@@ -1,0 +1,1611 @@
+{
+  "contract_version": 1,
+  "cases": [
+    {
+      "case_id": "var_01_refund_day30_discounted",
+      "customer_id": "CU-2031",
+      "request_id": "RQ-var_01_refund_day30_discounted",
+      "initial_state": {
+        "as_of": "2027-06-01",
+        "currency": "USD",
+        "products": [
+          {
+            "sku": "BEANIE-S",
+            "product_id": "BEANIE",
+            "size": "S",
+            "price_cents": 3200,
+            "stock": 6
+          },
+          {
+            "sku": "BEANIE-M",
+            "product_id": "BEANIE",
+            "size": "M",
+            "price_cents": 3200,
+            "stock": 5
+          },
+          {
+            "sku": "BEANIE-L",
+            "product_id": "BEANIE",
+            "size": "L",
+            "price_cents": 3200,
+            "stock": 5
+          },
+          {
+            "sku": "BEANIE-XL",
+            "product_id": "BEANIE",
+            "size": "XL",
+            "price_cents": 3200,
+            "stock": 1
+          },
+          {
+            "sku": "SNEAKER-S",
+            "product_id": "SNEAKER",
+            "size": "S",
+            "price_cents": 12000,
+            "stock": 3
+          },
+          {
+            "sku": "SNEAKER-M",
+            "product_id": "SNEAKER",
+            "size": "M",
+            "price_cents": 12000,
+            "stock": 5
+          },
+          {
+            "sku": "SNEAKER-L",
+            "product_id": "SNEAKER",
+            "size": "L",
+            "price_cents": 12000,
+            "stock": 5
+          },
+          {
+            "sku": "SNEAKER-XL",
+            "product_id": "SNEAKER",
+            "size": "XL",
+            "price_cents": 12000,
+            "stock": 6
+          }
+        ],
+        "orders": [
+          {
+            "order_id": "ORD-35644",
+            "customer_id": "CU-2031",
+            "status": "delivered",
+            "delivered_on": "2027-05-02",
+            "lines": [
+              {
+                "line_id": "LN1",
+                "sku": "BEANIE-L",
+                "paid_cents": 2700,
+                "unopened": true,
+                "final_sale": false,
+                "returned": false
+              }
+            ]
+          }
+        ],
+        "returns": [],
+        "refunds": [],
+        "exchanges": [],
+        "quarantine": [],
+        "idempotency": {}
+      },
+      "turns": [
+        {
+          "message": "I would like a refund for line LN1 of order ORD-35644, the beanie. It is still sealed."
+        },
+        {
+          "message": "Yes, go ahead with that.",
+          "confirm_proposal": "last"
+        }
+      ],
+      "faults": []
+    },
+    {
+      "case_id": "var_02_refund_same_day",
+      "customer_id": "CU-5628",
+      "request_id": "RQ-var_02_refund_same_day",
+      "initial_state": {
+        "as_of": "2027-07-10",
+        "currency": "USD",
+        "products": [
+          {
+            "sku": "CARDIGAN-S",
+            "product_id": "CARDIGAN",
+            "size": "S",
+            "price_cents": 2500,
+            "stock": 5
+          },
+          {
+            "sku": "CARDIGAN-M",
+            "product_id": "CARDIGAN",
+            "size": "M",
+            "price_cents": 2500,
+            "stock": 6
+          },
+          {
+            "sku": "CARDIGAN-L",
+            "product_id": "CARDIGAN",
+            "size": "L",
+            "price_cents": 2500,
+            "stock": 4
+          },
+          {
+            "sku": "CARDIGAN-XL",
+            "product_id": "CARDIGAN",
+            "size": "XL",
+            "price_cents": 2500,
+            "stock": 1
+          },
+          {
+            "sku": "BLAZER-S",
+            "product_id": "BLAZER",
+            "size": "S",
+            "price_cents": 2500,
+            "stock": 5
+          },
+          {
+            "sku": "BLAZER-M",
+            "product_id": "BLAZER",
+            "size": "M",
+            "price_cents": 2500,
+            "stock": 2
+          },
+          {
+            "sku": "BLAZER-L",
+            "product_id": "BLAZER",
+            "size": "L",
+            "price_cents": 2500,
+            "stock": 6
+          },
+          {
+            "sku": "BLAZER-XL",
+            "product_id": "BLAZER",
+            "size": "XL",
+            "price_cents": 2500,
+            "stock": 1
+          }
+        ],
+        "orders": [
+          {
+            "order_id": "ORD-80936",
+            "customer_id": "CU-5628",
+            "status": "delivered",
+            "delivered_on": "2027-07-10",
+            "lines": [
+              {
+                "line_id": "LN1",
+                "sku": "CARDIGAN-L",
+                "paid_cents": 2500,
+                "unopened": true,
+                "final_sale": false,
+                "returned": false
+              }
+            ]
+          }
+        ],
+        "returns": [],
+        "refunds": [],
+        "exchanges": [],
+        "quarantine": [],
+        "idempotency": {}
+      },
+      "turns": [
+        {
+          "message": "I would like a refund for line LN1 of order ORD-80936, the cardigan. It is still sealed."
+        },
+        {
+          "message": "Confirmed, please proceed.",
+          "confirm_proposal": "last"
+        }
+      ],
+      "faults": []
+    },
+    {
+      "case_id": "var_03_refund_reworded",
+      "customer_id": "CU-4419",
+      "request_id": "RQ-var_03_refund_reworded",
+      "initial_state": {
+        "as_of": "2027-03-10",
+        "currency": "USD",
+        "products": [
+          {
+            "sku": "POLO-S",
+            "product_id": "POLO",
+            "size": "S",
+            "price_cents": 2500,
+            "stock": 6
+          },
+          {
+            "sku": "POLO-M",
+            "product_id": "POLO",
+            "size": "M",
+            "price_cents": 2500,
+            "stock": 1
+          },
+          {
+            "sku": "POLO-L",
+            "product_id": "POLO",
+            "size": "L",
+            "price_cents": 2500,
+            "stock": 6
+          },
+          {
+            "sku": "POLO-XL",
+            "product_id": "POLO",
+            "size": "XL",
+            "price_cents": 2500,
+            "stock": 5
+          },
+          {
+            "sku": "HOODIE-S",
+            "product_id": "HOODIE",
+            "size": "S",
+            "price_cents": 12000,
+            "stock": 2
+          },
+          {
+            "sku": "HOODIE-M",
+            "product_id": "HOODIE",
+            "size": "M",
+            "price_cents": 12000,
+            "stock": 5
+          },
+          {
+            "sku": "HOODIE-L",
+            "product_id": "HOODIE",
+            "size": "L",
+            "price_cents": 12000,
+            "stock": 6
+          },
+          {
+            "sku": "HOODIE-XL",
+            "product_id": "HOODIE",
+            "size": "XL",
+            "price_cents": 12000,
+            "stock": 2
+          }
+        ],
+        "orders": [
+          {
+            "order_id": "ORD-47646",
+            "customer_id": "CU-4419",
+            "status": "delivered",
+            "delivered_on": "2027-02-15",
+            "lines": [
+              {
+                "line_id": "LN1",
+                "sku": "POLO-L",
+                "paid_cents": 1750,
+                "unopened": true,
+                "final_sale": false,
+                "returned": false
+              }
+            ]
+          }
+        ],
+        "returns": [],
+        "refunds": [],
+        "exchanges": [],
+        "quarantine": [],
+        "idempotency": {}
+      },
+      "turns": [
+        {
+          "message": "hey, can I send back the polo from ORD-47646 (LN1)? never opened it, I'd like my money back"
+        },
+        {
+          "message": "Yes, go ahead with that.",
+          "confirm_proposal": "last"
+        }
+      ],
+      "faults": []
+    },
+    {
+      "case_id": "var_04_deny_day31",
+      "customer_id": "CU-6838",
+      "request_id": "RQ-var_04_deny_day31",
+      "initial_state": {
+        "as_of": "2027-04-15",
+        "currency": "USD",
+        "products": [
+          {
+            "sku": "CARDIGAN-S",
+            "product_id": "CARDIGAN",
+            "size": "S",
+            "price_cents": 4500,
+            "stock": 5
+          },
+          {
+            "sku": "CARDIGAN-M",
+            "product_id": "CARDIGAN",
+            "size": "M",
+            "price_cents": 4500,
+            "stock": 2
+          },
+          {
+            "sku": "CARDIGAN-L",
+            "product_id": "CARDIGAN",
+            "size": "L",
+            "price_cents": 4500,
+            "stock": 3
+          },
+          {
+            "sku": "CARDIGAN-XL",
+            "product_id": "CARDIGAN",
+            "size": "XL",
+            "price_cents": 4500,
+            "stock": 3
+          },
+          {
+            "sku": "SNEAKER-S",
+            "product_id": "SNEAKER",
+            "size": "S",
+            "price_cents": 2500,
+            "stock": 6
+          },
+          {
+            "sku": "SNEAKER-M",
+            "product_id": "SNEAKER",
+            "size": "M",
+            "price_cents": 2500,
+            "stock": 1
+          },
+          {
+            "sku": "SNEAKER-L",
+            "product_id": "SNEAKER",
+            "size": "L",
+            "price_cents": 2500,
+            "stock": 1
+          },
+          {
+            "sku": "SNEAKER-XL",
+            "product_id": "SNEAKER",
+            "size": "XL",
+            "price_cents": 2500,
+            "stock": 5
+          }
+        ],
+        "orders": [
+          {
+            "order_id": "ORD-29018",
+            "customer_id": "CU-6838",
+            "status": "delivered",
+            "delivered_on": "2027-03-15",
+            "lines": [
+              {
+                "line_id": "LN1",
+                "sku": "CARDIGAN-L",
+                "paid_cents": 4500,
+                "unopened": true,
+                "final_sale": false,
+                "returned": false
+              }
+            ]
+          }
+        ],
+        "returns": [],
+        "refunds": [],
+        "exchanges": [],
+        "quarantine": [],
+        "idempotency": {}
+      },
+      "turns": [
+        {
+          "message": "Please refund line LN1 of order ORD-29018."
+        }
+      ],
+      "faults": []
+    },
+    {
+      "case_id": "var_05_deny_future_delivery",
+      "customer_id": "CU-2219",
+      "request_id": "RQ-var_05_deny_future_delivery",
+      "initial_state": {
+        "as_of": "2027-04-21",
+        "currency": "USD",
+        "products": [
+          {
+            "sku": "POLO-S",
+            "product_id": "POLO",
+            "size": "S",
+            "price_cents": 4500,
+            "stock": 4
+          },
+          {
+            "sku": "POLO-M",
+            "product_id": "POLO",
+            "size": "M",
+            "price_cents": 4500,
+            "stock": 3
+          },
+          {
+            "sku": "POLO-L",
+            "product_id": "POLO",
+            "size": "L",
+            "price_cents": 4500,
+            "stock": 4
+          },
+          {
+            "sku": "POLO-XL",
+            "product_id": "POLO",
+            "size": "XL",
+            "price_cents": 4500,
+            "stock": 3
+          },
+          {
+            "sku": "CARDIGAN-S",
+            "product_id": "CARDIGAN",
+            "size": "S",
+            "price_cents": 12000,
+            "stock": 4
+          },
+          {
+            "sku": "CARDIGAN-M",
+            "product_id": "CARDIGAN",
+            "size": "M",
+            "price_cents": 12000,
+            "stock": 6
+          },
+          {
+            "sku": "CARDIGAN-L",
+            "product_id": "CARDIGAN",
+            "size": "L",
+            "price_cents": 12000,
+            "stock": 2
+          },
+          {
+            "sku": "CARDIGAN-XL",
+            "product_id": "CARDIGAN",
+            "size": "XL",
+            "price_cents": 12000,
+            "stock": 3
+          }
+        ],
+        "orders": [
+          {
+            "order_id": "ORD-39588",
+            "customer_id": "CU-2219",
+            "status": "delivered",
+            "delivered_on": "2027-04-23",
+            "lines": [
+              {
+                "line_id": "LN1",
+                "sku": "POLO-L",
+                "paid_cents": 4500,
+                "unopened": true,
+                "final_sale": false,
+                "returned": false
+              }
+            ]
+          }
+        ],
+        "returns": [],
+        "refunds": [],
+        "exchanges": [],
+        "quarantine": [],
+        "idempotency": {}
+      },
+      "turns": [
+        {
+          "message": "Refund the polo on line LN1, order ORD-39588, please."
+        }
+      ],
+      "faults": []
+    },
+    {
+      "case_id": "var_06_deny_opened",
+      "customer_id": "CU-6428",
+      "request_id": "RQ-var_06_deny_opened",
+      "initial_state": {
+        "as_of": "2027-04-05",
+        "currency": "USD",
+        "products": [
+          {
+            "sku": "HOODIE-S",
+            "product_id": "HOODIE",
+            "size": "S",
+            "price_cents": 4500,
+            "stock": 1
+          },
+          {
+            "sku": "HOODIE-M",
+            "product_id": "HOODIE",
+            "size": "M",
+            "price_cents": 4500,
+            "stock": 2
+          },
+          {
+            "sku": "HOODIE-L",
+            "product_id": "HOODIE",
+            "size": "L",
+            "price_cents": 4500,
+            "stock": 3
+          },
+          {
+            "sku": "HOODIE-XL",
+            "product_id": "HOODIE",
+            "size": "XL",
+            "price_cents": 4500,
+            "stock": 3
+          },
+          {
+            "sku": "PARKA-S",
+            "product_id": "PARKA",
+            "size": "S",
+            "price_cents": 4500,
+            "stock": 2
+          },
+          {
+            "sku": "PARKA-M",
+            "product_id": "PARKA",
+            "size": "M",
+            "price_cents": 4500,
+            "stock": 3
+          },
+          {
+            "sku": "PARKA-L",
+            "product_id": "PARKA",
+            "size": "L",
+            "price_cents": 4500,
+            "stock": 4
+          },
+          {
+            "sku": "PARKA-XL",
+            "product_id": "PARKA",
+            "size": "XL",
+            "price_cents": 4500,
+            "stock": 3
+          }
+        ],
+        "orders": [
+          {
+            "order_id": "ORD-81154",
+            "customer_id": "CU-6428",
+            "status": "delivered",
+            "delivered_on": "2027-03-28",
+            "lines": [
+              {
+                "line_id": "LN1",
+                "sku": "HOODIE-L",
+                "paid_cents": 4500,
+                "unopened": false,
+                "final_sale": false,
+                "returned": false
+              }
+            ]
+          }
+        ],
+        "returns": [],
+        "refunds": [],
+        "exchanges": [],
+        "quarantine": [],
+        "idempotency": {}
+      },
+      "turns": [
+        {
+          "message": "I opened the hoodie (line LN1, order ORD-81154) and want a refund."
+        }
+      ],
+      "faults": []
+    },
+    {
+      "case_id": "var_07_deny_final_sale",
+      "customer_id": "CU-3192",
+      "request_id": "RQ-var_07_deny_final_sale",
+      "initial_state": {
+        "as_of": "2027-06-16",
+        "currency": "USD",
+        "products": [
+          {
+            "sku": "POLO-S",
+            "product_id": "POLO",
+            "size": "S",
+            "price_cents": 4500,
+            "stock": 6
+          },
+          {
+            "sku": "POLO-M",
+            "product_id": "POLO",
+            "size": "M",
+            "price_cents": 4500,
+            "stock": 5
+          },
+          {
+            "sku": "POLO-L",
+            "product_id": "POLO",
+            "size": "L",
+            "price_cents": 4500,
+            "stock": 6
+          },
+          {
+            "sku": "POLO-XL",
+            "product_id": "POLO",
+            "size": "XL",
+            "price_cents": 4500,
+            "stock": 6
+          },
+          {
+            "sku": "CARDIGAN-S",
+            "product_id": "CARDIGAN",
+            "size": "S",
+            "price_cents": 4500,
+            "stock": 3
+          },
+          {
+            "sku": "CARDIGAN-M",
+            "product_id": "CARDIGAN",
+            "size": "M",
+            "price_cents": 4500,
+            "stock": 2
+          },
+          {
+            "sku": "CARDIGAN-L",
+            "product_id": "CARDIGAN",
+            "size": "L",
+            "price_cents": 4500,
+            "stock": 3
+          },
+          {
+            "sku": "CARDIGAN-XL",
+            "product_id": "CARDIGAN",
+            "size": "XL",
+            "price_cents": 4500,
+            "stock": 4
+          }
+        ],
+        "orders": [
+          {
+            "order_id": "ORD-70856",
+            "customer_id": "CU-3192",
+            "status": "delivered",
+            "delivered_on": "2027-06-11",
+            "lines": [
+              {
+                "line_id": "LN1",
+                "sku": "POLO-M",
+                "paid_cents": 4500,
+                "unopened": true,
+                "final_sale": true,
+                "returned": false
+              }
+            ]
+          }
+        ],
+        "returns": [],
+        "refunds": [],
+        "exchanges": [],
+        "quarantine": [],
+        "idempotency": {}
+      },
+      "turns": [
+        {
+          "message": "Refund line LN1 from order ORD-70856. It's unopened."
+        }
+      ],
+      "faults": []
+    },
+    {
+      "case_id": "var_08_deny_already_returned",
+      "customer_id": "CU-8421",
+      "request_id": "RQ-var_08_deny_already_returned",
+      "initial_state": {
+        "as_of": "2027-10-14",
+        "currency": "USD",
+        "products": [
+          {
+            "sku": "SNEAKER-S",
+            "product_id": "SNEAKER",
+            "size": "S",
+            "price_cents": 3200,
+            "stock": 2
+          },
+          {
+            "sku": "SNEAKER-M",
+            "product_id": "SNEAKER",
+            "size": "M",
+            "price_cents": 3200,
+            "stock": 5
+          },
+          {
+            "sku": "SNEAKER-L",
+            "product_id": "SNEAKER",
+            "size": "L",
+            "price_cents": 3200,
+            "stock": 3
+          },
+          {
+            "sku": "SNEAKER-XL",
+            "product_id": "SNEAKER",
+            "size": "XL",
+            "price_cents": 3200,
+            "stock": 6
+          },
+          {
+            "sku": "HOODIE-S",
+            "product_id": "HOODIE",
+            "size": "S",
+            "price_cents": 12000,
+            "stock": 5
+          },
+          {
+            "sku": "HOODIE-M",
+            "product_id": "HOODIE",
+            "size": "M",
+            "price_cents": 12000,
+            "stock": 2
+          },
+          {
+            "sku": "HOODIE-L",
+            "product_id": "HOODIE",
+            "size": "L",
+            "price_cents": 12000,
+            "stock": 3
+          },
+          {
+            "sku": "HOODIE-XL",
+            "product_id": "HOODIE",
+            "size": "XL",
+            "price_cents": 12000,
+            "stock": 5
+          }
+        ],
+        "orders": [
+          {
+            "order_id": "ORD-23172",
+            "customer_id": "CU-8421",
+            "status": "delivered",
+            "delivered_on": "2027-10-02",
+            "lines": [
+              {
+                "line_id": "LN1",
+                "sku": "SNEAKER-L",
+                "paid_cents": 3200,
+                "unopened": true,
+                "final_sale": false,
+                "returned": true
+              }
+            ]
+          }
+        ],
+        "returns": [],
+        "refunds": [],
+        "exchanges": [],
+        "quarantine": [],
+        "idempotency": {}
+      },
+      "turns": [
+        {
+          "message": "I want to return line LN1 of order ORD-23172 for a refund."
+        }
+      ],
+      "faults": []
+    },
+    {
+      "case_id": "var_09_exchange_xl",
+      "customer_id": "CU-5542",
+      "request_id": "RQ-var_09_exchange_xl",
+      "initial_state": {
+        "as_of": "2027-08-15",
+        "currency": "USD",
+        "products": [
+          {
+            "sku": "HOODIE-S",
+            "product_id": "HOODIE",
+            "size": "S",
+            "price_cents": 3200,
+            "stock": 2
+          },
+          {
+            "sku": "HOODIE-M",
+            "product_id": "HOODIE",
+            "size": "M",
+            "price_cents": 3200,
+            "stock": 3
+          },
+          {
+            "sku": "HOODIE-L",
+            "product_id": "HOODIE",
+            "size": "L",
+            "price_cents": 3200,
+            "stock": 4
+          },
+          {
+            "sku": "HOODIE-XL",
+            "product_id": "HOODIE",
+            "size": "XL",
+            "price_cents": 3200,
+            "stock": 6
+          },
+          {
+            "sku": "BLAZER-S",
+            "product_id": "BLAZER",
+            "size": "S",
+            "price_cents": 4500,
+            "stock": 4
+          },
+          {
+            "sku": "BLAZER-M",
+            "product_id": "BLAZER",
+            "size": "M",
+            "price_cents": 4500,
+            "stock": 3
+          },
+          {
+            "sku": "BLAZER-L",
+            "product_id": "BLAZER",
+            "size": "L",
+            "price_cents": 4500,
+            "stock": 1
+          },
+          {
+            "sku": "BLAZER-XL",
+            "product_id": "BLAZER",
+            "size": "XL",
+            "price_cents": 4500,
+            "stock": 4
+          }
+        ],
+        "orders": [
+          {
+            "order_id": "ORD-76881",
+            "customer_id": "CU-5542",
+            "status": "delivered",
+            "delivered_on": "2027-07-21",
+            "lines": [
+              {
+                "line_id": "LN1",
+                "sku": "HOODIE-M",
+                "paid_cents": 2200,
+                "unopened": true,
+                "final_sale": false,
+                "returned": false
+              }
+            ]
+          }
+        ],
+        "returns": [],
+        "refunds": [],
+        "exchanges": [],
+        "quarantine": [],
+        "idempotency": {}
+      },
+      "turns": [
+        {
+          "message": "Could I exchange line LN1 of order ORD-76881 for the same hoodie in size XL?"
+        },
+        {
+          "message": "Yes, go ahead with that.",
+          "confirm_proposal": "last"
+        }
+      ],
+      "faults": []
+    },
+    {
+      "case_id": "var_10_exchange_zero_stock",
+      "customer_id": "CU-9069",
+      "request_id": "RQ-var_10_exchange_zero_stock",
+      "initial_state": {
+        "as_of": "2027-06-27",
+        "currency": "USD",
+        "products": [
+          {
+            "sku": "BLAZER-S",
+            "product_id": "BLAZER",
+            "size": "S",
+            "price_cents": 12000,
+            "stock": 1
+          },
+          {
+            "sku": "BLAZER-M",
+            "product_id": "BLAZER",
+            "size": "M",
+            "price_cents": 12000,
+            "stock": 6
+          },
+          {
+            "sku": "BLAZER-L",
+            "product_id": "BLAZER",
+            "size": "L",
+            "price_cents": 12000,
+            "stock": 0
+          },
+          {
+            "sku": "BLAZER-XL",
+            "product_id": "BLAZER",
+            "size": "XL",
+            "price_cents": 12000,
+            "stock": 3
+          },
+          {
+            "sku": "HOODIE-S",
+            "product_id": "HOODIE",
+            "size": "S",
+            "price_cents": 7800,
+            "stock": 1
+          },
+          {
+            "sku": "HOODIE-M",
+            "product_id": "HOODIE",
+            "size": "M",
+            "price_cents": 7800,
+            "stock": 5
+          },
+          {
+            "sku": "HOODIE-L",
+            "product_id": "HOODIE",
+            "size": "L",
+            "price_cents": 7800,
+            "stock": 6
+          },
+          {
+            "sku": "HOODIE-XL",
+            "product_id": "HOODIE",
+            "size": "XL",
+            "price_cents": 7800,
+            "stock": 1
+          }
+        ],
+        "orders": [
+          {
+            "order_id": "ORD-56075",
+            "customer_id": "CU-9069",
+            "status": "delivered",
+            "delivered_on": "2027-06-05",
+            "lines": [
+              {
+                "line_id": "LN1",
+                "sku": "BLAZER-S",
+                "paid_cents": 12000,
+                "unopened": true,
+                "final_sale": false,
+                "returned": false
+              }
+            ]
+          }
+        ],
+        "returns": [],
+        "refunds": [],
+        "exchanges": [],
+        "quarantine": [],
+        "idempotency": {}
+      },
+      "turns": [
+        {
+          "message": "Exchange line LN1 in order ORD-56075 for size L of the same blazer."
+        }
+      ],
+      "faults": []
+    },
+    {
+      "case_id": "var_11_exchange_other_product",
+      "customer_id": "CU-3119",
+      "request_id": "RQ-var_11_exchange_other_product",
+      "initial_state": {
+        "as_of": "2027-02-02",
+        "currency": "USD",
+        "products": [
+          {
+            "sku": "BEANIE-S",
+            "product_id": "BEANIE",
+            "size": "S",
+            "price_cents": 12000,
+            "stock": 3
+          },
+          {
+            "sku": "BEANIE-M",
+            "product_id": "BEANIE",
+            "size": "M",
+            "price_cents": 12000,
+            "stock": 3
+          },
+          {
+            "sku": "BEANIE-L",
+            "product_id": "BEANIE",
+            "size": "L",
+            "price_cents": 12000,
+            "stock": 4
+          },
+          {
+            "sku": "BEANIE-XL",
+            "product_id": "BEANIE",
+            "size": "XL",
+            "price_cents": 12000,
+            "stock": 6
+          },
+          {
+            "sku": "CARDIGAN-S",
+            "product_id": "CARDIGAN",
+            "size": "S",
+            "price_cents": 5900,
+            "stock": 3
+          },
+          {
+            "sku": "CARDIGAN-M",
+            "product_id": "CARDIGAN",
+            "size": "M",
+            "price_cents": 5900,
+            "stock": 3
+          },
+          {
+            "sku": "CARDIGAN-L",
+            "product_id": "CARDIGAN",
+            "size": "L",
+            "price_cents": 5900,
+            "stock": 5
+          },
+          {
+            "sku": "CARDIGAN-XL",
+            "product_id": "CARDIGAN",
+            "size": "XL",
+            "price_cents": 5900,
+            "stock": 3
+          }
+        ],
+        "orders": [
+          {
+            "order_id": "ORD-91276",
+            "customer_id": "CU-3119",
+            "status": "delivered",
+            "delivered_on": "2027-01-15",
+            "lines": [
+              {
+                "line_id": "LN1",
+                "sku": "BEANIE-S",
+                "paid_cents": 12000,
+                "unopened": true,
+                "final_sale": false,
+                "returned": false
+              }
+            ]
+          }
+        ],
+        "returns": [],
+        "refunds": [],
+        "exchanges": [],
+        "quarantine": [],
+        "idempotency": {}
+      },
+      "turns": [
+        {
+          "message": "Swap line LN1 of order ORD-91276 for the cardigan in size S instead (CARDIGAN-S)."
+        }
+      ],
+      "faults": []
+    },
+    {
+      "case_id": "var_12_exchange_price_mismatch",
+      "customer_id": "CU-5590",
+      "request_id": "RQ-var_12_exchange_price_mismatch",
+      "initial_state": {
+        "as_of": "2027-08-14",
+        "currency": "USD",
+        "products": [
+          {
+            "sku": "PARKA-S",
+            "product_id": "PARKA",
+            "size": "S",
+            "price_cents": 5900,
+            "stock": 2
+          },
+          {
+            "sku": "PARKA-M",
+            "product_id": "PARKA",
+            "size": "M",
+            "price_cents": 5900,
+            "stock": 4
+          },
+          {
+            "sku": "PARKA-L",
+            "product_id": "PARKA",
+            "size": "L",
+            "price_cents": 5900,
+            "stock": 1
+          },
+          {
+            "sku": "PARKA-XL",
+            "product_id": "PARKA",
+            "size": "XL",
+            "price_cents": 7400,
+            "stock": 2
+          },
+          {
+            "sku": "POLO-S",
+            "product_id": "POLO",
+            "size": "S",
+            "price_cents": 4500,
+            "stock": 1
+          },
+          {
+            "sku": "POLO-M",
+            "product_id": "POLO",
+            "size": "M",
+            "price_cents": 4500,
+            "stock": 3
+          },
+          {
+            "sku": "POLO-L",
+            "product_id": "POLO",
+            "size": "L",
+            "price_cents": 4500,
+            "stock": 5
+          },
+          {
+            "sku": "POLO-XL",
+            "product_id": "POLO",
+            "size": "XL",
+            "price_cents": 4500,
+            "stock": 6
+          }
+        ],
+        "orders": [
+          {
+            "order_id": "ORD-44848",
+            "customer_id": "CU-5590",
+            "status": "delivered",
+            "delivered_on": "2027-08-10",
+            "lines": [
+              {
+                "line_id": "LN1",
+                "sku": "PARKA-S",
+                "paid_cents": 5900,
+                "unopened": true,
+                "final_sale": false,
+                "returned": false
+              }
+            ]
+          }
+        ],
+        "returns": [],
+        "refunds": [],
+        "exchanges": [],
+        "quarantine": [],
+        "idempotency": {}
+      },
+      "turns": [
+        {
+          "message": "I'd like to exchange line LN1 of order ORD-44848 for the XL size."
+        }
+      ],
+      "faults": []
+    },
+    {
+      "case_id": "var_13_clarify_then_refund",
+      "customer_id": "CU-8769",
+      "request_id": "RQ-var_13_clarify_then_refund",
+      "initial_state": {
+        "as_of": "2027-01-22",
+        "currency": "USD",
+        "products": [
+          {
+            "sku": "CARDIGAN-S",
+            "product_id": "CARDIGAN",
+            "size": "S",
+            "price_cents": 5900,
+            "stock": 1
+          },
+          {
+            "sku": "CARDIGAN-M",
+            "product_id": "CARDIGAN",
+            "size": "M",
+            "price_cents": 5900,
+            "stock": 3
+          },
+          {
+            "sku": "CARDIGAN-L",
+            "product_id": "CARDIGAN",
+            "size": "L",
+            "price_cents": 5900,
+            "stock": 1
+          },
+          {
+            "sku": "CARDIGAN-XL",
+            "product_id": "CARDIGAN",
+            "size": "XL",
+            "price_cents": 5900,
+            "stock": 4
+          },
+          {
+            "sku": "SNEAKER-S",
+            "product_id": "SNEAKER",
+            "size": "S",
+            "price_cents": 4500,
+            "stock": 5
+          },
+          {
+            "sku": "SNEAKER-M",
+            "product_id": "SNEAKER",
+            "size": "M",
+            "price_cents": 4500,
+            "stock": 5
+          },
+          {
+            "sku": "SNEAKER-L",
+            "product_id": "SNEAKER",
+            "size": "L",
+            "price_cents": 4500,
+            "stock": 6
+          },
+          {
+            "sku": "SNEAKER-XL",
+            "product_id": "SNEAKER",
+            "size": "XL",
+            "price_cents": 4500,
+            "stock": 4
+          }
+        ],
+        "orders": [
+          {
+            "order_id": "ORD-15951",
+            "customer_id": "CU-8769",
+            "status": "delivered",
+            "delivered_on": "2027-01-02",
+            "lines": [
+              {
+                "line_id": "LN1",
+                "sku": "CARDIGAN-M",
+                "paid_cents": 5900,
+                "unopened": true,
+                "final_sale": false,
+                "returned": false
+              },
+              {
+                "line_id": "LN2",
+                "sku": "SNEAKER-L",
+                "paid_cents": 4200,
+                "unopened": true,
+                "final_sale": false,
+                "returned": false
+              }
+            ]
+          }
+        ],
+        "returns": [],
+        "refunds": [],
+        "exchanges": [],
+        "quarantine": [],
+        "idempotency": {}
+      },
+      "turns": [
+        {
+          "message": "I need to return something from order ORD-15951."
+        },
+        {
+          "message": "It's line LN2, the sneaker in size L. Refund please."
+        },
+        {
+          "message": "That works, I approve.",
+          "confirm_proposal": "last"
+        }
+      ],
+      "faults": []
+    },
+    {
+      "case_id": "var_14_other_customer_order",
+      "customer_id": "CU-2662",
+      "request_id": "RQ-var_14_other_customer_order",
+      "initial_state": {
+        "as_of": "2027-03-21",
+        "currency": "USD",
+        "products": [
+          {
+            "sku": "CARDIGAN-S",
+            "product_id": "CARDIGAN",
+            "size": "S",
+            "price_cents": 2500,
+            "stock": 6
+          },
+          {
+            "sku": "CARDIGAN-M",
+            "product_id": "CARDIGAN",
+            "size": "M",
+            "price_cents": 2500,
+            "stock": 3
+          },
+          {
+            "sku": "CARDIGAN-L",
+            "product_id": "CARDIGAN",
+            "size": "L",
+            "price_cents": 2500,
+            "stock": 1
+          },
+          {
+            "sku": "CARDIGAN-XL",
+            "product_id": "CARDIGAN",
+            "size": "XL",
+            "price_cents": 2500,
+            "stock": 5
+          },
+          {
+            "sku": "BLAZER-S",
+            "product_id": "BLAZER",
+            "size": "S",
+            "price_cents": 7800,
+            "stock": 4
+          },
+          {
+            "sku": "BLAZER-M",
+            "product_id": "BLAZER",
+            "size": "M",
+            "price_cents": 7800,
+            "stock": 1
+          },
+          {
+            "sku": "BLAZER-L",
+            "product_id": "BLAZER",
+            "size": "L",
+            "price_cents": 7800,
+            "stock": 3
+          },
+          {
+            "sku": "BLAZER-XL",
+            "product_id": "BLAZER",
+            "size": "XL",
+            "price_cents": 7800,
+            "stock": 2
+          }
+        ],
+        "orders": [
+          {
+            "order_id": "ORD-99248",
+            "customer_id": "CU-2662",
+            "status": "delivered",
+            "delivered_on": "2027-03-15",
+            "lines": [
+              {
+                "line_id": "LN1",
+                "sku": "CARDIGAN-M",
+                "paid_cents": 2500,
+                "unopened": true,
+                "final_sale": false,
+                "returned": false
+              }
+            ]
+          },
+          {
+            "order_id": "ORD-79687",
+            "customer_id": "CU-8823",
+            "status": "delivered",
+            "delivered_on": "2027-03-15",
+            "lines": [
+              {
+                "line_id": "LN2",
+                "sku": "BLAZER-S",
+                "paid_cents": 7800,
+                "unopened": true,
+                "final_sale": false,
+                "returned": false
+              }
+            ]
+          }
+        ],
+        "returns": [],
+        "refunds": [],
+        "exchanges": [],
+        "quarantine": [],
+        "idempotency": {}
+      },
+      "turns": [
+        {
+          "message": "Refund line LN2 of order ORD-79687, please."
+        }
+      ],
+      "faults": []
+    },
+    {
+      "case_id": "var_15_stale_stock_fault",
+      "customer_id": "CU-1256",
+      "request_id": "RQ-var_15_stale_stock_fault",
+      "initial_state": {
+        "as_of": "2027-09-08",
+        "currency": "USD",
+        "products": [
+          {
+            "sku": "BEANIE-S",
+            "product_id": "BEANIE",
+            "size": "S",
+            "price_cents": 2500,
+            "stock": 5
+          },
+          {
+            "sku": "BEANIE-M",
+            "product_id": "BEANIE",
+            "size": "M",
+            "price_cents": 2500,
+            "stock": 3
+          },
+          {
+            "sku": "BEANIE-L",
+            "product_id": "BEANIE",
+            "size": "L",
+            "price_cents": 2500,
+            "stock": 3
+          },
+          {
+            "sku": "BEANIE-XL",
+            "product_id": "BEANIE",
+            "size": "XL",
+            "price_cents": 2500,
+            "stock": 5
+          },
+          {
+            "sku": "HOODIE-S",
+            "product_id": "HOODIE",
+            "size": "S",
+            "price_cents": 4500,
+            "stock": 2
+          },
+          {
+            "sku": "HOODIE-M",
+            "product_id": "HOODIE",
+            "size": "M",
+            "price_cents": 4500,
+            "stock": 1
+          },
+          {
+            "sku": "HOODIE-L",
+            "product_id": "HOODIE",
+            "size": "L",
+            "price_cents": 4500,
+            "stock": 2
+          },
+          {
+            "sku": "HOODIE-XL",
+            "product_id": "HOODIE",
+            "size": "XL",
+            "price_cents": 4500,
+            "stock": 1
+          }
+        ],
+        "orders": [
+          {
+            "order_id": "ORD-85012",
+            "customer_id": "CU-1256",
+            "status": "delivered",
+            "delivered_on": "2027-08-21",
+            "lines": [
+              {
+                "line_id": "LN1",
+                "sku": "HOODIE-S",
+                "paid_cents": 4500,
+                "unopened": true,
+                "final_sale": false,
+                "returned": false
+              }
+            ]
+          }
+        ],
+        "returns": [],
+        "refunds": [],
+        "exchanges": [],
+        "quarantine": [],
+        "idempotency": {}
+      },
+      "turns": [
+        {
+          "message": "Please exchange line LN1 of ORD-85012 for size M."
+        },
+        {
+          "message": "That works, I approve.",
+          "confirm_proposal": "last"
+        }
+      ],
+      "faults": [
+        {
+          "type": "stock_change",
+          "before_turn": 2,
+          "sku": "HOODIE-M",
+          "new_stock": 0
+        }
+      ]
+    },
+    {
+      "case_id": "var_16_timeout_replay_fault",
+      "customer_id": "CU-1481",
+      "request_id": "RQ-var_16_timeout_replay_fault",
+      "initial_state": {
+        "as_of": "2027-04-30",
+        "currency": "USD",
+        "products": [
+          {
+            "sku": "BEANIE-S",
+            "product_id": "BEANIE",
+            "size": "S",
+            "price_cents": 2500,
+            "stock": 2
+          },
+          {
+            "sku": "BEANIE-M",
+            "product_id": "BEANIE",
+            "size": "M",
+            "price_cents": 2500,
+            "stock": 3
+          },
+          {
+            "sku": "BEANIE-L",
+            "product_id": "BEANIE",
+            "size": "L",
+            "price_cents": 2500,
+            "stock": 1
+          },
+          {
+            "sku": "BEANIE-XL",
+            "product_id": "BEANIE",
+            "size": "XL",
+            "price_cents": 2500,
+            "stock": 6
+          },
+          {
+            "sku": "CARDIGAN-S",
+            "product_id": "CARDIGAN",
+            "size": "S",
+            "price_cents": 7800,
+            "stock": 5
+          },
+          {
+            "sku": "CARDIGAN-M",
+            "product_id": "CARDIGAN",
+            "size": "M",
+            "price_cents": 7800,
+            "stock": 4
+          },
+          {
+            "sku": "CARDIGAN-L",
+            "product_id": "CARDIGAN",
+            "size": "L",
+            "price_cents": 7800,
+            "stock": 1
+          },
+          {
+            "sku": "CARDIGAN-XL",
+            "product_id": "CARDIGAN",
+            "size": "XL",
+            "price_cents": 7800,
+            "stock": 5
+          }
+        ],
+        "orders": [
+          {
+            "order_id": "ORD-61138",
+            "customer_id": "CU-1481",
+            "status": "delivered",
+            "delivered_on": "2027-04-19",
+            "lines": [
+              {
+                "line_id": "LN1",
+                "sku": "BEANIE-L",
+                "paid_cents": 1750,
+                "unopened": true,
+                "final_sale": false,
+                "returned": false
+              }
+            ]
+          }
+        ],
+        "returns": [],
+        "refunds": [],
+        "exchanges": [],
+        "quarantine": [],
+        "idempotency": {}
+      },
+      "turns": [
+        {
+          "message": "Refund line LN1 of order ORD-61138; it is unopened."
+        },
+        {
+          "message": "OK, please do it.",
+          "confirm_proposal": "last"
+        },
+        {
+          "message": "I never got a confirmation, so I'm approving again.",
+          "confirm_proposal": "last"
+        }
+      ],
+      "faults": [
+        {
+          "type": "timeout_after_commit"
+        }
+      ]
+    }
+  ]
+}

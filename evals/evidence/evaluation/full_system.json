@@ -1,0 +1,9 @@
+{
+  "status": "recorded",
+  "playwright_passed": 16,
+  "playwright_failed": 0,
+  "pytest_not_ollama": "617 passed, 0 failed",
+  "pytest_ollama": "15 passed, 0 failed",
+  "vitest": "27 passed, 0 failed",
+  "vite_build": "passed"
+}

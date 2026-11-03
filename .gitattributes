@@ -1,0 +1,4 @@
+# Supplied assets must stay byte-identical (input_sha256 is computed from exact bytes).
+candidate_assets/** -text
+evals/evidence/** -text
+*.bat text eol=crlf

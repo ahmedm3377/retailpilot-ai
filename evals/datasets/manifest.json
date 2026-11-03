@@ -1,0 +1,28 @@
+{
+  "generator": "evals.generators.variants",
+  "generator_version": "1",
+  "seed": 20261029,
+  "source_fixture": {
+    "path": "candidate_assets/public_cases.json",
+    "sha256": "f3f9dc73ac2d846de3af5c8647afcccd58d0335b80cd06f416f4dd08a1ca6165"
+  },
+  "splits": {
+    "synthetic_variants": {
+      "cases": 16,
+      "file": "variants.json"
+    },
+    "adversarial": {
+      "cases": 14,
+      "file": "adversarial.json",
+      "attacks": 9,
+      "benign_controls": 4
+    }
+  },
+  "sha256": {
+    "adversarial.json": "e8b9bbce47ab9317fc1c096ec1dfbcadd4c4bb1cbd784fb8a9c0b3ce433bfe85",
+    "labels/adversarial_labels.json": "d96d7eb9cc17e06570e0de3f8095e1446fb737e5fffd0ff66be8402c093ade27",
+    "labels/variants_labels.json": "28c2b5c744d5e3c24dbcc38c0fba29c2bf3da7afd9e3cf5cae3c1bd681bd5368",
+    "variants.json": "54b5e8b261767b638fb2ed35cabc833bb1d930deaf37656e3f7a1562fdebddfc"
+  },
+  "note": "Synthetic, schema-compatible cases; not HP's private tests. Labels are evaluation-only."
+}

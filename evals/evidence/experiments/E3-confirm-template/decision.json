@@ -1,0 +1,149 @@
+{
+  "id": "E3-confirm-template",
+  "decision": "accept",
+  "effect": "p50 8080 -> 5719 ms (29.2%), mean 20.7%, p95 22.8%; LLM calls/task 6 -> 4",
+  "reason": "gate passed and latency improved",
+  "control": "evals/evidence/experiments/E1-pool/variant",
+  "variant": "evals/evidence/experiments/E3-confirm-template/variant",
+  "control_ids": {
+    "source_id": "3e72efe9f5+6105ab4e",
+    "config_id": "24ba48140790"
+  },
+  "variant_ids": {
+    "source_id": "3e72efe9f5+6105ab4e",
+    "config_id": "d6d3e38d35b5"
+  },
+  "gate": {
+    "comparable": true,
+    "failed_checks": [],
+    "all_runs_correct": true,
+    "validator_ok": true,
+    "quality_preserved": true
+  },
+  "latency_ms": {
+    "p50": {
+      "baseline": 8080.5,
+      "optimized": 5718.8,
+      "improvement_pct": 29.2
+    },
+    "p95": {
+      "baseline": 10104.5,
+      "optimized": 7795.8,
+      "improvement_pct": 22.8
+    },
+    "mean": {
+      "baseline": 7614.9,
+      "optimized": 6039.6,
+      "improvement_pct": 20.7
+    },
+    "n": {
+      "baseline": 18,
+      "optimized": 18
+    },
+    "per_case_median": {
+      "public_01_refund_boundary": {
+        "baseline": 6277.5,
+        "optimized": 4435.0,
+        "improvement_pct": 29.4
+      },
+      "public_02_exchange": {
+        "baseline": 8080.5,
+        "optimized": 6582.0,
+        "improvement_pct": 18.5
+      },
+      "public_03_expired": {
+        "baseline": 5384.5,
+        "optimized": 5109.9,
+        "improvement_pct": 5.1
+      },
+      "public_04_clarify": {
+        "baseline": 9452.0,
+        "optimized": 7779.6,
+        "improvement_pct": 17.7
+      },
+      "public_05_stale_stock": {
+        "baseline": 8184.4,
+        "optimized": 6581.8,
+        "improvement_pct": 19.6
+      },
+      "public_06_timeout_replay": {
+        "baseline": 8191.3,
+        "optimized": 5583.7,
+        "improvement_pct": 31.8
+      }
+    }
+  },
+  "components_median_ms_per_task": {
+    "llm_ms": {
+      "baseline": 6844.0,
+      "optimized": 4769.8,
+      "improvement_pct": 30.3
+    },
+    "guard_ms": {
+      "baseline": 700.6,
+      "optimized": 540.4,
+      "improvement_pct": 22.9
+    },
+    "other_ms": {
+      "baseline": 357.1,
+      "optimized": 299.3,
+      "improvement_pct": 16.2
+    }
+  },
+  "llm_calls_per_task_median": {
+    "baseline": 6,
+    "optimized": 4,
+    "improvement_pct": 33.3
+  },
+  "tokens": {
+    "completion_total": {
+      "baseline": 3954,
+      "optimized": 3381,
+      "improvement_pct": 14.5
+    },
+    "prompt_total": {
+      "baseline": 49485,
+      "optimized": 43236,
+      "improvement_pct": 12.6
+    },
+    "effective_output_tokens_per_call_second_median": {
+      "baseline": 33.4,
+      "optimized": 35.9,
+      "increase_pct": 7.5
+    },
+    "note": "Ollama-reported completion tokens / summed LLM call wall time (not pure decode time)"
+  },
+  "memory": {
+    "peak_ram_mb_max": {
+      "baseline": 5259.2,
+      "optimized": 5298.5,
+      "improvement_pct": -0.7
+    },
+    "peak_python_rss_mb_max": {
+      "baseline": 2272.5,
+      "optimized": 2326.6,
+      "improvement_pct": -2.4
+    },
+    "peak_ollama_rss_mb_max": {
+      "baseline": 2990.2,
+      "optimized": 2988.4,
+      "improvement_pct": 0.1
+    },
+    "peak_vram_mb_max": {
+      "baseline": 315.5,
+      "optimized": 315.5,
+      "improvement_pct": 0.0
+    },
+    "peak_gpu_device_used_mb_max": {
+      "baseline": 3045.0,
+      "optimized": 3045.0,
+      "improvement_pct": 0.0
+    },
+    "scope": {
+      "peak_ram_mb": "adapter Python RSS + ollama* RSS summed per sample (shared pages double-counted)",
+      "peak_vram_mb": "Ollama /api/ps size_vram (model allocation, not per-process driver data)",
+      "peak_gpu_device_used_mb": "whole GPU incl. other applications"
+    }
+  },
+  "notes": "UX trade-off: confirmation replies are templated (e.g. 'Your refund of $30.00 for line L1 of order O100 is complete.'), which states the stored result exactly. Tests updated where they asserted the old call count; a new test covers the switch-off path."
+}

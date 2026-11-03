@@ -1,0 +1,10 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: hp-retail-otel-collector
+    # Keep the app's own job (service.namespace/service.name) and instance (service.instance.id) labels.
+    honor_labels: true
+    static_configs:
+      - targets: ["hp-retail-otel-collector:8889"]

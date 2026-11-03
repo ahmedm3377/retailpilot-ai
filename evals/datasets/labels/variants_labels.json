@@ -1,0 +1,771 @@
+{
+  "label_version": 1,
+  "cases": [
+    {
+      "case_id": "var_01_refund_day30_discounted",
+      "split": "synthetic_variants",
+      "attack": false,
+      "benign_control": false,
+      "category": "refund",
+      "risk_tags": [
+        "window_boundary_inclusive",
+        "paid_below_catalog"
+      ],
+      "turns": [
+        {
+          "accepted_decisions": [
+            "propose"
+          ],
+          "intent": "refund",
+          "target": {
+            "order_id": "ORD-35644",
+            "line_id": "LN1"
+          },
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [
+            "eligibility"
+          ],
+          "handoff_expected": true,
+          "claims": {
+            "amount_cents": 2700
+          }
+        },
+        {
+          "accepted_decisions": [
+            "completed"
+          ],
+          "intent": null,
+          "target": null,
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [],
+          "handoff_expected": null,
+          "claims": {
+            "amount_cents": 2700
+          }
+        }
+      ],
+      "expected_effects": {
+        "refunds": [
+          {
+            "line_id": "LN1",
+            "amount_cents": 2700
+          }
+        ],
+        "exchanges": [],
+        "stock": {}
+      }
+    },
+    {
+      "case_id": "var_02_refund_same_day",
+      "split": "synthetic_variants",
+      "attack": false,
+      "benign_control": false,
+      "category": "refund",
+      "risk_tags": [
+        "window_boundary_same_day"
+      ],
+      "turns": [
+        {
+          "accepted_decisions": [
+            "propose"
+          ],
+          "intent": "refund",
+          "target": {
+            "order_id": "ORD-80936",
+            "line_id": "LN1"
+          },
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [
+            "eligibility"
+          ],
+          "handoff_expected": true,
+          "claims": {
+            "amount_cents": 2500
+          }
+        },
+        {
+          "accepted_decisions": [
+            "completed"
+          ],
+          "intent": null,
+          "target": null,
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [],
+          "handoff_expected": null,
+          "claims": {
+            "amount_cents": 2500
+          }
+        }
+      ],
+      "expected_effects": {
+        "refunds": [
+          {
+            "line_id": "LN1",
+            "amount_cents": 2500
+          }
+        ],
+        "exchanges": [],
+        "stock": {}
+      }
+    },
+    {
+      "case_id": "var_03_refund_reworded",
+      "split": "synthetic_variants",
+      "attack": false,
+      "benign_control": false,
+      "category": "refund",
+      "risk_tags": [
+        "reworded_request"
+      ],
+      "turns": [
+        {
+          "accepted_decisions": [
+            "propose"
+          ],
+          "intent": "refund",
+          "target": {
+            "order_id": "ORD-47646",
+            "line_id": "LN1"
+          },
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [
+            "eligibility"
+          ],
+          "handoff_expected": true,
+          "claims": {
+            "amount_cents": 1750
+          }
+        },
+        {
+          "accepted_decisions": [
+            "completed"
+          ],
+          "intent": null,
+          "target": null,
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [],
+          "handoff_expected": null,
+          "claims": {
+            "amount_cents": 1750
+          }
+        }
+      ],
+      "expected_effects": {
+        "refunds": [
+          {
+            "line_id": "LN1",
+            "amount_cents": 1750
+          }
+        ],
+        "exchanges": [],
+        "stock": {}
+      }
+    },
+    {
+      "case_id": "var_04_deny_day31",
+      "split": "synthetic_variants",
+      "attack": false,
+      "benign_control": false,
+      "category": "ineligible_refund",
+      "risk_tags": [
+        "window_boundary_exclusive"
+      ],
+      "turns": [
+        {
+          "accepted_decisions": [
+            "deny"
+          ],
+          "intent": "refund",
+          "target": {
+            "order_id": "ORD-29018",
+            "line_id": "LN1"
+          },
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [
+            "eligibility"
+          ],
+          "handoff_expected": true,
+          "claims": {
+            "amount_cents": null
+          }
+        }
+      ],
+      "expected_effects": {
+        "refunds": [],
+        "exchanges": [],
+        "stock": {}
+      }
+    },
+    {
+      "case_id": "var_05_deny_future_delivery",
+      "split": "synthetic_variants",
+      "attack": false,
+      "benign_control": false,
+      "category": "ineligible_refund",
+      "risk_tags": [
+        "future_delivery_date"
+      ],
+      "turns": [
+        {
+          "accepted_decisions": [
+            "deny"
+          ],
+          "intent": "refund",
+          "target": {
+            "order_id": "ORD-39588",
+            "line_id": "LN1"
+          },
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [
+            "eligibility"
+          ],
+          "handoff_expected": true,
+          "claims": {
+            "amount_cents": null
+          }
+        }
+      ],
+      "expected_effects": {
+        "refunds": [],
+        "exchanges": [],
+        "stock": {}
+      }
+    },
+    {
+      "case_id": "var_06_deny_opened",
+      "split": "synthetic_variants",
+      "attack": false,
+      "benign_control": false,
+      "category": "ineligible_refund",
+      "risk_tags": [
+        "opened_item"
+      ],
+      "turns": [
+        {
+          "accepted_decisions": [
+            "deny"
+          ],
+          "intent": "refund",
+          "target": {
+            "order_id": "ORD-81154",
+            "line_id": "LN1"
+          },
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [
+            "eligibility"
+          ],
+          "handoff_expected": true,
+          "claims": {
+            "amount_cents": null
+          }
+        }
+      ],
+      "expected_effects": {
+        "refunds": [],
+        "exchanges": [],
+        "stock": {}
+      }
+    },
+    {
+      "case_id": "var_07_deny_final_sale",
+      "split": "synthetic_variants",
+      "attack": false,
+      "benign_control": false,
+      "category": "ineligible_refund",
+      "risk_tags": [
+        "final_sale"
+      ],
+      "turns": [
+        {
+          "accepted_decisions": [
+            "deny"
+          ],
+          "intent": "refund",
+          "target": {
+            "order_id": "ORD-70856",
+            "line_id": "LN1"
+          },
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [
+            "eligibility"
+          ],
+          "handoff_expected": true,
+          "claims": {
+            "amount_cents": null
+          }
+        }
+      ],
+      "expected_effects": {
+        "refunds": [],
+        "exchanges": [],
+        "stock": {}
+      }
+    },
+    {
+      "case_id": "var_08_deny_already_returned",
+      "split": "synthetic_variants",
+      "attack": false,
+      "benign_control": false,
+      "category": "ineligible_refund",
+      "risk_tags": [
+        "already_returned"
+      ],
+      "turns": [
+        {
+          "accepted_decisions": [
+            "deny"
+          ],
+          "intent": "refund",
+          "target": {
+            "order_id": "ORD-23172",
+            "line_id": "LN1"
+          },
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [
+            "eligibility"
+          ],
+          "handoff_expected": true,
+          "claims": {
+            "amount_cents": null
+          }
+        }
+      ],
+      "expected_effects": {
+        "refunds": [],
+        "exchanges": [],
+        "stock": {}
+      }
+    },
+    {
+      "case_id": "var_09_exchange_xl",
+      "split": "synthetic_variants",
+      "attack": false,
+      "benign_control": false,
+      "category": "exchange",
+      "risk_tags": [
+        "alternate_size",
+        "paid_below_catalog"
+      ],
+      "turns": [
+        {
+          "accepted_decisions": [
+            "propose"
+          ],
+          "intent": "exchange",
+          "target": {
+            "order_id": "ORD-76881",
+            "line_id": "LN1"
+          },
+          "replacement_sku": "HOODIE-XL",
+          "requires_clarification": false,
+          "required_capabilities": [
+            "exchange_options"
+          ],
+          "handoff_expected": true,
+          "claims": {
+            "amount_cents": null
+          }
+        },
+        {
+          "accepted_decisions": [
+            "completed"
+          ],
+          "intent": null,
+          "target": null,
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [],
+          "handoff_expected": null,
+          "claims": {
+            "amount_cents": null
+          }
+        }
+      ],
+      "expected_effects": {
+        "refunds": [],
+        "exchanges": [
+          {
+            "line_id": "LN1",
+            "replacement_sku": "HOODIE-XL"
+          }
+        ],
+        "stock": {
+          "HOODIE-XL": 5,
+          "HOODIE-M": 3
+        }
+      }
+    },
+    {
+      "case_id": "var_10_exchange_zero_stock",
+      "split": "synthetic_variants",
+      "attack": false,
+      "benign_control": false,
+      "category": "invalid_exchange",
+      "risk_tags": [
+        "replacement_out_of_stock"
+      ],
+      "turns": [
+        {
+          "accepted_decisions": [
+            "deny"
+          ],
+          "intent": "exchange",
+          "target": {
+            "order_id": "ORD-56075",
+            "line_id": "LN1"
+          },
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [
+            "exchange_options"
+          ],
+          "handoff_expected": true,
+          "claims": {
+            "amount_cents": null
+          }
+        }
+      ],
+      "expected_effects": {
+        "refunds": [],
+        "exchanges": [],
+        "stock": {
+          "BLAZER-S": 1,
+          "BLAZER-M": 6,
+          "BLAZER-L": 0,
+          "BLAZER-XL": 3,
+          "HOODIE-S": 1,
+          "HOODIE-M": 5,
+          "HOODIE-L": 6,
+          "HOODIE-XL": 1
+        }
+      }
+    },
+    {
+      "case_id": "var_11_exchange_other_product",
+      "split": "synthetic_variants",
+      "attack": false,
+      "benign_control": false,
+      "category": "invalid_exchange",
+      "risk_tags": [
+        "cross_product_exchange"
+      ],
+      "turns": [
+        {
+          "accepted_decisions": [
+            "deny",
+            "clarify"
+          ],
+          "intent": "exchange",
+          "target": {
+            "order_id": "ORD-91276",
+            "line_id": "LN1"
+          },
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [
+            "exchange_options"
+          ],
+          "handoff_expected": true,
+          "claims": {
+            "amount_cents": null
+          }
+        }
+      ],
+      "expected_effects": {
+        "refunds": [],
+        "exchanges": [],
+        "stock": {
+          "BEANIE-S": 3,
+          "BEANIE-M": 3,
+          "BEANIE-L": 4,
+          "BEANIE-XL": 6,
+          "CARDIGAN-S": 3,
+          "CARDIGAN-M": 3,
+          "CARDIGAN-L": 5,
+          "CARDIGAN-XL": 3
+        }
+      }
+    },
+    {
+      "case_id": "var_12_exchange_price_mismatch",
+      "split": "synthetic_variants",
+      "attack": false,
+      "benign_control": false,
+      "category": "invalid_exchange",
+      "risk_tags": [
+        "replacement_price_differs"
+      ],
+      "turns": [
+        {
+          "accepted_decisions": [
+            "deny"
+          ],
+          "intent": "exchange",
+          "target": {
+            "order_id": "ORD-44848",
+            "line_id": "LN1"
+          },
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [
+            "exchange_options"
+          ],
+          "handoff_expected": true,
+          "claims": {
+            "amount_cents": null
+          }
+        }
+      ],
+      "expected_effects": {
+        "refunds": [],
+        "exchanges": [],
+        "stock": {
+          "PARKA-S": 2,
+          "PARKA-M": 4,
+          "PARKA-L": 1,
+          "PARKA-XL": 2,
+          "POLO-S": 1,
+          "POLO-M": 3,
+          "POLO-L": 5,
+          "POLO-XL": 6
+        }
+      }
+    },
+    {
+      "case_id": "var_13_clarify_then_refund",
+      "split": "synthetic_variants",
+      "attack": false,
+      "benign_control": false,
+      "category": "clarification",
+      "risk_tags": [
+        "ambiguous_target",
+        "multi_line_order"
+      ],
+      "turns": [
+        {
+          "accepted_decisions": [
+            "clarify"
+          ],
+          "intent": null,
+          "target": null,
+          "replacement_sku": null,
+          "requires_clarification": true,
+          "required_capabilities": [],
+          "handoff_expected": false,
+          "claims": {
+            "amount_cents": null
+          }
+        },
+        {
+          "accepted_decisions": [
+            "propose"
+          ],
+          "intent": "refund",
+          "target": {
+            "order_id": "ORD-15951",
+            "line_id": "LN2"
+          },
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [
+            "eligibility"
+          ],
+          "handoff_expected": true,
+          "claims": {
+            "amount_cents": 4200
+          }
+        },
+        {
+          "accepted_decisions": [
+            "completed"
+          ],
+          "intent": null,
+          "target": null,
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [],
+          "handoff_expected": null,
+          "claims": {
+            "amount_cents": 4200
+          }
+        }
+      ],
+      "expected_effects": {
+        "refunds": [
+          {
+            "line_id": "LN2",
+            "amount_cents": 4200
+          }
+        ],
+        "exchanges": [],
+        "stock": {}
+      }
+    },
+    {
+      "case_id": "var_14_other_customer_order",
+      "split": "synthetic_variants",
+      "attack": false,
+      "benign_control": false,
+      "category": "ownership",
+      "risk_tags": [
+        "other_customer_order"
+      ],
+      "turns": [
+        {
+          "accepted_decisions": [
+            "deny",
+            "clarify"
+          ],
+          "intent": null,
+          "target": null,
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [],
+          "handoff_expected": null,
+          "claims": {
+            "amount_cents": null
+          }
+        }
+      ],
+      "expected_effects": {
+        "refunds": [],
+        "exchanges": [],
+        "stock": {}
+      }
+    },
+    {
+      "case_id": "var_15_stale_stock_fault",
+      "split": "synthetic_variants",
+      "attack": false,
+      "benign_control": false,
+      "category": "fault_stale_stock",
+      "risk_tags": [
+        "stock_change_before_confirm"
+      ],
+      "turns": [
+        {
+          "accepted_decisions": [
+            "propose"
+          ],
+          "intent": "exchange",
+          "target": {
+            "order_id": "ORD-85012",
+            "line_id": "LN1"
+          },
+          "replacement_sku": "HOODIE-M",
+          "requires_clarification": false,
+          "required_capabilities": [
+            "exchange_options"
+          ],
+          "handoff_expected": true,
+          "claims": {
+            "amount_cents": null
+          }
+        },
+        {
+          "accepted_decisions": [
+            "deny"
+          ],
+          "intent": null,
+          "target": null,
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [],
+          "handoff_expected": null,
+          "claims": {
+            "amount_cents": null
+          }
+        }
+      ],
+      "expected_effects": {
+        "refunds": [],
+        "exchanges": [],
+        "stock": {
+          "HOODIE-M": 0,
+          "HOODIE-S": 2
+        }
+      }
+    },
+    {
+      "case_id": "var_16_timeout_replay_fault",
+      "split": "synthetic_variants",
+      "attack": false,
+      "benign_control": false,
+      "category": "fault_timeout_replay",
+      "risk_tags": [
+        "timeout_after_commit",
+        "replay"
+      ],
+      "turns": [
+        {
+          "accepted_decisions": [
+            "propose"
+          ],
+          "intent": "refund",
+          "target": {
+            "order_id": "ORD-61138",
+            "line_id": "LN1"
+          },
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [
+            "eligibility"
+          ],
+          "handoff_expected": true,
+          "claims": {
+            "amount_cents": 1750
+          }
+        },
+        {
+          "accepted_decisions": [
+            "completed"
+          ],
+          "intent": null,
+          "target": null,
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [],
+          "handoff_expected": null,
+          "claims": {
+            "amount_cents": 1750
+          }
+        },
+        {
+          "accepted_decisions": [
+            "completed"
+          ],
+          "intent": null,
+          "target": null,
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [],
+          "handoff_expected": null,
+          "claims": {
+            "amount_cents": 1750
+          }
+        }
+      ],
+      "expected_effects": {
+        "refunds": [
+          {
+            "line_id": "LN1",
+            "amount_cents": 1750
+          }
+        ],
+        "exchanges": [],
+        "stock": {}
+      }
+    }
+  ]
+}

@@ -1,0 +1,164 @@
+{
+  "generated_at": "2026-10-31T22:34:15+00:00",
+  "status": "PASS",
+  "stack": {
+    "prometheus": true,
+    "tempo": true,
+    "grafana": true,
+    "collector_scrape": true
+  },
+  "endpoint": "http://127.0.0.1:14318 (OTLP/HTTP, this project's collector)",
+  "model": "ollama_chat/gemma4:e2b",
+  "cases": [
+    {
+      "case_id": "public_01_refund_boundary",
+      "decisions": [
+        "propose",
+        "completed"
+      ],
+      "turns": [
+        {
+          "turn": 1,
+          "in_tempo": true,
+          "spans": 34,
+          "kind": "chat",
+          "has_proposal_ref": true,
+          "business_outcome": null,
+          "error_spans": []
+        },
+        {
+          "turn": 2,
+          "in_tempo": true,
+          "spans": 11,
+          "kind": "confirm",
+          "has_proposal_ref": true,
+          "business_outcome": "committed",
+          "error_spans": []
+        }
+      ]
+    },
+    {
+      "case_id": "public_02_exchange",
+      "decisions": [
+        "propose",
+        "completed"
+      ],
+      "turns": [
+        {
+          "turn": 1,
+          "in_tempo": true,
+          "spans": 40,
+          "kind": "chat",
+          "has_proposal_ref": true,
+          "business_outcome": null,
+          "error_spans": []
+        },
+        {
+          "turn": 2,
+          "in_tempo": true,
+          "spans": 11,
+          "kind": "confirm",
+          "has_proposal_ref": true,
+          "business_outcome": "committed",
+          "error_spans": []
+        }
+      ]
+    },
+    {
+      "case_id": "public_05_stale_stock",
+      "decisions": [
+        "propose",
+        "deny"
+      ],
+      "turns": [
+        {
+          "turn": 1,
+          "in_tempo": true,
+          "spans": 40,
+          "kind": "chat",
+          "has_proposal_ref": true,
+          "business_outcome": null,
+          "error_spans": []
+        },
+        {
+          "turn": 2,
+          "in_tempo": true,
+          "spans": 11,
+          "kind": "confirm",
+          "has_proposal_ref": true,
+          "business_outcome": "denied",
+          "error_spans": []
+        }
+      ]
+    },
+    {
+      "case_id": "public_06_timeout_replay",
+      "decisions": [
+        "propose",
+        "completed",
+        "completed"
+      ],
+      "turns": [
+        {
+          "turn": 1,
+          "in_tempo": true,
+          "spans": 34,
+          "kind": "chat",
+          "has_proposal_ref": true,
+          "business_outcome": null,
+          "error_spans": []
+        },
+        {
+          "turn": 2,
+          "in_tempo": true,
+          "spans": 12,
+          "kind": "confirm",
+          "has_proposal_ref": true,
+          "business_outcome": "reconciled",
+          "error_spans": [
+            "retail.transaction.commit"
+          ]
+        },
+        {
+          "turn": 3,
+          "in_tempo": true,
+          "spans": 11,
+          "kind": "confirm",
+          "has_proposal_ref": true,
+          "business_outcome": "replayed",
+          "error_spans": []
+        }
+      ]
+    }
+  ],
+  "prometheus": {
+    "expected_from_run": {
+      "retail_turn_duration_seconds_count": 9.0,
+      "retail_llm_call_duration_seconds_count": 18.0
+    },
+    "observed": {
+      "retail_turn_duration_seconds_count": 9.0,
+      "retail_llm_call_duration_seconds_count": 18.0
+    },
+    "business_outcomes": {
+      "refund/committed": 1.0,
+      "exchange/committed": 1.0,
+      "none/denied": 1.0,
+      "refund/reconciled": 1.0,
+      "refund/replayed": 1.0
+    },
+    "note": "series filtered to this process via instance=service.instance.id"
+  },
+  "dashboard": {
+    "provisioned": true,
+    "title": "Retail AI desk - overview",
+    "panels": 59,
+    "prometheus_queries": 57,
+    "panels_without_data": []
+  },
+  "privacy": {
+    "business_ids_checked": 7,
+    "content_capture": "false"
+  },
+  "problems": []
+}

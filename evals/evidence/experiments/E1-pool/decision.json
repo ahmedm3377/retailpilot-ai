@@ -1,0 +1,149 @@
+{
+  "id": "E1-pool",
+  "decision": "accept",
+  "effect": "p50 8601 -> 8080 ms (6.1%), mean 4.6%, p95 0.9%; LLM calls/task 6 -> 6",
+  "reason": "gate passed and latency improved",
+  "control": "evals/evidence/experiments/E1-pool/control",
+  "variant": "evals/evidence/experiments/E1-pool/variant",
+  "control_ids": {
+    "source_id": "3e72efe9f5+d423ba92",
+    "config_id": "b9c594125b7b"
+  },
+  "variant_ids": {
+    "source_id": "3e72efe9f5+6105ab4e",
+    "config_id": "24ba48140790"
+  },
+  "gate": {
+    "comparable": true,
+    "failed_checks": [],
+    "all_runs_correct": true,
+    "validator_ok": true,
+    "quality_preserved": true
+  },
+  "latency_ms": {
+    "p50": {
+      "baseline": 8601.1,
+      "optimized": 8080.5,
+      "improvement_pct": 6.1
+    },
+    "p95": {
+      "baseline": 10196.4,
+      "optimized": 10104.5,
+      "improvement_pct": 0.9
+    },
+    "mean": {
+      "baseline": 7984.2,
+      "optimized": 7614.9,
+      "improvement_pct": 4.6
+    },
+    "n": {
+      "baseline": 18,
+      "optimized": 18
+    },
+    "per_case_median": {
+      "public_01_refund_boundary": {
+        "baseline": 6465.9,
+        "optimized": 6277.5,
+        "improvement_pct": 2.9
+      },
+      "public_02_exchange": {
+        "baseline": 8452.9,
+        "optimized": 8080.5,
+        "improvement_pct": 4.4
+      },
+      "public_03_expired": {
+        "baseline": 5403.6,
+        "optimized": 5384.5,
+        "improvement_pct": 0.4
+      },
+      "public_04_clarify": {
+        "baseline": 9950.4,
+        "optimized": 9452.0,
+        "improvement_pct": 5.0
+      },
+      "public_05_stale_stock": {
+        "baseline": 8715.8,
+        "optimized": 8184.4,
+        "improvement_pct": 6.1
+      },
+      "public_06_timeout_replay": {
+        "baseline": 8854.9,
+        "optimized": 8191.3,
+        "improvement_pct": 7.5
+      }
+    }
+  },
+  "components_median_ms_per_task": {
+    "llm_ms": {
+      "baseline": 6797.7,
+      "optimized": 6844.0,
+      "improvement_pct": -0.7
+    },
+    "guard_ms": {
+      "baseline": 621.5,
+      "optimized": 700.6,
+      "improvement_pct": -12.7
+    },
+    "other_ms": {
+      "baseline": 804.6,
+      "optimized": 357.1,
+      "improvement_pct": 55.6
+    }
+  },
+  "llm_calls_per_task_median": {
+    "baseline": 6,
+    "optimized": 6,
+    "improvement_pct": 0.0
+  },
+  "tokens": {
+    "completion_total": {
+      "baseline": 3954,
+      "optimized": 3954,
+      "improvement_pct": 0.0
+    },
+    "prompt_total": {
+      "baseline": 49485,
+      "optimized": 49485,
+      "improvement_pct": 0.0
+    },
+    "effective_output_tokens_per_call_second_median": {
+      "baseline": 34.0,
+      "optimized": 33.4,
+      "increase_pct": -1.8
+    },
+    "note": "Ollama-reported completion tokens / summed LLM call wall time (not pure decode time)"
+  },
+  "memory": {
+    "peak_ram_mb_max": {
+      "baseline": 5314.8,
+      "optimized": 5259.2,
+      "improvement_pct": 1.0
+    },
+    "peak_python_rss_mb_max": {
+      "baseline": 2360.1,
+      "optimized": 2272.5,
+      "improvement_pct": 3.7
+    },
+    "peak_ollama_rss_mb_max": {
+      "baseline": 2991.6,
+      "optimized": 2990.2,
+      "improvement_pct": 0.0
+    },
+    "peak_vram_mb_max": {
+      "baseline": 315.5,
+      "optimized": 315.5,
+      "improvement_pct": 0.0
+    },
+    "peak_gpu_device_used_mb_max": {
+      "baseline": 3045.0,
+      "optimized": 3045.0,
+      "improvement_pct": 0.0
+    },
+    "scope": {
+      "peak_ram_mb": "adapter Python RSS + ollama* RSS summed per sample (shared pages double-counted)",
+      "peak_vram_mb": "Ollama /api/ps size_vram (model allocation, not per-process driver data)",
+      "peak_gpu_device_used_mb": "whole GPU incl. other applications"
+    }
+  },
+  "notes": "Control measured on AC power (decode probe 64.5 tok/s after) before the gate recorded AC status; the first variant attempt ran partly on battery and is kept as _invalid_variant_on_battery (see INVALID.md). Variant rerun on AC: decode 66.2 -> 63.6 tok/s."
+}

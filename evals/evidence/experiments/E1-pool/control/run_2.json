@@ -1,0 +1,5589 @@
+{
+  "contract_version": 1,
+  "input_sha256": "f3f9dc73ac2d846de3af5c8647afcccd58d0335b80cd06f416f4dd08a1ca6165",
+  "hardware": {
+    "cpu": "Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz",
+    "cpu_physical_cores": 6,
+    "cpu_logical_cores": 12,
+    "ram": "15.8 GiB",
+    "gpu": [
+      {
+        "name": "NVIDIA GeForce GTX 1060 with Max-Q Design",
+        "memory_total": "6144 MiB",
+        "driver": "581.57"
+      }
+    ],
+    "os": "Windows 11 (10.0.26200)",
+    "machine": "AMD64",
+    "python": "3.13.11",
+    "power": {
+      "on_ac_power": true,
+      "power_scheme": "Balanced"
+    }
+  },
+  "configuration": {
+    "model": "ollama_chat/gemma4:e2b",
+    "model_digest": "b37049369adfe3d2b653af0ab301a062ca5cbe96ace6aa0d3f2559ee9b563fc2",
+    "quantization": "Q4_K_M",
+    "parameter_size": "4.6B",
+    "engine": "ollama",
+    "engine_version": "0.40.12",
+    "engine_url": "http://127.0.0.1:11434",
+    "llm_sdk": "litellm (Python SDK, ollama_chat route)",
+    "decoding": {
+      "temperature": 0.0,
+      "top_p": 1.0,
+      "seed": 7,
+      "think": false,
+      "max_tokens": 512,
+      "timeout_s": 75.0
+    },
+    "ollama_loaded_model": {
+      "size_mb": 315.5,
+      "size_vram_mb": 315.5,
+      "context_length": 4096,
+      "source": "Ollama /api/ps after warm-up"
+    },
+    "agents": [
+      "customer_resolution_agent",
+      "retail_operations_agent"
+    ],
+    "max_tool_steps": 5,
+    "concurrency": 1,
+    "guardrails": {
+      "enabled": true,
+      "fail_closed": true,
+      "validators": {
+        "TaskInjection": "custom regex validator (retail/task_injection)",
+        "DetectJailbreak": "local, threshold=0.8",
+        "ToxicLanguage": "local Detoxify unbiased-small, threshold=0.5, full",
+        "DetectPII": "local Presidio en_core_web_sm, ['EMAIL_ADDRESS', 'PHONE_NUMBER'], fix",
+        "Schema": "Guard.for_pydantic + Pydantic extra=forbid"
+      },
+      "unavailable": {}
+    },
+    "database": {
+      "engine": "postgresql",
+      "server_version": "17.11",
+      "url": "postgresql://127.0.0.1:55432/retail_test",
+      "isolation": "fresh business + checkpoint schema per case run"
+    },
+    "packages": {
+      "litellm": "1.106.6",
+      "langgraph": "1.2.18",
+      "langgraph-checkpoint-postgres": "3.2.0",
+      "langchain-core": "1.7.1",
+      "guardrails-ai": "0.11.0",
+      "guardrails-ai-detect-jailbreak": "0.1.6",
+      "guardrails-ai-toxic-language": "0.0.2",
+      "guardrails-ai-detect-pii": "0.0.6",
+      "presidio-analyzer": "2.2.362",
+      "detoxify": "0.5.4",
+      "transformers": "5.22.0",
+      "torch": "2.15.0",
+      "psycopg": "3.3.6",
+      "pydantic": "2.14.1",
+      "psutil": "7.2.2"
+    },
+    "offline_env": {
+      "LITELLM_LOCAL_MODEL_COST_MAP": "True",
+      "HF_HUB_OFFLINE": "1",
+      "TRANSFORMERS_OFFLINE": "1",
+      "HF_HUB_DISABLE_TELEMETRY": "1",
+      "LANGSMITH_TRACING": "false",
+      "LANGCHAIN_TRACING_V2": "false",
+      "OTEL_SDK_DISABLED": "true"
+    }
+  },
+  "results": [
+    {
+      "case_id": "public_01_refund_boundary",
+      "turns": [
+        {
+          "decision": "propose",
+          "response": "We propose a refund of $30.00 for line L1 of order O100. Please confirm this proposal.",
+          "proposal": {
+            "proposal_id": "PROP-1",
+            "request_id": "REQ-public_01_refund_boundary",
+            "customer_id": "C100",
+            "order_id": "O100",
+            "line_id": "L1",
+            "remedy": "refund",
+            "amount_cents": 3000,
+            "paid_cents": 3000,
+            "original_sku": "TEE-M",
+            "replacement_sku": null,
+            "status": "pending"
+          }
+        },
+        {
+          "decision": "completed",
+          "response": "Your refund of $30.00 for line L1 of order O100 is complete.",
+          "proposal": null
+        }
+      ],
+      "action_audit": [
+        {
+          "turn": 1,
+          "event_id": 1,
+          "actor": "customer_resolution_agent",
+          "tool": "lookup_customer_orders",
+          "arguments": {
+            "customer_id": "C100"
+          },
+          "outcome": "ok",
+          "result": {
+            "order_ids": [
+              "O100"
+            ]
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 2,
+          "actor": "retail_operations_agent",
+          "tool": "check_return_eligibility",
+          "arguments": {
+            "line_id": "L1",
+            "order_id": "O100",
+            "customer_id": "C100"
+          },
+          "outcome": "ELIGIBLE",
+          "result": {
+            "sku": "TEE-M",
+            "line_id": "L1",
+            "eligible": true,
+            "order_id": "O100",
+            "paid_cents": 3000,
+            "reason_code": "ELIGIBLE",
+            "delivery_age_days": 30,
+            "candidate_line_ids": []
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 3,
+          "actor": "trusted_controller",
+          "tool": "create_proposal",
+          "arguments": {
+            "remedy": "refund",
+            "line_id": "L1",
+            "order_id": "O100",
+            "request_id": "REQ-public_01_refund_boundary",
+            "customer_id": "C100",
+            "replacement_sku": null
+          },
+          "outcome": "proposed",
+          "result": {
+            "kind": "proposed",
+            "proposal": {
+              "remedy": "refund",
+              "status": "pending",
+              "line_id": "L1",
+              "order_id": "O100",
+              "paid_cents": 3000,
+              "request_id": "REQ-public_01_refund_boundary",
+              "customer_id": "C100",
+              "proposal_id": "PROP-1",
+              "amount_cents": 3000,
+              "original_sku": "TEE-M",
+              "replacement_sku": null
+            },
+            "request_id": "REQ-public_01_refund_boundary",
+            "reason_code": "ELIGIBLE",
+            "existing_result": null,
+            "candidate_line_ids": []
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 4,
+          "actor": "customer_resolution_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "customer_resolution_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 1488.8,
+            "prompt_tokens": 355,
+            "completion_tokens": 56
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 5,
+          "actor": "retail_operations_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "retail_operations_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 670.0,
+            "prompt_tokens": 564,
+            "completion_tokens": 40
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 6,
+          "actor": "retail_operations_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "retail_operations_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 552.5,
+            "prompt_tokens": 696,
+            "completion_tokens": 21
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 7,
+          "actor": "customer_resolution_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "customer_resolution_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 1198.6,
+            "prompt_tokens": 351,
+            "completion_tokens": 37
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 8,
+          "actor": "guardrails",
+          "tool": "guard:input:sanitization",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": "removed=0",
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "sanitization",
+            "elapsed_ms": 0.02,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 9,
+          "actor": "guardrails",
+          "tool": "guard:input:TaskInjection",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "TaskInjection",
+            "elapsed_ms": 2.27,
+            "reason_code": "NO_MATCH"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 10,
+          "actor": "guardrails",
+          "tool": "guard:input:DetectJailbreak",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectJailbreak",
+            "elapsed_ms": 156.73,
+            "reason_code": "BELOW_THRESHOLD"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 11,
+          "actor": "guardrails",
+          "tool": "guard:input:ToxicLanguage",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "ToxicLanguage",
+            "elapsed_ms": 43.28,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 12,
+          "actor": "guardrails",
+          "tool": "guard:input:DetectPII",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectPII",
+            "elapsed_ms": 10.07,
+            "reason_code": "NO_PII"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 13,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[CustomerHandoff]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[CustomerHandoff]",
+            "elapsed_ms": 2.48,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 14,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[OperationsAction]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[OperationsAction]",
+            "elapsed_ms": 5.08,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 15,
+          "actor": "guardrails",
+          "tool": "guard:tool_context:TaskInjection",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "tool_context",
+            "detail": "check_return_eligibility",
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "TaskInjection",
+            "elapsed_ms": 7.35,
+            "reason_code": "NO_MATCH"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 16,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[OperationsAction]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[OperationsAction]",
+            "elapsed_ms": 3.15,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 17,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[CustomerMessage]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[CustomerMessage]",
+            "elapsed_ms": 1.61,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 18,
+          "actor": "guardrails",
+          "tool": "guard:output:consistency",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "consistency",
+            "elapsed_ms": 0.02,
+            "reason_code": "CONSISTENT"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 19,
+          "actor": "guardrails",
+          "tool": "guard:output:ToxicLanguage",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "ToxicLanguage",
+            "elapsed_ms": 55.3,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 20,
+          "actor": "guardrails",
+          "tool": "guard:output:DetectPII",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectPII",
+            "elapsed_ms": 13.81,
+            "reason_code": "NO_PII"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 21,
+          "actor": "customer_resolution_agent",
+          "tool": "lookup_customer_orders",
+          "arguments": {
+            "customer_id": "C100"
+          },
+          "outcome": "ok",
+          "result": {
+            "order_ids": [
+              "O100"
+            ]
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 22,
+          "actor": "trusted_controller",
+          "tool": "commit_confirmed_proposal",
+          "arguments": {
+            "request_id": "REQ-public_01_refund_boundary",
+            "customer_id": "C100",
+            "proposal_id": "PROP-1"
+          },
+          "outcome": "committed",
+          "result": {
+            "remedy": "refund",
+            "status": "completed",
+            "line_id": "L1",
+            "order_id": "O100",
+            "replayed": false,
+            "record_ids": {
+              "refund_id": "REF-1",
+              "return_id": "RET-1",
+              "quarantine_id": "Q-1"
+            },
+            "request_id": "REQ-public_01_refund_boundary",
+            "customer_id": "C100",
+            "proposal_id": "PROP-1",
+            "reason_code": "COMMITTED",
+            "original_sku": "TEE-M",
+            "replacement_sku": null,
+            "refund_amount_cents": 3000
+          },
+          "error": null,
+          "effects": [
+            {
+              "type": "line_returned",
+              "line_id": "L1",
+              "order_id": "O100"
+            },
+            {
+              "sku": "TEE-M",
+              "type": "quarantined",
+              "quantity": 1
+            },
+            {
+              "type": "refund",
+              "amount_cents": 3000
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "event_id": 23,
+          "actor": "customer_resolution_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "customer_resolution_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 1159.4,
+            "prompt_tokens": 349,
+            "completion_tokens": 32
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 24,
+          "actor": "guardrails",
+          "tool": "guard:input:sanitization",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": "removed=0",
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "sanitization",
+            "elapsed_ms": 0.04,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 25,
+          "actor": "guardrails",
+          "tool": "guard:input:TaskInjection",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "TaskInjection",
+            "elapsed_ms": 2.43,
+            "reason_code": "NO_MATCH"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 26,
+          "actor": "guardrails",
+          "tool": "guard:input:DetectJailbreak",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectJailbreak",
+            "elapsed_ms": 152.56,
+            "reason_code": "BELOW_THRESHOLD"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 27,
+          "actor": "guardrails",
+          "tool": "guard:input:ToxicLanguage",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "ToxicLanguage",
+            "elapsed_ms": 46.54,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 28,
+          "actor": "guardrails",
+          "tool": "guard:input:DetectPII",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectPII",
+            "elapsed_ms": 12.13,
+            "reason_code": "NO_PII"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 29,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[CustomerMessage]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[CustomerMessage]",
+            "elapsed_ms": 1.78,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 30,
+          "actor": "guardrails",
+          "tool": "guard:output:consistency",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "consistency",
+            "elapsed_ms": 0.01,
+            "reason_code": "CONSISTENT"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 31,
+          "actor": "guardrails",
+          "tool": "guard:output:ToxicLanguage",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "ToxicLanguage",
+            "elapsed_ms": 49.06,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 32,
+          "actor": "guardrails",
+          "tool": "guard:output:DetectPII",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectPII",
+            "elapsed_ms": 10.32,
+            "reason_code": "NO_PII"
+          },
+          "error": null,
+          "effects": []
+        }
+      ],
+      "final_state": {
+        "as_of": "2026-10-26",
+        "currency": "USD",
+        "products": [
+          {
+            "sku": "TEE-S",
+            "product_id": "TEE",
+            "size": "S",
+            "price_cents": 4000,
+            "stock": 4
+          },
+          {
+            "sku": "TEE-M",
+            "product_id": "TEE",
+            "size": "M",
+            "price_cents": 4000,
+            "stock": 2
+          },
+          {
+            "sku": "TEE-L",
+            "product_id": "TEE",
+            "size": "L",
+            "price_cents": 4000,
+            "stock": 3
+          },
+          {
+            "sku": "JACKET-M",
+            "product_id": "JACKET",
+            "size": "M",
+            "price_cents": 9000,
+            "stock": 1
+          },
+          {
+            "sku": "JACKET-L",
+            "product_id": "JACKET",
+            "size": "L",
+            "price_cents": 9000,
+            "stock": 0
+          }
+        ],
+        "orders": [
+          {
+            "order_id": "O100",
+            "customer_id": "C100",
+            "status": "delivered",
+            "delivered_on": "2026-09-26",
+            "lines": [
+              {
+                "line_id": "L1",
+                "sku": "TEE-M",
+                "paid_cents": 3000,
+                "unopened": true,
+                "final_sale": false,
+                "returned": true
+              }
+            ]
+          }
+        ],
+        "returns": [
+          {
+            "return_id": "RET-1",
+            "request_id": "REQ-public_01_refund_boundary",
+            "proposal_id": "PROP-1",
+            "customer_id": "C100",
+            "order_id": "O100",
+            "line_id": "L1",
+            "sku": "TEE-M",
+            "remedy": "refund"
+          }
+        ],
+        "refunds": [
+          {
+            "refund_id": "REF-1",
+            "return_id": "RET-1",
+            "request_id": "REQ-public_01_refund_boundary",
+            "proposal_id": "PROP-1",
+            "customer_id": "C100",
+            "order_id": "O100",
+            "line_id": "L1",
+            "amount_cents": 3000,
+            "currency": "USD"
+          }
+        ],
+        "exchanges": [],
+        "quarantine": [
+          {
+            "quarantine_id": "Q-1",
+            "return_id": "RET-1",
+            "request_id": "REQ-public_01_refund_boundary",
+            "proposal_id": "PROP-1",
+            "customer_id": "C100",
+            "order_id": "O100",
+            "line_id": "L1",
+            "sku": "TEE-M",
+            "quantity": 1
+          }
+        ],
+        "idempotency": {
+          "REQ-public_01_refund_boundary": {
+            "status": "completed",
+            "customer_id": "C100",
+            "proposal_id": "PROP-1",
+            "result": {
+              "remedy": "refund",
+              "status": "completed",
+              "line_id": "L1",
+              "order_id": "O100",
+              "replayed": false,
+              "record_ids": {
+                "refund_id": "REF-1",
+                "return_id": "RET-1",
+                "quarantine_id": "Q-1"
+              },
+              "request_id": "REQ-public_01_refund_boundary",
+              "customer_id": "C100",
+              "proposal_id": "PROP-1",
+              "reason_code": "COMMITTED",
+              "original_sku": "TEE-M",
+              "replacement_sku": null,
+              "refund_amount_cents": 3000
+            }
+          }
+        }
+      },
+      "metrics": {
+        "elapsed_ms": 6349.7,
+        "peak_ram_mb": 5224.5,
+        "peak_vram_mb": 315.5,
+        "turn_ms": [
+          4563.3,
+          1662.7
+        ],
+        "llm_calls": 5,
+        "llm_calls_failed": 0,
+        "llm_wall_ms": 5069.3,
+        "prompt_tokens": 2315,
+        "completion_tokens": 186,
+        "completion_tokens_per_llm_second": 36.7,
+        "peak_python_rss_mb": 2246.6,
+        "peak_ollama_rss_mb": 2977.9,
+        "peak_gpu_device_used_mb": 3045.0,
+        "resource_samples": 53,
+        "metric_scope": {
+          "elapsed_ms": "first turn start to last turn end (excludes schema setup/teardown)",
+          "peak_ram_mb": "adapter Python process RSS + RSS of local Ollama processes: ollama* and its llama-server model runner (sampled together)",
+          "peak_vram_mb": "Ollama /api/ps size_vram of loaded models (model allocation, not a per-process driver reading)",
+          "peak_gpu_device_used_mb": "nvidia-smi memory.used for the whole GPU, including other applications",
+          "completion_tokens_per_llm_second": "Ollama-reported completion tokens / summed LLM call wall time (includes request overhead)"
+        },
+        "notes": ""
+      }
+    },
+    {
+      "case_id": "public_02_exchange",
+      "turns": [
+        {
+          "decision": "propose",
+          "response": "We propose an exchange for line L1 of order O100, exchanging the original SKU TEE-M for the replacement SKU TEE-L. Please confirm this proposal.",
+          "proposal": {
+            "proposal_id": "PROP-1",
+            "request_id": "REQ-public_02_exchange",
+            "customer_id": "C100",
+            "order_id": "O100",
+            "line_id": "L1",
+            "remedy": "exchange",
+            "amount_cents": 0,
+            "paid_cents": 3000,
+            "original_sku": "TEE-M",
+            "replacement_sku": "TEE-L",
+            "status": "pending"
+          }
+        },
+        {
+          "decision": "completed",
+          "response": "Your exchange for line L1 of order O100 is complete with replacement SKU TEE-L.",
+          "proposal": null
+        }
+      ],
+      "action_audit": [
+        {
+          "turn": 1,
+          "event_id": 1,
+          "actor": "customer_resolution_agent",
+          "tool": "lookup_customer_orders",
+          "arguments": {
+            "customer_id": "C100"
+          },
+          "outcome": "ok",
+          "result": {
+            "order_ids": [
+              "O100"
+            ]
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 2,
+          "actor": "retail_operations_agent",
+          "tool": "check_return_eligibility",
+          "arguments": {
+            "line_id": "L1",
+            "order_id": "O100",
+            "customer_id": "C100"
+          },
+          "outcome": "ELIGIBLE",
+          "result": {
+            "sku": "TEE-M",
+            "line_id": "L1",
+            "eligible": true,
+            "order_id": "O100",
+            "paid_cents": 3000,
+            "reason_code": "ELIGIBLE",
+            "delivery_age_days": 16,
+            "candidate_line_ids": []
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 3,
+          "actor": "retail_operations_agent",
+          "tool": "get_exchange_options",
+          "arguments": {
+            "line_id": "L1",
+            "order_id": "O100",
+            "customer_id": "C100"
+          },
+          "outcome": "ok",
+          "result": [
+            {
+              "remedy": "exchange",
+              "line_id": "L1",
+              "eligible": true,
+              "order_id": "O100",
+              "price_cents": 4000,
+              "reason_code": "ELIGIBLE",
+              "original_sku": "TEE-M",
+              "replacement_sku": "TEE-S",
+              "replacement_stock": 4,
+              "candidate_line_ids": []
+            },
+            {
+              "remedy": "exchange",
+              "line_id": "L1",
+              "eligible": true,
+              "order_id": "O100",
+              "price_cents": 4000,
+              "reason_code": "ELIGIBLE",
+              "original_sku": "TEE-M",
+              "replacement_sku": "TEE-L",
+              "replacement_stock": 3,
+              "candidate_line_ids": []
+            }
+          ],
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 4,
+          "actor": "trusted_controller",
+          "tool": "get_exchange_options",
+          "arguments": {
+            "line_id": "L1",
+            "order_id": "O100",
+            "customer_id": "C100"
+          },
+          "outcome": "ok",
+          "result": [
+            {
+              "remedy": "exchange",
+              "line_id": "L1",
+              "eligible": true,
+              "order_id": "O100",
+              "price_cents": 4000,
+              "reason_code": "ELIGIBLE",
+              "original_sku": "TEE-M",
+              "replacement_sku": "TEE-S",
+              "replacement_stock": 4,
+              "candidate_line_ids": []
+            },
+            {
+              "remedy": "exchange",
+              "line_id": "L1",
+              "eligible": true,
+              "order_id": "O100",
+              "price_cents": 4000,
+              "reason_code": "ELIGIBLE",
+              "original_sku": "TEE-M",
+              "replacement_sku": "TEE-L",
+              "replacement_stock": 3,
+              "candidate_line_ids": []
+            }
+          ],
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 5,
+          "actor": "trusted_controller",
+          "tool": "create_proposal",
+          "arguments": {
+            "remedy": "exchange",
+            "line_id": "L1",
+            "order_id": "O100",
+            "request_id": "REQ-public_02_exchange",
+            "customer_id": "C100",
+            "replacement_sku": "TEE-L"
+          },
+          "outcome": "proposed",
+          "result": {
+            "kind": "proposed",
+            "proposal": {
+              "remedy": "exchange",
+              "status": "pending",
+              "line_id": "L1",
+              "order_id": "O100",
+              "paid_cents": 3000,
+              "request_id": "REQ-public_02_exchange",
+              "customer_id": "C100",
+              "proposal_id": "PROP-1",
+              "amount_cents": 0,
+              "original_sku": "TEE-M",
+              "replacement_sku": "TEE-L"
+            },
+            "request_id": "REQ-public_02_exchange",
+            "reason_code": "ELIGIBLE",
+            "existing_result": null,
+            "candidate_line_ids": []
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 6,
+          "actor": "customer_resolution_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "customer_resolution_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 1481.7,
+            "prompt_tokens": 357,
+            "completion_tokens": 58
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 7,
+          "actor": "retail_operations_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "retail_operations_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 1275.7,
+            "prompt_tokens": 564,
+            "completion_tokens": 40
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 8,
+          "actor": "retail_operations_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "retail_operations_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 758.5,
+            "prompt_tokens": 696,
+            "completion_tokens": 39
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 9,
+          "actor": "retail_operations_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "retail_operations_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 861.9,
+            "prompt_tokens": 933,
+            "completion_tokens": 28
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 10,
+          "actor": "customer_resolution_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "customer_resolution_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 1396.2,
+            "prompt_tokens": 345,
+            "completion_tokens": 47
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 11,
+          "actor": "guardrails",
+          "tool": "guard:input:sanitization",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": "removed=0",
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "sanitization",
+            "elapsed_ms": 0.02,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 12,
+          "actor": "guardrails",
+          "tool": "guard:input:TaskInjection",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "TaskInjection",
+            "elapsed_ms": 2.2,
+            "reason_code": "NO_MATCH"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 13,
+          "actor": "guardrails",
+          "tool": "guard:input:DetectJailbreak",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectJailbreak",
+            "elapsed_ms": 166.46,
+            "reason_code": "BELOW_THRESHOLD"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 14,
+          "actor": "guardrails",
+          "tool": "guard:input:ToxicLanguage",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "ToxicLanguage",
+            "elapsed_ms": 48.73,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 15,
+          "actor": "guardrails",
+          "tool": "guard:input:DetectPII",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectPII",
+            "elapsed_ms": 20.67,
+            "reason_code": "NO_PII"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 16,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[CustomerHandoff]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[CustomerHandoff]",
+            "elapsed_ms": 3.01,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 17,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[OperationsAction]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[OperationsAction]",
+            "elapsed_ms": 3.05,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 18,
+          "actor": "guardrails",
+          "tool": "guard:tool_context:TaskInjection",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "tool_context",
+            "detail": "check_return_eligibility",
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "TaskInjection",
+            "elapsed_ms": 7.23,
+            "reason_code": "NO_MATCH"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 19,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[OperationsAction]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[OperationsAction]",
+            "elapsed_ms": 2.91,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 20,
+          "actor": "guardrails",
+          "tool": "guard:tool_context:TaskInjection",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "tool_context",
+            "detail": "get_exchange_options",
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "TaskInjection",
+            "elapsed_ms": 14.56,
+            "reason_code": "NO_MATCH"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 21,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[OperationsAction]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[OperationsAction]",
+            "elapsed_ms": 3.23,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 22,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[CustomerMessage]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[CustomerMessage]",
+            "elapsed_ms": 1.82,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 23,
+          "actor": "guardrails",
+          "tool": "guard:output:consistency",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "consistency",
+            "elapsed_ms": 0.02,
+            "reason_code": "CONSISTENT"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 24,
+          "actor": "guardrails",
+          "tool": "guard:output:ToxicLanguage",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "ToxicLanguage",
+            "elapsed_ms": 75.35,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 25,
+          "actor": "guardrails",
+          "tool": "guard:output:DetectPII",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectPII",
+            "elapsed_ms": 14.41,
+            "reason_code": "NO_PII"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 26,
+          "actor": "customer_resolution_agent",
+          "tool": "lookup_customer_orders",
+          "arguments": {
+            "customer_id": "C100"
+          },
+          "outcome": "ok",
+          "result": {
+            "order_ids": [
+              "O100"
+            ]
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 27,
+          "actor": "trusted_controller",
+          "tool": "commit_confirmed_proposal",
+          "arguments": {
+            "request_id": "REQ-public_02_exchange",
+            "customer_id": "C100",
+            "proposal_id": "PROP-1"
+          },
+          "outcome": "committed",
+          "result": {
+            "remedy": "exchange",
+            "status": "completed",
+            "line_id": "L1",
+            "order_id": "O100",
+            "replayed": false,
+            "record_ids": {
+              "return_id": "RET-1",
+              "exchange_id": "EXC-1",
+              "quarantine_id": "Q-1"
+            },
+            "request_id": "REQ-public_02_exchange",
+            "customer_id": "C100",
+            "proposal_id": "PROP-1",
+            "reason_code": "COMMITTED",
+            "original_sku": "TEE-M",
+            "replacement_sku": "TEE-L",
+            "refund_amount_cents": null
+          },
+          "error": null,
+          "effects": [
+            {
+              "sku": "TEE-L",
+              "type": "stock_decrement",
+              "new_stock": 2
+            },
+            {
+              "type": "line_returned",
+              "line_id": "L1",
+              "order_id": "O100"
+            },
+            {
+              "sku": "TEE-M",
+              "type": "quarantined",
+              "quantity": 1
+            },
+            {
+              "type": "exchange",
+              "original_sku": "TEE-M",
+              "replacement_sku": "TEE-L"
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "event_id": 28,
+          "actor": "customer_resolution_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "customer_resolution_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 1134.6,
+            "prompt_tokens": 343,
+            "completion_tokens": 32
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 29,
+          "actor": "guardrails",
+          "tool": "guard:input:sanitization",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": "removed=0",
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "sanitization",
+            "elapsed_ms": 0.04,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 30,
+          "actor": "guardrails",
+          "tool": "guard:input:TaskInjection",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "TaskInjection",
+            "elapsed_ms": 3.36,
+            "reason_code": "NO_MATCH"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 31,
+          "actor": "guardrails",
+          "tool": "guard:input:DetectJailbreak",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectJailbreak",
+            "elapsed_ms": 141.8,
+            "reason_code": "BELOW_THRESHOLD"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 32,
+          "actor": "guardrails",
+          "tool": "guard:input:ToxicLanguage",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "ToxicLanguage",
+            "elapsed_ms": 42.38,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 33,
+          "actor": "guardrails",
+          "tool": "guard:input:DetectPII",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectPII",
+            "elapsed_ms": 11.44,
+            "reason_code": "NO_PII"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 34,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[CustomerMessage]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[CustomerMessage]",
+            "elapsed_ms": 1.7,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 35,
+          "actor": "guardrails",
+          "tool": "guard:output:consistency",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "consistency",
+            "elapsed_ms": 0.01,
+            "reason_code": "CONSISTENT"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 36,
+          "actor": "guardrails",
+          "tool": "guard:output:ToxicLanguage",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "ToxicLanguage",
+            "elapsed_ms": 47.39,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 37,
+          "actor": "guardrails",
+          "tool": "guard:output:DetectPII",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectPII",
+            "elapsed_ms": 9.21,
+            "reason_code": "NO_PII"
+          },
+          "error": null,
+          "effects": []
+        }
+      ],
+      "final_state": {
+        "as_of": "2026-10-26",
+        "currency": "USD",
+        "products": [
+          {
+            "sku": "TEE-S",
+            "product_id": "TEE",
+            "size": "S",
+            "price_cents": 4000,
+            "stock": 4
+          },
+          {
+            "sku": "TEE-M",
+            "product_id": "TEE",
+            "size": "M",
+            "price_cents": 4000,
+            "stock": 2
+          },
+          {
+            "sku": "TEE-L",
+            "product_id": "TEE",
+            "size": "L",
+            "price_cents": 4000,
+            "stock": 2
+          },
+          {
+            "sku": "JACKET-M",
+            "product_id": "JACKET",
+            "size": "M",
+            "price_cents": 9000,
+            "stock": 1
+          },
+          {
+            "sku": "JACKET-L",
+            "product_id": "JACKET",
+            "size": "L",
+            "price_cents": 9000,
+            "stock": 0
+          }
+        ],
+        "orders": [
+          {
+            "order_id": "O100",
+            "customer_id": "C100",
+            "status": "delivered",
+            "delivered_on": "2026-10-10",
+            "lines": [
+              {
+                "line_id": "L1",
+                "sku": "TEE-M",
+                "paid_cents": 3000,
+                "unopened": true,
+                "final_sale": false,
+                "returned": true
+              }
+            ]
+          }
+        ],
+        "returns": [
+          {
+            "return_id": "RET-1",
+            "request_id": "REQ-public_02_exchange",
+            "proposal_id": "PROP-1",
+            "customer_id": "C100",
+            "order_id": "O100",
+            "line_id": "L1",
+            "sku": "TEE-M",
+            "remedy": "exchange"
+          }
+        ],
+        "refunds": [],
+        "exchanges": [
+          {
+            "exchange_id": "EXC-1",
+            "return_id": "RET-1",
+            "request_id": "REQ-public_02_exchange",
+            "proposal_id": "PROP-1",
+            "customer_id": "C100",
+            "order_id": "O100",
+            "line_id": "L1",
+            "original_sku": "TEE-M",
+            "replacement_sku": "TEE-L"
+          }
+        ],
+        "quarantine": [
+          {
+            "quarantine_id": "Q-1",
+            "return_id": "RET-1",
+            "request_id": "REQ-public_02_exchange",
+            "proposal_id": "PROP-1",
+            "customer_id": "C100",
+            "order_id": "O100",
+            "line_id": "L1",
+            "sku": "TEE-M",
+            "quantity": 1
+          }
+        ],
+        "idempotency": {
+          "REQ-public_02_exchange": {
+            "status": "completed",
+            "customer_id": "C100",
+            "proposal_id": "PROP-1",
+            "result": {
+              "remedy": "exchange",
+              "status": "completed",
+              "line_id": "L1",
+              "order_id": "O100",
+              "replayed": false,
+              "record_ids": {
+                "return_id": "RET-1",
+                "exchange_id": "EXC-1",
+                "quarantine_id": "Q-1"
+              },
+              "request_id": "REQ-public_02_exchange",
+              "customer_id": "C100",
+              "proposal_id": "PROP-1",
+              "reason_code": "COMMITTED",
+              "original_sku": "TEE-M",
+              "replacement_sku": "TEE-L",
+              "refund_amount_cents": null
+            }
+          }
+        }
+      },
+      "metrics": {
+        "elapsed_ms": 8452.9,
+        "peak_ram_mb": 5228.0,
+        "peak_vram_mb": 315.5,
+        "turn_ms": [
+          6708.1,
+          1622.6
+        ],
+        "llm_calls": 6,
+        "llm_calls_failed": 0,
+        "llm_wall_ms": 6908.6,
+        "prompt_tokens": 3238,
+        "completion_tokens": 244,
+        "completion_tokens_per_llm_second": 35.3,
+        "peak_python_rss_mb": 2247.0,
+        "peak_ollama_rss_mb": 2982.6,
+        "peak_gpu_device_used_mb": 3045.0,
+        "resource_samples": 71,
+        "metric_scope": {
+          "elapsed_ms": "first turn start to last turn end (excludes schema setup/teardown)",
+          "peak_ram_mb": "adapter Python process RSS + RSS of local Ollama processes: ollama* and its llama-server model runner (sampled together)",
+          "peak_vram_mb": "Ollama /api/ps size_vram of loaded models (model allocation, not a per-process driver reading)",
+          "peak_gpu_device_used_mb": "nvidia-smi memory.used for the whole GPU, including other applications",
+          "completion_tokens_per_llm_second": "Ollama-reported completion tokens / summed LLM call wall time (includes request overhead)"
+        },
+        "notes": ""
+      }
+    },
+    {
+      "case_id": "public_03_expired",
+      "turns": [
+        {
+          "decision": "deny",
+          "response": "We are unable to process this return because the delivery date was out of range. We apologise for this inconvenience.",
+          "proposal": null
+        }
+      ],
+      "action_audit": [
+        {
+          "turn": 1,
+          "event_id": 1,
+          "actor": "customer_resolution_agent",
+          "tool": "lookup_customer_orders",
+          "arguments": {
+            "customer_id": "C100"
+          },
+          "outcome": "ok",
+          "result": {
+            "order_ids": [
+              "O100"
+            ]
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 2,
+          "actor": "retail_operations_agent",
+          "tool": "check_return_eligibility",
+          "arguments": {
+            "line_id": "L1",
+            "order_id": "O100",
+            "customer_id": "C100"
+          },
+          "outcome": "DELIVERY_DATE_OUT_OF_RANGE",
+          "result": {
+            "sku": "TEE-M",
+            "line_id": "L1",
+            "eligible": false,
+            "order_id": "O100",
+            "paid_cents": 3000,
+            "reason_code": "DELIVERY_DATE_OUT_OF_RANGE",
+            "delivery_age_days": 31,
+            "candidate_line_ids": []
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 3,
+          "actor": "trusted_controller",
+          "tool": "create_proposal",
+          "arguments": {
+            "remedy": "refund",
+            "line_id": "L1",
+            "order_id": "O100",
+            "request_id": "REQ-public_03_expired",
+            "customer_id": "C100",
+            "replacement_sku": null
+          },
+          "outcome": "deny",
+          "result": {
+            "kind": "deny",
+            "proposal": null,
+            "request_id": "REQ-public_03_expired",
+            "reason_code": "DELIVERY_DATE_OUT_OF_RANGE",
+            "existing_result": null,
+            "candidate_line_ids": []
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 4,
+          "actor": "customer_resolution_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "customer_resolution_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 1456.1,
+            "prompt_tokens": 351,
+            "completion_tokens": 56
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 5,
+          "actor": "retail_operations_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "retail_operations_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 1244.9,
+            "prompt_tokens": 564,
+            "completion_tokens": 40
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 6,
+          "actor": "retail_operations_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "retail_operations_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 725.3,
+            "prompt_tokens": 704,
+            "completion_tokens": 30
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 7,
+          "actor": "customer_resolution_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "customer_resolution_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 1225.1,
+            "prompt_tokens": 285,
+            "completion_tokens": 32
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 8,
+          "actor": "guardrails",
+          "tool": "guard:input:sanitization",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": "removed=0",
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "sanitization",
+            "elapsed_ms": 0.02,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 9,
+          "actor": "guardrails",
+          "tool": "guard:input:TaskInjection",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "TaskInjection",
+            "elapsed_ms": 2.16,
+            "reason_code": "NO_MATCH"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 10,
+          "actor": "guardrails",
+          "tool": "guard:input:DetectJailbreak",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectJailbreak",
+            "elapsed_ms": 146.31,
+            "reason_code": "BELOW_THRESHOLD"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 11,
+          "actor": "guardrails",
+          "tool": "guard:input:ToxicLanguage",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "ToxicLanguage",
+            "elapsed_ms": 40.41,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 12,
+          "actor": "guardrails",
+          "tool": "guard:input:DetectPII",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectPII",
+            "elapsed_ms": 10.65,
+            "reason_code": "NO_PII"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 13,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[CustomerHandoff]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[CustomerHandoff]",
+            "elapsed_ms": 3.25,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 14,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[OperationsAction]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[OperationsAction]",
+            "elapsed_ms": 6.29,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 15,
+          "actor": "guardrails",
+          "tool": "guard:tool_context:TaskInjection",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "tool_context",
+            "detail": "check_return_eligibility",
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "TaskInjection",
+            "elapsed_ms": 5.37,
+            "reason_code": "NO_MATCH"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 16,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[OperationsAction]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[OperationsAction]",
+            "elapsed_ms": 3.93,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 17,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[CustomerMessage]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[CustomerMessage]",
+            "elapsed_ms": 3.37,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 18,
+          "actor": "guardrails",
+          "tool": "guard:output:consistency",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "consistency",
+            "elapsed_ms": 0.02,
+            "reason_code": "CONSISTENT"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 19,
+          "actor": "guardrails",
+          "tool": "guard:output:ToxicLanguage",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "ToxicLanguage",
+            "elapsed_ms": 57.01,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 20,
+          "actor": "guardrails",
+          "tool": "guard:output:DetectPII",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectPII",
+            "elapsed_ms": 14.49,
+            "reason_code": "NO_PII"
+          },
+          "error": null,
+          "effects": []
+        }
+      ],
+      "final_state": {
+        "as_of": "2026-10-26",
+        "currency": "USD",
+        "products": [
+          {
+            "sku": "TEE-S",
+            "product_id": "TEE",
+            "size": "S",
+            "price_cents": 4000,
+            "stock": 4
+          },
+          {
+            "sku": "TEE-M",
+            "product_id": "TEE",
+            "size": "M",
+            "price_cents": 4000,
+            "stock": 2
+          },
+          {
+            "sku": "TEE-L",
+            "product_id": "TEE",
+            "size": "L",
+            "price_cents": 4000,
+            "stock": 3
+          },
+          {
+            "sku": "JACKET-M",
+            "product_id": "JACKET",
+            "size": "M",
+            "price_cents": 9000,
+            "stock": 1
+          },
+          {
+            "sku": "JACKET-L",
+            "product_id": "JACKET",
+            "size": "L",
+            "price_cents": 9000,
+            "stock": 0
+          }
+        ],
+        "orders": [
+          {
+            "order_id": "O100",
+            "customer_id": "C100",
+            "status": "delivered",
+            "delivered_on": "2026-09-25",
+            "lines": [
+              {
+                "line_id": "L1",
+                "sku": "TEE-M",
+                "paid_cents": 3000,
+                "unopened": true,
+                "final_sale": false,
+                "returned": false
+              }
+            ]
+          }
+        ],
+        "returns": [],
+        "refunds": [],
+        "exchanges": [],
+        "quarantine": [],
+        "idempotency": {}
+      },
+      "metrics": {
+        "elapsed_ms": 5403.6,
+        "peak_ram_mb": 5211.0,
+        "peak_vram_mb": 315.5,
+        "turn_ms": [
+          5348.7
+        ],
+        "llm_calls": 4,
+        "llm_calls_failed": 0,
+        "llm_wall_ms": 4651.4,
+        "prompt_tokens": 1904,
+        "completion_tokens": 158,
+        "completion_tokens_per_llm_second": 34.0,
+        "peak_python_rss_mb": 2246.6,
+        "peak_ollama_rss_mb": 2966.2,
+        "peak_gpu_device_used_mb": 3045.0,
+        "resource_samples": 45,
+        "metric_scope": {
+          "elapsed_ms": "first turn start to last turn end (excludes schema setup/teardown)",
+          "peak_ram_mb": "adapter Python process RSS + RSS of local Ollama processes: ollama* and its llama-server model runner (sampled together)",
+          "peak_vram_mb": "Ollama /api/ps size_vram of loaded models (model allocation, not a per-process driver reading)",
+          "peak_gpu_device_used_mb": "nvidia-smi memory.used for the whole GPU, including other applications",
+          "completion_tokens_per_llm_second": "Ollama-reported completion tokens / summed LLM call wall time (includes request overhead)"
+        },
+        "notes": ""
+      }
+    },
+    {
+      "case_id": "public_04_clarify",
+      "turns": [
+        {
+          "decision": "clarify",
+          "response": "Could you please confirm which line you would like to proceed with, L1 or L2?",
+          "proposal": null
+        },
+        {
+          "decision": "propose",
+          "response": "We propose a refund of $30.00 for line L1 of order O100. Please confirm this proposal.",
+          "proposal": {
+            "proposal_id": "PROP-1",
+            "request_id": "REQ-public_04_clarify",
+            "customer_id": "C100",
+            "order_id": "O100",
+            "line_id": "L1",
+            "remedy": "refund",
+            "amount_cents": 3000,
+            "paid_cents": 3000,
+            "original_sku": "TEE-M",
+            "replacement_sku": null,
+            "status": "pending"
+          }
+        },
+        {
+          "decision": "completed",
+          "response": "Your refund of $30.00 for line L1 of order O100 is complete.",
+          "proposal": null
+        }
+      ],
+      "action_audit": [
+        {
+          "turn": 1,
+          "event_id": 1,
+          "actor": "customer_resolution_agent",
+          "tool": "lookup_customer_orders",
+          "arguments": {
+            "customer_id": "C100"
+          },
+          "outcome": "ok",
+          "result": {
+            "order_ids": [
+              "O100"
+            ]
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 2,
+          "actor": "customer_resolution_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "customer_resolution_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 1550.9,
+            "prompt_tokens": 384,
+            "completion_tokens": 54
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 3,
+          "actor": "customer_resolution_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "customer_resolution_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 1092.1,
+            "prompt_tokens": 333,
+            "completion_tokens": 29
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 4,
+          "actor": "guardrails",
+          "tool": "guard:input:sanitization",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": "removed=0",
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "sanitization",
+            "elapsed_ms": 0.02,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 5,
+          "actor": "guardrails",
+          "tool": "guard:input:TaskInjection",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "TaskInjection",
+            "elapsed_ms": 2.88,
+            "reason_code": "NO_MATCH"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 6,
+          "actor": "guardrails",
+          "tool": "guard:input:DetectJailbreak",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectJailbreak",
+            "elapsed_ms": 137.79,
+            "reason_code": "BELOW_THRESHOLD"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 7,
+          "actor": "guardrails",
+          "tool": "guard:input:ToxicLanguage",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "ToxicLanguage",
+            "elapsed_ms": 41.06,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 8,
+          "actor": "guardrails",
+          "tool": "guard:input:DetectPII",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectPII",
+            "elapsed_ms": 11.22,
+            "reason_code": "NO_PII"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 9,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[CustomerHandoff]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[CustomerHandoff]",
+            "elapsed_ms": 2.61,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 10,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[CustomerMessage]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[CustomerMessage]",
+            "elapsed_ms": 2.21,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 11,
+          "actor": "guardrails",
+          "tool": "guard:output:consistency",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "consistency",
+            "elapsed_ms": 0.02,
+            "reason_code": "CONSISTENT"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 12,
+          "actor": "guardrails",
+          "tool": "guard:output:ToxicLanguage",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "ToxicLanguage",
+            "elapsed_ms": 52.19,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 13,
+          "actor": "guardrails",
+          "tool": "guard:output:DetectPII",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectPII",
+            "elapsed_ms": 20.38,
+            "reason_code": "NO_PII"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 14,
+          "actor": "customer_resolution_agent",
+          "tool": "lookup_customer_orders",
+          "arguments": {
+            "customer_id": "C100"
+          },
+          "outcome": "ok",
+          "result": {
+            "order_ids": [
+              "O100"
+            ]
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 15,
+          "actor": "retail_operations_agent",
+          "tool": "check_return_eligibility",
+          "arguments": {
+            "line_id": "L1",
+            "order_id": "O100",
+            "customer_id": "C100"
+          },
+          "outcome": "ELIGIBLE",
+          "result": {
+            "sku": "TEE-M",
+            "line_id": "L1",
+            "eligible": true,
+            "order_id": "O100",
+            "paid_cents": 3000,
+            "reason_code": "ELIGIBLE",
+            "delivery_age_days": 16,
+            "candidate_line_ids": []
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 16,
+          "actor": "trusted_controller",
+          "tool": "create_proposal",
+          "arguments": {
+            "remedy": "refund",
+            "line_id": "L1",
+            "order_id": "O100",
+            "request_id": "REQ-public_04_clarify",
+            "customer_id": "C100",
+            "replacement_sku": null
+          },
+          "outcome": "proposed",
+          "result": {
+            "kind": "proposed",
+            "proposal": {
+              "remedy": "refund",
+              "status": "pending",
+              "line_id": "L1",
+              "order_id": "O100",
+              "paid_cents": 3000,
+              "request_id": "REQ-public_04_clarify",
+              "customer_id": "C100",
+              "proposal_id": "PROP-1",
+              "amount_cents": 3000,
+              "original_sku": "TEE-M",
+              "replacement_sku": null
+            },
+            "request_id": "REQ-public_04_clarify",
+            "reason_code": "ELIGIBLE",
+            "existing_result": null,
+            "candidate_line_ids": []
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 17,
+          "actor": "customer_resolution_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "customer_resolution_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 1594.5,
+            "prompt_tokens": 464,
+            "completion_tokens": 56
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 18,
+          "actor": "retail_operations_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "retail_operations_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 895.4,
+            "prompt_tokens": 564,
+            "completion_tokens": 40
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 19,
+          "actor": "retail_operations_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "retail_operations_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 649.9,
+            "prompt_tokens": 696,
+            "completion_tokens": 21
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 20,
+          "actor": "customer_resolution_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "customer_resolution_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 1225.9,
+            "prompt_tokens": 351,
+            "completion_tokens": 37
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 21,
+          "actor": "guardrails",
+          "tool": "guard:input:sanitization",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": "removed=0",
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "sanitization",
+            "elapsed_ms": 0.02,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 22,
+          "actor": "guardrails",
+          "tool": "guard:input:TaskInjection",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "TaskInjection",
+            "elapsed_ms": 3.05,
+            "reason_code": "NO_MATCH"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 23,
+          "actor": "guardrails",
+          "tool": "guard:input:DetectJailbreak",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectJailbreak",
+            "elapsed_ms": 174.4,
+            "reason_code": "BELOW_THRESHOLD"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 24,
+          "actor": "guardrails",
+          "tool": "guard:input:ToxicLanguage",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "ToxicLanguage",
+            "elapsed_ms": 49.78,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 25,
+          "actor": "guardrails",
+          "tool": "guard:input:DetectPII",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectPII",
+            "elapsed_ms": 9.21,
+            "reason_code": "NO_PII"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 26,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[CustomerHandoff]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[CustomerHandoff]",
+            "elapsed_ms": 2.76,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 27,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[OperationsAction]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[OperationsAction]",
+            "elapsed_ms": 4.58,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 28,
+          "actor": "guardrails",
+          "tool": "guard:tool_context:TaskInjection",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "tool_context",
+            "detail": "check_return_eligibility",
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "TaskInjection",
+            "elapsed_ms": 5.92,
+            "reason_code": "NO_MATCH"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 29,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[OperationsAction]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[OperationsAction]",
+            "elapsed_ms": 2.93,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 30,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[CustomerMessage]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[CustomerMessage]",
+            "elapsed_ms": 1.78,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 31,
+          "actor": "guardrails",
+          "tool": "guard:output:consistency",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "consistency",
+            "elapsed_ms": 0.02,
+            "reason_code": "CONSISTENT"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 32,
+          "actor": "guardrails",
+          "tool": "guard:output:ToxicLanguage",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "ToxicLanguage",
+            "elapsed_ms": 48.75,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 33,
+          "actor": "guardrails",
+          "tool": "guard:output:DetectPII",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectPII",
+            "elapsed_ms": 9.23,
+            "reason_code": "NO_PII"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 3,
+          "event_id": 34,
+          "actor": "customer_resolution_agent",
+          "tool": "lookup_customer_orders",
+          "arguments": {
+            "customer_id": "C100"
+          },
+          "outcome": "ok",
+          "result": {
+            "order_ids": [
+              "O100"
+            ]
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 3,
+          "event_id": 35,
+          "actor": "trusted_controller",
+          "tool": "commit_confirmed_proposal",
+          "arguments": {
+            "request_id": "REQ-public_04_clarify",
+            "customer_id": "C100",
+            "proposal_id": "PROP-1"
+          },
+          "outcome": "committed",
+          "result": {
+            "remedy": "refund",
+            "status": "completed",
+            "line_id": "L1",
+            "order_id": "O100",
+            "replayed": false,
+            "record_ids": {
+              "refund_id": "REF-1",
+              "return_id": "RET-1",
+              "quarantine_id": "Q-1"
+            },
+            "request_id": "REQ-public_04_clarify",
+            "customer_id": "C100",
+            "proposal_id": "PROP-1",
+            "reason_code": "COMMITTED",
+            "original_sku": "TEE-M",
+            "replacement_sku": null,
+            "refund_amount_cents": 3000
+          },
+          "error": null,
+          "effects": [
+            {
+              "type": "line_returned",
+              "line_id": "L1",
+              "order_id": "O100"
+            },
+            {
+              "sku": "TEE-M",
+              "type": "quarantined",
+              "quantity": 1
+            },
+            {
+              "type": "refund",
+              "amount_cents": 3000
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "event_id": 36,
+          "actor": "customer_resolution_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "customer_resolution_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 1314.5,
+            "prompt_tokens": 349,
+            "completion_tokens": 32
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 3,
+          "event_id": 37,
+          "actor": "guardrails",
+          "tool": "guard:input:sanitization",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": "removed=0",
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "sanitization",
+            "elapsed_ms": 0.02,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 3,
+          "event_id": 38,
+          "actor": "guardrails",
+          "tool": "guard:input:TaskInjection",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "TaskInjection",
+            "elapsed_ms": 2.57,
+            "reason_code": "NO_MATCH"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 3,
+          "event_id": 39,
+          "actor": "guardrails",
+          "tool": "guard:input:DetectJailbreak",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectJailbreak",
+            "elapsed_ms": 141.07,
+            "reason_code": "BELOW_THRESHOLD"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 3,
+          "event_id": 40,
+          "actor": "guardrails",
+          "tool": "guard:input:ToxicLanguage",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "ToxicLanguage",
+            "elapsed_ms": 37.55,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 3,
+          "event_id": 41,
+          "actor": "guardrails",
+          "tool": "guard:input:DetectPII",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectPII",
+            "elapsed_ms": 18.02,
+            "reason_code": "NO_PII"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 3,
+          "event_id": 42,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[CustomerMessage]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[CustomerMessage]",
+            "elapsed_ms": 2.53,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 3,
+          "event_id": 43,
+          "actor": "guardrails",
+          "tool": "guard:output:consistency",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "consistency",
+            "elapsed_ms": 0.02,
+            "reason_code": "CONSISTENT"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 3,
+          "event_id": 44,
+          "actor": "guardrails",
+          "tool": "guard:output:ToxicLanguage",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "ToxicLanguage",
+            "elapsed_ms": 65.43,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 3,
+          "event_id": 45,
+          "actor": "guardrails",
+          "tool": "guard:output:DetectPII",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectPII",
+            "elapsed_ms": 18.39,
+            "reason_code": "NO_PII"
+          },
+          "error": null,
+          "effects": []
+        }
+      ],
+      "final_state": {
+        "as_of": "2026-10-26",
+        "currency": "USD",
+        "products": [
+          {
+            "sku": "TEE-S",
+            "product_id": "TEE",
+            "size": "S",
+            "price_cents": 4000,
+            "stock": 4
+          },
+          {
+            "sku": "TEE-M",
+            "product_id": "TEE",
+            "size": "M",
+            "price_cents": 4000,
+            "stock": 2
+          },
+          {
+            "sku": "TEE-L",
+            "product_id": "TEE",
+            "size": "L",
+            "price_cents": 4000,
+            "stock": 3
+          },
+          {
+            "sku": "JACKET-M",
+            "product_id": "JACKET",
+            "size": "M",
+            "price_cents": 9000,
+            "stock": 1
+          },
+          {
+            "sku": "JACKET-L",
+            "product_id": "JACKET",
+            "size": "L",
+            "price_cents": 9000,
+            "stock": 0
+          }
+        ],
+        "orders": [
+          {
+            "order_id": "O100",
+            "customer_id": "C100",
+            "status": "delivered",
+            "delivered_on": "2026-10-10",
+            "lines": [
+              {
+                "line_id": "L1",
+                "sku": "TEE-M",
+                "paid_cents": 3000,
+                "unopened": true,
+                "final_sale": false,
+                "returned": true
+              },
+              {
+                "line_id": "L2",
+                "sku": "JACKET-M",
+                "paid_cents": 9000,
+                "unopened": true,
+                "final_sale": false,
+                "returned": false
+              }
+            ]
+          }
+        ],
+        "returns": [
+          {
+            "return_id": "RET-1",
+            "request_id": "REQ-public_04_clarify",
+            "proposal_id": "PROP-1",
+            "customer_id": "C100",
+            "order_id": "O100",
+            "line_id": "L1",
+            "sku": "TEE-M",
+            "remedy": "refund"
+          }
+        ],
+        "refunds": [
+          {
+            "refund_id": "REF-1",
+            "return_id": "RET-1",
+            "request_id": "REQ-public_04_clarify",
+            "proposal_id": "PROP-1",
+            "customer_id": "C100",
+            "order_id": "O100",
+            "line_id": "L1",
+            "amount_cents": 3000,
+            "currency": "USD"
+          }
+        ],
+        "exchanges": [],
+        "quarantine": [
+          {
+            "quarantine_id": "Q-1",
+            "return_id": "RET-1",
+            "request_id": "REQ-public_04_clarify",
+            "proposal_id": "PROP-1",
+            "customer_id": "C100",
+            "order_id": "O100",
+            "line_id": "L1",
+            "sku": "TEE-M",
+            "quantity": 1
+          }
+        ],
+        "idempotency": {
+          "REQ-public_04_clarify": {
+            "status": "completed",
+            "customer_id": "C100",
+            "proposal_id": "PROP-1",
+            "result": {
+              "remedy": "refund",
+              "status": "completed",
+              "line_id": "L1",
+              "order_id": "O100",
+              "replayed": false,
+              "record_ids": {
+                "refund_id": "REF-1",
+                "return_id": "RET-1",
+                "quarantine_id": "Q-1"
+              },
+              "request_id": "REQ-public_04_clarify",
+              "customer_id": "C100",
+              "proposal_id": "PROP-1",
+              "reason_code": "COMMITTED",
+              "original_sku": "TEE-M",
+              "replacement_sku": null,
+              "refund_amount_cents": 3000
+            }
+          }
+        }
+      },
+      "metrics": {
+        "elapsed_ms": 10196.4,
+        "peak_ram_mb": 5214.5,
+        "peak_vram_mb": 315.5,
+        "turn_ms": [
+          3063.2,
+          5059.1,
+          1873.9
+        ],
+        "llm_calls": 7,
+        "llm_calls_failed": 0,
+        "llm_wall_ms": 8323.2,
+        "prompt_tokens": 3141,
+        "completion_tokens": 269,
+        "completion_tokens_per_llm_second": 32.3,
+        "peak_python_rss_mb": 2246.5,
+        "peak_ollama_rss_mb": 2969.4,
+        "peak_gpu_device_used_mb": 3045.0,
+        "resource_samples": 82,
+        "metric_scope": {
+          "elapsed_ms": "first turn start to last turn end (excludes schema setup/teardown)",
+          "peak_ram_mb": "adapter Python process RSS + RSS of local Ollama processes: ollama* and its llama-server model runner (sampled together)",
+          "peak_vram_mb": "Ollama /api/ps size_vram of loaded models (model allocation, not a per-process driver reading)",
+          "peak_gpu_device_used_mb": "nvidia-smi memory.used for the whole GPU, including other applications",
+          "completion_tokens_per_llm_second": "Ollama-reported completion tokens / summed LLM call wall time (includes request overhead)"
+        },
+        "notes": ""
+      }
+    },
+    {
+      "case_id": "public_05_stale_stock",
+      "turns": [
+        {
+          "decision": "propose",
+          "response": "We propose an exchange for line L1 of order O100, exchanging the original SKU TEE-M for the replacement SKU TEE-L. Please confirm this proposal.",
+          "proposal": {
+            "proposal_id": "PROP-1",
+            "request_id": "REQ-public_05_stale_stock",
+            "customer_id": "C100",
+            "order_id": "O100",
+            "line_id": "L1",
+            "remedy": "exchange",
+            "amount_cents": 0,
+            "paid_cents": 3000,
+            "original_sku": "TEE-M",
+            "replacement_sku": "TEE-L",
+            "status": "pending"
+          }
+        },
+        {
+          "decision": "deny",
+          "response": "We are unable to process a replacement because the item is out of stock. We apologise for this inconvenience.",
+          "proposal": null
+        }
+      ],
+      "action_audit": [
+        {
+          "turn": 1,
+          "event_id": 1,
+          "actor": "customer_resolution_agent",
+          "tool": "lookup_customer_orders",
+          "arguments": {
+            "customer_id": "C100"
+          },
+          "outcome": "ok",
+          "result": {
+            "order_ids": [
+              "O100"
+            ]
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 2,
+          "actor": "retail_operations_agent",
+          "tool": "check_return_eligibility",
+          "arguments": {
+            "line_id": "L1",
+            "order_id": "O100",
+            "customer_id": "C100"
+          },
+          "outcome": "ELIGIBLE",
+          "result": {
+            "sku": "TEE-M",
+            "line_id": "L1",
+            "eligible": true,
+            "order_id": "O100",
+            "paid_cents": 3000,
+            "reason_code": "ELIGIBLE",
+            "delivery_age_days": 16,
+            "candidate_line_ids": []
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 3,
+          "actor": "retail_operations_agent",
+          "tool": "get_exchange_options",
+          "arguments": {
+            "line_id": "L1",
+            "order_id": "O100",
+            "customer_id": "C100"
+          },
+          "outcome": "ok",
+          "result": [
+            {
+              "remedy": "exchange",
+              "line_id": "L1",
+              "eligible": true,
+              "order_id": "O100",
+              "price_cents": 4000,
+              "reason_code": "ELIGIBLE",
+              "original_sku": "TEE-M",
+              "replacement_sku": "TEE-S",
+              "replacement_stock": 4,
+              "candidate_line_ids": []
+            },
+            {
+              "remedy": "exchange",
+              "line_id": "L1",
+              "eligible": true,
+              "order_id": "O100",
+              "price_cents": 4000,
+              "reason_code": "ELIGIBLE",
+              "original_sku": "TEE-M",
+              "replacement_sku": "TEE-L",
+              "replacement_stock": 3,
+              "candidate_line_ids": []
+            }
+          ],
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 4,
+          "actor": "trusted_controller",
+          "tool": "get_exchange_options",
+          "arguments": {
+            "line_id": "L1",
+            "order_id": "O100",
+            "customer_id": "C100"
+          },
+          "outcome": "ok",
+          "result": [
+            {
+              "remedy": "exchange",
+              "line_id": "L1",
+              "eligible": true,
+              "order_id": "O100",
+              "price_cents": 4000,
+              "reason_code": "ELIGIBLE",
+              "original_sku": "TEE-M",
+              "replacement_sku": "TEE-S",
+              "replacement_stock": 4,
+              "candidate_line_ids": []
+            },
+            {
+              "remedy": "exchange",
+              "line_id": "L1",
+              "eligible": true,
+              "order_id": "O100",
+              "price_cents": 4000,
+              "reason_code": "ELIGIBLE",
+              "original_sku": "TEE-M",
+              "replacement_sku": "TEE-L",
+              "replacement_stock": 3,
+              "candidate_line_ids": []
+            }
+          ],
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 5,
+          "actor": "trusted_controller",
+          "tool": "create_proposal",
+          "arguments": {
+            "remedy": "exchange",
+            "line_id": "L1",
+            "order_id": "O100",
+            "request_id": "REQ-public_05_stale_stock",
+            "customer_id": "C100",
+            "replacement_sku": "TEE-L"
+          },
+          "outcome": "proposed",
+          "result": {
+            "kind": "proposed",
+            "proposal": {
+              "remedy": "exchange",
+              "status": "pending",
+              "line_id": "L1",
+              "order_id": "O100",
+              "paid_cents": 3000,
+              "request_id": "REQ-public_05_stale_stock",
+              "customer_id": "C100",
+              "proposal_id": "PROP-1",
+              "amount_cents": 0,
+              "original_sku": "TEE-M",
+              "replacement_sku": "TEE-L"
+            },
+            "request_id": "REQ-public_05_stale_stock",
+            "reason_code": "ELIGIBLE",
+            "existing_result": null,
+            "candidate_line_ids": []
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 6,
+          "actor": "customer_resolution_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "customer_resolution_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 1705.1,
+            "prompt_tokens": 356,
+            "completion_tokens": 58
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 7,
+          "actor": "retail_operations_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "retail_operations_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 1451.2,
+            "prompt_tokens": 564,
+            "completion_tokens": 40
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 8,
+          "actor": "retail_operations_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "retail_operations_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 741.0,
+            "prompt_tokens": 696,
+            "completion_tokens": 39
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 9,
+          "actor": "retail_operations_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "retail_operations_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 861.4,
+            "prompt_tokens": 933,
+            "completion_tokens": 28
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 10,
+          "actor": "customer_resolution_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "customer_resolution_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 1377.2,
+            "prompt_tokens": 345,
+            "completion_tokens": 47
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 11,
+          "actor": "guardrails",
+          "tool": "guard:input:sanitization",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": "removed=0",
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "sanitization",
+            "elapsed_ms": 0.02,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 12,
+          "actor": "guardrails",
+          "tool": "guard:input:TaskInjection",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "TaskInjection",
+            "elapsed_ms": 2.54,
+            "reason_code": "NO_MATCH"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 13,
+          "actor": "guardrails",
+          "tool": "guard:input:DetectJailbreak",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectJailbreak",
+            "elapsed_ms": 167.56,
+            "reason_code": "BELOW_THRESHOLD"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 14,
+          "actor": "guardrails",
+          "tool": "guard:input:ToxicLanguage",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "ToxicLanguage",
+            "elapsed_ms": 50.16,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 15,
+          "actor": "guardrails",
+          "tool": "guard:input:DetectPII",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectPII",
+            "elapsed_ms": 13.46,
+            "reason_code": "NO_PII"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 16,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[CustomerHandoff]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[CustomerHandoff]",
+            "elapsed_ms": 6.31,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 17,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[OperationsAction]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[OperationsAction]",
+            "elapsed_ms": 3.51,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 18,
+          "actor": "guardrails",
+          "tool": "guard:tool_context:TaskInjection",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "tool_context",
+            "detail": "check_return_eligibility",
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "TaskInjection",
+            "elapsed_ms": 4.93,
+            "reason_code": "NO_MATCH"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 19,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[OperationsAction]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[OperationsAction]",
+            "elapsed_ms": 3.0,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 20,
+          "actor": "guardrails",
+          "tool": "guard:tool_context:TaskInjection",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "tool_context",
+            "detail": "get_exchange_options",
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "TaskInjection",
+            "elapsed_ms": 14.43,
+            "reason_code": "NO_MATCH"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 21,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[OperationsAction]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[OperationsAction]",
+            "elapsed_ms": 3.25,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 22,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[CustomerMessage]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[CustomerMessage]",
+            "elapsed_ms": 1.9,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 23,
+          "actor": "guardrails",
+          "tool": "guard:output:consistency",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "consistency",
+            "elapsed_ms": 0.02,
+            "reason_code": "CONSISTENT"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 24,
+          "actor": "guardrails",
+          "tool": "guard:output:ToxicLanguage",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "ToxicLanguage",
+            "elapsed_ms": 66.79,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 25,
+          "actor": "guardrails",
+          "tool": "guard:output:DetectPII",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectPII",
+            "elapsed_ms": 16.84,
+            "reason_code": "NO_PII"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 26,
+          "actor": "external",
+          "tool": "stock_change",
+          "arguments": {
+            "sku": "TEE-L",
+            "new_stock": 0,
+            "before_turn": 2
+          },
+          "outcome": "applied",
+          "result": null,
+          "error": null,
+          "effects": [
+            {
+              "sku": "TEE-L",
+              "type": "stock_set",
+              "new_stock": 0,
+              "old_stock": 3
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "event_id": 27,
+          "actor": "customer_resolution_agent",
+          "tool": "lookup_customer_orders",
+          "arguments": {
+            "customer_id": "C100"
+          },
+          "outcome": "ok",
+          "result": {
+            "order_ids": [
+              "O100"
+            ]
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 28,
+          "actor": "trusted_controller",
+          "tool": "commit_confirmed_proposal",
+          "arguments": {
+            "request_id": "REQ-public_05_stale_stock",
+            "customer_id": "C100",
+            "proposal_id": "PROP-1"
+          },
+          "outcome": "rejected",
+          "result": {
+            "remedy": null,
+            "status": "rejected",
+            "line_id": null,
+            "order_id": null,
+            "replayed": false,
+            "record_ids": {},
+            "request_id": "REQ-public_05_stale_stock",
+            "customer_id": null,
+            "proposal_id": "PROP-1",
+            "reason_code": "REPLACEMENT_OUT_OF_STOCK",
+            "original_sku": null,
+            "replacement_sku": null,
+            "refund_amount_cents": null
+          },
+          "error": "REPLACEMENT_OUT_OF_STOCK",
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 29,
+          "actor": "customer_resolution_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "customer_resolution_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 1282.1,
+            "prompt_tokens": 335,
+            "completion_tokens": 31
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 30,
+          "actor": "guardrails",
+          "tool": "guard:input:sanitization",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": "removed=0",
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "sanitization",
+            "elapsed_ms": 0.05,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 31,
+          "actor": "guardrails",
+          "tool": "guard:input:TaskInjection",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "TaskInjection",
+            "elapsed_ms": 3.55,
+            "reason_code": "NO_MATCH"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 32,
+          "actor": "guardrails",
+          "tool": "guard:input:DetectJailbreak",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectJailbreak",
+            "elapsed_ms": 136.49,
+            "reason_code": "BELOW_THRESHOLD"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 33,
+          "actor": "guardrails",
+          "tool": "guard:input:ToxicLanguage",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "ToxicLanguage",
+            "elapsed_ms": 43.26,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 34,
+          "actor": "guardrails",
+          "tool": "guard:input:DetectPII",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectPII",
+            "elapsed_ms": 9.14,
+            "reason_code": "NO_PII"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 35,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[CustomerMessage]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[CustomerMessage]",
+            "elapsed_ms": 2.2,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 36,
+          "actor": "guardrails",
+          "tool": "guard:output:consistency",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "consistency",
+            "elapsed_ms": 0.02,
+            "reason_code": "CONSISTENT"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 37,
+          "actor": "guardrails",
+          "tool": "guard:output:ToxicLanguage",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "ToxicLanguage",
+            "elapsed_ms": 55.09,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 38,
+          "actor": "guardrails",
+          "tool": "guard:output:DetectPII",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectPII",
+            "elapsed_ms": 14.51,
+            "reason_code": "NO_PII"
+          },
+          "error": null,
+          "effects": []
+        }
+      ],
+      "final_state": {
+        "as_of": "2026-10-26",
+        "currency": "USD",
+        "products": [
+          {
+            "sku": "TEE-S",
+            "product_id": "TEE",
+            "size": "S",
+            "price_cents": 4000,
+            "stock": 4
+          },
+          {
+            "sku": "TEE-M",
+            "product_id": "TEE",
+            "size": "M",
+            "price_cents": 4000,
+            "stock": 2
+          },
+          {
+            "sku": "TEE-L",
+            "product_id": "TEE",
+            "size": "L",
+            "price_cents": 4000,
+            "stock": 0
+          },
+          {
+            "sku": "JACKET-M",
+            "product_id": "JACKET",
+            "size": "M",
+            "price_cents": 9000,
+            "stock": 1
+          },
+          {
+            "sku": "JACKET-L",
+            "product_id": "JACKET",
+            "size": "L",
+            "price_cents": 9000,
+            "stock": 0
+          }
+        ],
+        "orders": [
+          {
+            "order_id": "O100",
+            "customer_id": "C100",
+            "status": "delivered",
+            "delivered_on": "2026-10-10",
+            "lines": [
+              {
+                "line_id": "L1",
+                "sku": "TEE-M",
+                "paid_cents": 3000,
+                "unopened": true,
+                "final_sale": false,
+                "returned": false
+              }
+            ]
+          }
+        ],
+        "returns": [],
+        "refunds": [],
+        "exchanges": [],
+        "quarantine": [],
+        "idempotency": {}
+      },
+      "metrics": {
+        "elapsed_ms": 9073.0,
+        "peak_ram_mb": 5228.5,
+        "peak_vram_mb": 315.5,
+        "turn_ms": [
+          7084.0,
+          1853.9
+        ],
+        "llm_calls": 6,
+        "llm_calls_failed": 0,
+        "llm_wall_ms": 7418.0,
+        "prompt_tokens": 3229,
+        "completion_tokens": 243,
+        "completion_tokens_per_llm_second": 32.8,
+        "peak_python_rss_mb": 2247.6,
+        "peak_ollama_rss_mb": 2983.1,
+        "peak_gpu_device_used_mb": 3045.0,
+        "resource_samples": 73,
+        "metric_scope": {
+          "elapsed_ms": "first turn start to last turn end (excludes schema setup/teardown)",
+          "peak_ram_mb": "adapter Python process RSS + RSS of local Ollama processes: ollama* and its llama-server model runner (sampled together)",
+          "peak_vram_mb": "Ollama /api/ps size_vram of loaded models (model allocation, not a per-process driver reading)",
+          "peak_gpu_device_used_mb": "nvidia-smi memory.used for the whole GPU, including other applications",
+          "completion_tokens_per_llm_second": "Ollama-reported completion tokens / summed LLM call wall time (includes request overhead)"
+        },
+        "notes": ""
+      }
+    },
+    {
+      "case_id": "public_06_timeout_replay",
+      "turns": [
+        {
+          "decision": "propose",
+          "response": "We propose a refund of $30.00 for line L1 of order O100. Please confirm this proposal.",
+          "proposal": {
+            "proposal_id": "PROP-1",
+            "request_id": "REQ-public_06_timeout_replay",
+            "customer_id": "C100",
+            "order_id": "O100",
+            "line_id": "L1",
+            "remedy": "refund",
+            "amount_cents": 3000,
+            "paid_cents": 3000,
+            "original_sku": "TEE-M",
+            "replacement_sku": null,
+            "status": "pending"
+          }
+        },
+        {
+          "decision": "completed",
+          "response": "Your refund of $30.00 for line L1 of order O100 is complete.",
+          "proposal": null
+        },
+        {
+          "decision": "completed",
+          "response": "Your refund of $30.00 for line L1 of order O100 is complete.",
+          "proposal": null
+        }
+      ],
+      "action_audit": [
+        {
+          "turn": 1,
+          "event_id": 1,
+          "actor": "customer_resolution_agent",
+          "tool": "lookup_customer_orders",
+          "arguments": {
+            "customer_id": "C100"
+          },
+          "outcome": "ok",
+          "result": {
+            "order_ids": [
+              "O100"
+            ]
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 2,
+          "actor": "retail_operations_agent",
+          "tool": "check_return_eligibility",
+          "arguments": {
+            "line_id": "L1",
+            "order_id": "O100",
+            "customer_id": "C100"
+          },
+          "outcome": "ELIGIBLE",
+          "result": {
+            "sku": "TEE-M",
+            "line_id": "L1",
+            "eligible": true,
+            "order_id": "O100",
+            "paid_cents": 3000,
+            "reason_code": "ELIGIBLE",
+            "delivery_age_days": 16,
+            "candidate_line_ids": []
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 3,
+          "actor": "trusted_controller",
+          "tool": "create_proposal",
+          "arguments": {
+            "remedy": "refund",
+            "line_id": "L1",
+            "order_id": "O100",
+            "request_id": "REQ-public_06_timeout_replay",
+            "customer_id": "C100",
+            "replacement_sku": null
+          },
+          "outcome": "proposed",
+          "result": {
+            "kind": "proposed",
+            "proposal": {
+              "remedy": "refund",
+              "status": "pending",
+              "line_id": "L1",
+              "order_id": "O100",
+              "paid_cents": 3000,
+              "request_id": "REQ-public_06_timeout_replay",
+              "customer_id": "C100",
+              "proposal_id": "PROP-1",
+              "amount_cents": 3000,
+              "original_sku": "TEE-M",
+              "replacement_sku": null
+            },
+            "request_id": "REQ-public_06_timeout_replay",
+            "reason_code": "ELIGIBLE",
+            "existing_result": null,
+            "candidate_line_ids": []
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 4,
+          "actor": "customer_resolution_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "customer_resolution_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 1506.1,
+            "prompt_tokens": 350,
+            "completion_tokens": 56
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 5,
+          "actor": "retail_operations_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "retail_operations_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 1261.0,
+            "prompt_tokens": 564,
+            "completion_tokens": 40
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 6,
+          "actor": "retail_operations_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "retail_operations_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 565.6,
+            "prompt_tokens": 696,
+            "completion_tokens": 21
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 7,
+          "actor": "customer_resolution_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "customer_resolution_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 1189.3,
+            "prompt_tokens": 351,
+            "completion_tokens": 37
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 8,
+          "actor": "guardrails",
+          "tool": "guard:input:sanitization",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": "removed=0",
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "sanitization",
+            "elapsed_ms": 0.03,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 9,
+          "actor": "guardrails",
+          "tool": "guard:input:TaskInjection",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "TaskInjection",
+            "elapsed_ms": 2.97,
+            "reason_code": "NO_MATCH"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 10,
+          "actor": "guardrails",
+          "tool": "guard:input:DetectJailbreak",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectJailbreak",
+            "elapsed_ms": 151.29,
+            "reason_code": "BELOW_THRESHOLD"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 11,
+          "actor": "guardrails",
+          "tool": "guard:input:ToxicLanguage",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "ToxicLanguage",
+            "elapsed_ms": 46.48,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 12,
+          "actor": "guardrails",
+          "tool": "guard:input:DetectPII",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectPII",
+            "elapsed_ms": 20.51,
+            "reason_code": "NO_PII"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 13,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[CustomerHandoff]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[CustomerHandoff]",
+            "elapsed_ms": 3.36,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 14,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[OperationsAction]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[OperationsAction]",
+            "elapsed_ms": 4.78,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 15,
+          "actor": "guardrails",
+          "tool": "guard:tool_context:TaskInjection",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "tool_context",
+            "detail": "check_return_eligibility",
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "TaskInjection",
+            "elapsed_ms": 4.95,
+            "reason_code": "NO_MATCH"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 16,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[OperationsAction]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[OperationsAction]",
+            "elapsed_ms": 3.7,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 17,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[CustomerMessage]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[CustomerMessage]",
+            "elapsed_ms": 1.77,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 18,
+          "actor": "guardrails",
+          "tool": "guard:output:consistency",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "consistency",
+            "elapsed_ms": 0.02,
+            "reason_code": "CONSISTENT"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 19,
+          "actor": "guardrails",
+          "tool": "guard:output:ToxicLanguage",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "ToxicLanguage",
+            "elapsed_ms": 53.54,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 1,
+          "event_id": 20,
+          "actor": "guardrails",
+          "tool": "guard:output:DetectPII",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectPII",
+            "elapsed_ms": 10.28,
+            "reason_code": "NO_PII"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 21,
+          "actor": "customer_resolution_agent",
+          "tool": "lookup_customer_orders",
+          "arguments": {
+            "customer_id": "C100"
+          },
+          "outcome": "ok",
+          "result": {
+            "order_ids": [
+              "O100"
+            ]
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 22,
+          "actor": "trusted_controller",
+          "tool": "commit_confirmed_proposal",
+          "arguments": {
+            "request_id": "REQ-public_06_timeout_replay",
+            "customer_id": "C100",
+            "proposal_id": "PROP-1"
+          },
+          "outcome": "committed",
+          "result": {
+            "remedy": "refund",
+            "status": "completed",
+            "line_id": "L1",
+            "order_id": "O100",
+            "replayed": false,
+            "record_ids": {
+              "refund_id": "REF-1",
+              "return_id": "RET-1",
+              "quarantine_id": "Q-1"
+            },
+            "request_id": "REQ-public_06_timeout_replay",
+            "customer_id": "C100",
+            "proposal_id": "PROP-1",
+            "reason_code": "COMMITTED",
+            "original_sku": "TEE-M",
+            "replacement_sku": null,
+            "refund_amount_cents": 3000
+          },
+          "error": null,
+          "effects": [
+            {
+              "type": "line_returned",
+              "line_id": "L1",
+              "order_id": "O100"
+            },
+            {
+              "sku": "TEE-M",
+              "type": "quarantined",
+              "quantity": 1
+            },
+            {
+              "type": "refund",
+              "amount_cents": 3000
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "event_id": 23,
+          "actor": "external",
+          "tool": "timeout_after_commit",
+          "arguments": {
+            "request_id": "REQ-public_06_timeout_replay",
+            "proposal_id": "PROP-1"
+          },
+          "outcome": "raised",
+          "result": null,
+          "error": "simulated timeout after durable commit",
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 24,
+          "actor": "customer_resolution_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "customer_resolution_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 1126.8,
+            "prompt_tokens": 358,
+            "completion_tokens": 32
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 25,
+          "actor": "guardrails",
+          "tool": "guard:input:sanitization",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": "removed=0",
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "sanitization",
+            "elapsed_ms": 0.02,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 26,
+          "actor": "guardrails",
+          "tool": "guard:input:TaskInjection",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "TaskInjection",
+            "elapsed_ms": 3.02,
+            "reason_code": "NO_MATCH"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 27,
+          "actor": "guardrails",
+          "tool": "guard:input:DetectJailbreak",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectJailbreak",
+            "elapsed_ms": 142.77,
+            "reason_code": "BELOW_THRESHOLD"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 28,
+          "actor": "guardrails",
+          "tool": "guard:input:ToxicLanguage",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "ToxicLanguage",
+            "elapsed_ms": 46.51,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 29,
+          "actor": "guardrails",
+          "tool": "guard:input:DetectPII",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectPII",
+            "elapsed_ms": 10.81,
+            "reason_code": "NO_PII"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 30,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[CustomerMessage]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[CustomerMessage]",
+            "elapsed_ms": 2.04,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 31,
+          "actor": "guardrails",
+          "tool": "guard:output:consistency",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "consistency",
+            "elapsed_ms": 0.01,
+            "reason_code": "CONSISTENT"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 32,
+          "actor": "guardrails",
+          "tool": "guard:output:ToxicLanguage",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "ToxicLanguage",
+            "elapsed_ms": 51.03,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 2,
+          "event_id": 33,
+          "actor": "guardrails",
+          "tool": "guard:output:DetectPII",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectPII",
+            "elapsed_ms": 25.38,
+            "reason_code": "NO_PII"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 3,
+          "event_id": 34,
+          "actor": "customer_resolution_agent",
+          "tool": "lookup_customer_orders",
+          "arguments": {
+            "customer_id": "C100"
+          },
+          "outcome": "ok",
+          "result": {
+            "order_ids": [
+              "O100"
+            ]
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 3,
+          "event_id": 35,
+          "actor": "trusted_controller",
+          "tool": "commit_confirmed_proposal",
+          "arguments": {
+            "request_id": "REQ-public_06_timeout_replay",
+            "customer_id": "C100",
+            "proposal_id": "PROP-1"
+          },
+          "outcome": "replayed",
+          "result": {
+            "remedy": "refund",
+            "status": "completed",
+            "line_id": "L1",
+            "order_id": "O100",
+            "replayed": true,
+            "record_ids": {
+              "refund_id": "REF-1",
+              "return_id": "RET-1",
+              "quarantine_id": "Q-1"
+            },
+            "request_id": "REQ-public_06_timeout_replay",
+            "customer_id": "C100",
+            "proposal_id": "PROP-1",
+            "reason_code": "COMMITTED",
+            "original_sku": "TEE-M",
+            "replacement_sku": null,
+            "refund_amount_cents": 3000
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 3,
+          "event_id": 36,
+          "actor": "customer_resolution_agent",
+          "tool": "llm_call",
+          "arguments": {
+            "model": "ollama_chat/gemma4:e2b"
+          },
+          "outcome": "ok",
+          "result": {
+            "ok": true,
+            "agent": "customer_resolution_agent",
+            "error": null,
+            "model": "ollama_chat/gemma4:e2b",
+            "latency_ms": 1148.9,
+            "prompt_tokens": 349,
+            "completion_tokens": 32
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 3,
+          "event_id": 37,
+          "actor": "guardrails",
+          "tool": "guard:input:sanitization",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": "removed=0",
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "sanitization",
+            "elapsed_ms": 0.03,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 3,
+          "event_id": 38,
+          "actor": "guardrails",
+          "tool": "guard:input:TaskInjection",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "TaskInjection",
+            "elapsed_ms": 3.45,
+            "reason_code": "NO_MATCH"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 3,
+          "event_id": 39,
+          "actor": "guardrails",
+          "tool": "guard:input:DetectJailbreak",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectJailbreak",
+            "elapsed_ms": 177.21,
+            "reason_code": "BELOW_THRESHOLD"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 3,
+          "event_id": 40,
+          "actor": "guardrails",
+          "tool": "guard:input:ToxicLanguage",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "ToxicLanguage",
+            "elapsed_ms": 55.63,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 3,
+          "event_id": 41,
+          "actor": "guardrails",
+          "tool": "guard:input:DetectPII",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "input",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectPII",
+            "elapsed_ms": 15.23,
+            "reason_code": "NO_PII"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 3,
+          "event_id": 42,
+          "actor": "guardrails",
+          "tool": "guard:agent_action:Schema[CustomerMessage]",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "agent_action",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "Schema[CustomerMessage]",
+            "elapsed_ms": 3.11,
+            "reason_code": "VALID"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 3,
+          "event_id": 43,
+          "actor": "guardrails",
+          "tool": "guard:output:consistency",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "consistency",
+            "elapsed_ms": 0.02,
+            "reason_code": "CONSISTENT"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 3,
+          "event_id": 44,
+          "actor": "guardrails",
+          "tool": "guard:output:ToxicLanguage",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "ToxicLanguage",
+            "elapsed_ms": 58.32,
+            "reason_code": "CLEAN"
+          },
+          "error": null,
+          "effects": []
+        },
+        {
+          "turn": 3,
+          "event_id": 45,
+          "actor": "guardrails",
+          "tool": "guard:output:DetectPII",
+          "arguments": {},
+          "outcome": "passed",
+          "result": {
+            "gate": "output",
+            "detail": null,
+            "outcome": "passed",
+            "severity": "info",
+            "validator": "DetectPII",
+            "elapsed_ms": 14.79,
+            "reason_code": "NO_PII"
+          },
+          "error": null,
+          "effects": []
+        }
+      ],
+      "final_state": {
+        "as_of": "2026-10-26",
+        "currency": "USD",
+        "products": [
+          {
+            "sku": "TEE-S",
+            "product_id": "TEE",
+            "size": "S",
+            "price_cents": 4000,
+            "stock": 4
+          },
+          {
+            "sku": "TEE-M",
+            "product_id": "TEE",
+            "size": "M",
+            "price_cents": 4000,
+            "stock": 2
+          },
+          {
+            "sku": "TEE-L",
+            "product_id": "TEE",
+            "size": "L",
+            "price_cents": 4000,
+            "stock": 3
+          },
+          {
+            "sku": "JACKET-M",
+            "product_id": "JACKET",
+            "size": "M",
+            "price_cents": 9000,
+            "stock": 1
+          },
+          {
+            "sku": "JACKET-L",
+            "product_id": "JACKET",
+            "size": "L",
+            "price_cents": 9000,
+            "stock": 0
+          }
+        ],
+        "orders": [
+          {
+            "order_id": "O100",
+            "customer_id": "C100",
+            "status": "delivered",
+            "delivered_on": "2026-10-10",
+            "lines": [
+              {
+                "line_id": "L1",
+                "sku": "TEE-M",
+                "paid_cents": 3000,
+                "unopened": true,
+                "final_sale": false,
+                "returned": true
+              }
+            ]
+          }
+        ],
+        "returns": [
+          {
+            "return_id": "RET-1",
+            "request_id": "REQ-public_06_timeout_replay",
+            "proposal_id": "PROP-1",
+            "customer_id": "C100",
+            "order_id": "O100",
+            "line_id": "L1",
+            "sku": "TEE-M",
+            "remedy": "refund"
+          }
+        ],
+        "refunds": [
+          {
+            "refund_id": "REF-1",
+            "return_id": "RET-1",
+            "request_id": "REQ-public_06_timeout_replay",
+            "proposal_id": "PROP-1",
+            "customer_id": "C100",
+            "order_id": "O100",
+            "line_id": "L1",
+            "amount_cents": 3000,
+            "currency": "USD"
+          }
+        ],
+        "exchanges": [],
+        "quarantine": [
+          {
+            "quarantine_id": "Q-1",
+            "return_id": "RET-1",
+            "request_id": "REQ-public_06_timeout_replay",
+            "proposal_id": "PROP-1",
+            "customer_id": "C100",
+            "order_id": "O100",
+            "line_id": "L1",
+            "sku": "TEE-M",
+            "quantity": 1
+          }
+        ],
+        "idempotency": {
+          "REQ-public_06_timeout_replay": {
+            "status": "completed",
+            "customer_id": "C100",
+            "proposal_id": "PROP-1",
+            "result": {
+              "remedy": "refund",
+              "status": "completed",
+              "line_id": "L1",
+              "order_id": "O100",
+              "replayed": false,
+              "record_ids": {
+                "refund_id": "REF-1",
+                "return_id": "RET-1",
+                "quarantine_id": "Q-1"
+              },
+              "request_id": "REQ-public_06_timeout_replay",
+              "customer_id": "C100",
+              "proposal_id": "PROP-1",
+              "reason_code": "COMMITTED",
+              "original_sku": "TEE-M",
+              "replacement_sku": null,
+              "refund_amount_cents": 3000
+            }
+          }
+        }
+      },
+      "metrics": {
+        "elapsed_ms": 8875.0,
+        "peak_ram_mb": 5219.6,
+        "peak_vram_mb": 315.5,
+        "turn_ms": [
+          5248.0,
+          1699.7,
+          1736.0
+        ],
+        "llm_calls": 6,
+        "llm_calls_failed": 0,
+        "llm_wall_ms": 6797.7,
+        "prompt_tokens": 2668,
+        "completion_tokens": 218,
+        "completion_tokens_per_llm_second": 32.1,
+        "peak_python_rss_mb": 2246.2,
+        "peak_ollama_rss_mb": 2974.8,
+        "peak_gpu_device_used_mb": 3045.0,
+        "resource_samples": 72,
+        "metric_scope": {
+          "elapsed_ms": "first turn start to last turn end (excludes schema setup/teardown)",
+          "peak_ram_mb": "adapter Python process RSS + RSS of local Ollama processes: ollama* and its llama-server model runner (sampled together)",
+          "peak_vram_mb": "Ollama /api/ps size_vram of loaded models (model allocation, not a per-process driver reading)",
+          "peak_gpu_device_used_mb": "nvidia-smi memory.used for the whole GPU, including other applications",
+          "completion_tokens_per_llm_second": "Ollama-reported completion tokens / summed LLM call wall time (includes request overhead)"
+        },
+        "notes": ""
+      }
+    }
+  ],
+  "run": {
+    "started_at": "2026-10-29T19:42:29+00:00",
+    "cold_start_ms": 26547.3,
+    "cases": 6,
+    "notes": [
+      "model was not loaded in Ollama before the run; cold_start_ms = validator load + Ollama readiness + one warm-up call; cases run warm"
+    ]
+  }
+}

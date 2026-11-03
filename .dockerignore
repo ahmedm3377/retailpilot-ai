@@ -1,0 +1,21 @@
+# Build context for deploy/*.Dockerfile. Never ship private settings, local environments or run outputs.
+.git
+.env
+.env_*
+deploy/.env
+**/.venv
+**/__pycache__
+**/*.py[cod]
+**/.pytest_cache
+*.egg-info
+.claude
+out
+results*.json
+baseline_results*.json
+*.diagnostics.json
+frontend/node_modules
+frontend/dist
+frontend/test-results
+frontend/playwright-report
+frontend/.vite
+deploy/vllm

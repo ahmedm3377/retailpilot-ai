@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "retail-desk"
+version = "0.1.0"
+description = "Local agentic retail returns and exchanges desk (HP interview case)"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2,<3",
+    "psycopg[binary]>=3.2,<4",
+    "langgraph>=1.2.18",
+    "langgraph-checkpoint-postgres>=3.2.0",
+    "litellm>=1.106.6",
+    "guardrails-ai>=0.11.0",
+    "guardrails-ai-detect-jailbreak>=0.1.6",
+    "guardrails-ai-toxic-language>=0.0.2",
+    "guardrails-ai-detect-pii>=0.0.6",
+    "en-core-web-sm",
+    "httpx>=0.28.1",
+    "psutil>=7.2.2",
+    "fastapi>=0.162.0",
+    "uvicorn[standard]>=0.54.0",
+    "opentelemetry-api==1.45.1",
+    "opentelemetry-sdk==1.45.1",
+    "opentelemetry-exporter-otlp-proto-http==1.45.1",
+    "mcp>=2.3,<3",
+    "python-dotenv>=1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[tool.setuptools.packages.find]
+where = ["backend"]
+include = ["app*", "retail_domain*", "mcp_server*"]
+
+[tool.pytest.ini_options]
+testpaths = ["backend/tests"]
+pythonpath = ["backend", "."]
+markers = [
+    "postgres: needs the local PostgreSQL from docker-compose.yml",
+    "real_model: needs the model server named in .env (plus local Guardrails models)",
+]
+
+[tool.uv.sources]
+en-core-web-sm = { url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl" }
+
+[tool.uv]
+# Offline install: pin MCP transitive deps to versions whose wheels are in the local uv cache.
+constraint-dependencies = ["sse-starlette==3.5.1"]

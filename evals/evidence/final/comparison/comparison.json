@@ -1,0 +1,790 @@
+{
+  "schema_version": 1,
+  "methodology": {
+    "percentile": "nearest-rank: sorted value at 1-based rank ceil(q*n); no interpolation",
+    "latency_scope": "first turn start to last turn end; successful runs only",
+    "formulas": {
+      "lower_is_better": "improvement_pct = 100 * (baseline - optimized) / baseline",
+      "higher_is_better": "increase_pct = 100 * (optimized - baseline) / baseline",
+      "unavailable": "null when either value is missing or the baseline is <= 0"
+    },
+    "sample": "3 and 3 repetitions x 6 cases; n(successful) = 18 and 18; p95 of n<=20 is a near-maximum, no significance claimed"
+  },
+  "variants": {
+    "baseline": {
+      "dir": "evals/evidence/final/baseline",
+      "source_id": "e20a5fcfbf+8b392f0e",
+      "config_id": "d300992d6df0",
+      "started_at": "2026-10-31T03:43:03+00:00",
+      "contended": false,
+      "load_before": {
+        "taken_at": "2026-10-31T03:43:01+00:00",
+        "ram_total_mb": 16164,
+        "ram_free_mb": 5207,
+        "cpu_load_pct": 12.2,
+        "gpu_device_used_mb": 0.0,
+        "gpu_util_pct": 0.0,
+        "ollama_loaded": [],
+        "process_groups": {
+          "ollama": {
+            "count": 2,
+            "rss_mb": 41
+          },
+          "llama-server": {
+            "count": 0,
+            "rss_mb": 0
+          },
+          "chrome": {
+            "count": 0,
+            "rss_mb": 0
+          },
+          "msedge": {
+            "count": 6,
+            "rss_mb": 83
+          },
+          "python": {
+            "count": 2,
+            "rss_mb": 286
+          },
+          "node": {
+            "count": 0,
+            "rss_mb": 0
+          },
+          "firefox": {
+            "count": 0,
+            "rss_mb": 0
+          }
+        },
+        "other_ollama_clients": [],
+        "on_ac_power": true,
+        "own_rss_mb": 279
+      },
+      "load_after": {
+        "taken_at": "2026-10-31T03:47:15+00:00",
+        "ram_total_mb": 16164,
+        "ram_free_mb": 2556,
+        "cpu_load_pct": 8.6,
+        "gpu_device_used_mb": 3045.0,
+        "gpu_util_pct": 0.0,
+        "ollama_loaded": [
+          {
+            "name": "gemma4:e2b",
+            "size_vram_mb": 315.5
+          }
+        ],
+        "process_groups": {
+          "ollama": {
+            "count": 2,
+            "rss_mb": 38
+          },
+          "llama-server": {
+            "count": 1,
+            "rss_mb": 2907
+          },
+          "chrome": {
+            "count": 15,
+            "rss_mb": 1445
+          },
+          "msedge": {
+            "count": 6,
+            "rss_mb": 53
+          },
+          "python": {
+            "count": 2,
+            "rss_mb": 1801
+          },
+          "node": {
+            "count": 0,
+            "rss_mb": 0
+          },
+          "firefox": {
+            "count": 0,
+            "rss_mb": 0
+          }
+        },
+        "other_ollama_clients": [],
+        "on_ac_power": true,
+        "own_rss_mb": 1796
+      }
+    },
+    "optimized": {
+      "dir": "evals/evidence/final/final",
+      "source_id": "e20a5fcfbf+8b392f0e",
+      "config_id": "2a768d7bf1af",
+      "started_at": "2026-10-31T03:47:35+00:00",
+      "contended": false,
+      "load_before": {
+        "taken_at": "2026-10-31T03:47:33+00:00",
+        "ram_total_mb": 16164,
+        "ram_free_mb": 6913,
+        "cpu_load_pct": 26.1,
+        "gpu_device_used_mb": 0.0,
+        "gpu_util_pct": 0.0,
+        "ollama_loaded": [],
+        "process_groups": {
+          "ollama": {
+            "count": 2,
+            "rss_mb": 38
+          },
+          "llama-server": {
+            "count": 0,
+            "rss_mb": 0
+          },
+          "chrome": {
+            "count": 15,
+            "rss_mb": 1454
+          },
+          "msedge": {
+            "count": 6,
+            "rss_mb": 53
+          },
+          "python": {
+            "count": 2,
+            "rss_mb": 286
+          },
+          "node": {
+            "count": 0,
+            "rss_mb": 0
+          },
+          "firefox": {
+            "count": 0,
+            "rss_mb": 0
+          }
+        },
+        "other_ollama_clients": [],
+        "on_ac_power": true,
+        "own_rss_mb": 279
+      },
+      "load_after": {
+        "taken_at": "2026-10-31T03:50:42+00:00",
+        "ram_total_mb": 16164,
+        "ram_free_mb": 2449,
+        "cpu_load_pct": 7.5,
+        "gpu_device_used_mb": 3045.0,
+        "gpu_util_pct": 0.0,
+        "ollama_loaded": [
+          {
+            "name": "gemma4:e2b",
+            "size_vram_mb": 315.5
+          }
+        ],
+        "process_groups": {
+          "ollama": {
+            "count": 2,
+            "rss_mb": 38
+          },
+          "llama-server": {
+            "count": 1,
+            "rss_mb": 2908
+          },
+          "chrome": {
+            "count": 0,
+            "rss_mb": 0
+          },
+          "msedge": {
+            "count": 6,
+            "rss_mb": 54
+          },
+          "python": {
+            "count": 2,
+            "rss_mb": 2274
+          },
+          "node": {
+            "count": 0,
+            "rss_mb": 0
+          },
+          "firefox": {
+            "count": 0,
+            "rss_mb": 0
+          }
+        },
+        "other_ollama_clients": [],
+        "on_ac_power": true,
+        "own_rss_mb": 2267
+      }
+    }
+  },
+  "input_sha256": "f3f9dc73ac2d846de3af5c8647afcccd58d0335b80cd06f416f4dd08a1ca6165",
+  "model_digest": "b37049369adfe3d2b653af0ab301a062ca5cbe96ace6aa0d3f2559ee9b563fc2",
+  "comparability": {
+    "comparable": true,
+    "checks": {
+      "same_input": true,
+      "same_model_digest": true,
+      "same_model_route_and_decoding": true,
+      "same_guardrail_policy": true,
+      "same_hardware_and_power": true,
+      "same_percentile_method": true,
+      "neither_contended": true,
+      "same_timeouts": true,
+      "at_least_3_repetitions": true,
+      "same_case_set": true
+    },
+    "reasons": []
+  },
+  "quality": {
+    "baseline_success": "18/18",
+    "optimized_success": "18/18",
+    "quality_preserved": true,
+    "failures": {
+      "baseline": {},
+      "optimized": {}
+    },
+    "error_turns": {
+      "baseline": 0,
+      "optimized": 0,
+      "improvement_pct": null
+    },
+    "llm_call_failures": {
+      "baseline": 0,
+      "optimized": 0
+    },
+    "injected_timeouts": {
+      "baseline": 3,
+      "optimized": 3
+    },
+    "recovered_timeouts": {
+      "baseline": 3,
+      "optimized": 3
+    },
+    "validator": {
+      "baseline": {
+        "run_1.json": {
+          "ok": true,
+          "error": null
+        },
+        "run_2.json": {
+          "ok": true,
+          "error": null
+        },
+        "run_3.json": {
+          "ok": true,
+          "error": null
+        }
+      },
+      "optimized": {
+        "run_1.json": {
+          "ok": true,
+          "error": null
+        },
+        "run_2.json": {
+          "ok": true,
+          "error": null
+        },
+        "run_3.json": {
+          "ok": true,
+          "error": null
+        }
+      }
+    }
+  },
+  "latency_ms": {
+    "p50": {
+      "baseline": 9736.2,
+      "optimized": 6902.6,
+      "improvement_pct": 29.1
+    },
+    "p95": {
+      "baseline": 12636.7,
+      "optimized": 11648.8,
+      "improvement_pct": 7.8
+    },
+    "mean": {
+      "baseline": 9402.3,
+      "optimized": 7063.7,
+      "improvement_pct": 24.9
+    },
+    "n": {
+      "baseline": 18,
+      "optimized": 18
+    },
+    "per_case_median": {
+      "public_01_refund_boundary": {
+        "baseline": 8140.5,
+        "optimized": 5520.8,
+        "improvement_pct": 32.2
+      },
+      "public_02_exchange": {
+        "baseline": 10276.0,
+        "optimized": 7206.9,
+        "improvement_pct": 29.9
+      },
+      "public_03_expired": {
+        "baseline": 6044.3,
+        "optimized": 5399.8,
+        "improvement_pct": 10.7
+      },
+      "public_04_clarify": {
+        "baseline": 12482.2,
+        "optimized": 10029.1,
+        "improvement_pct": 19.7
+      },
+      "public_05_stale_stock": {
+        "baseline": 9626.2,
+        "optimized": 7110.4,
+        "improvement_pct": 26.1
+      },
+      "public_06_timeout_replay": {
+        "baseline": 9736.2,
+        "optimized": 6250.4,
+        "improvement_pct": 35.8
+      }
+    }
+  },
+  "components_median_ms_per_task": {
+    "llm_ms": {
+      "baseline": 7053.2,
+      "optimized": 5591.4,
+      "improvement_pct": 20.7
+    },
+    "guard_ms": {
+      "baseline": 861.5,
+      "optimized": 647.1,
+      "improvement_pct": 24.9
+    },
+    "other_ms": {
+      "baseline": 1295.8,
+      "optimized": 433.3,
+      "improvement_pct": 66.6
+    }
+  },
+  "llm_calls_per_task_median": {
+    "baseline": 6,
+    "optimized": 4,
+    "improvement_pct": 33.3
+  },
+  "tokens": {
+    "completion_total": {
+      "baseline": 4135,
+      "optimized": 3568,
+      "improvement_pct": 13.7
+    },
+    "prompt_total": {
+      "baseline": 72615,
+      "optimized": 66045,
+      "improvement_pct": 9.0
+    },
+    "effective_output_tokens_per_call_second_median": {
+      "baseline": 32.4,
+      "optimized": 34.9,
+      "increase_pct": 7.7
+    },
+    "note": "Ollama-reported completion tokens / summed LLM call wall time (not pure decode time)"
+  },
+  "memory": {
+    "peak_ram_mb_max": {
+      "baseline": 4900.0,
+      "optimized": 5275.2,
+      "improvement_pct": -7.7
+    },
+    "peak_python_rss_mb_max": {
+      "baseline": 1939.6,
+      "optimized": 2319.3,
+      "improvement_pct": -19.6
+    },
+    "peak_model_server_rss_mb_max": {
+      "baseline": null,
+      "optimized": null,
+      "improvement_pct": null
+    },
+    "peak_vram_mb_max": {
+      "baseline": 315.5,
+      "optimized": 315.5,
+      "improvement_pct": 0.0
+    },
+    "peak_gpu_device_used_mb_max": {
+      "baseline": 3045.0,
+      "optimized": 3045.0,
+      "improvement_pct": 0.0
+    },
+    "peak_mcp_children_rss_mb_max": {
+      "baseline": 0.0,
+      "optimized": 0.0,
+      "improvement_pct": null
+    },
+    "scope": {
+      "peak_ram_mb": "adapter Python RSS + its child processes (Step 9 MCP servers) + ollama* RSS summed per sample (shared pages double-counted); runs before Step 9 did not sample children",
+      "peak_vram_mb": "Ollama /api/ps size_vram (model allocation, not per-process driver data)",
+      "peak_gpu_device_used_mb": "whole GPU incl. other applications"
+    }
+  },
+  "cold_start_ms": {
+    "baseline": 55120.8,
+    "optimized": 33908.6,
+    "improvement_pct": 38.5
+  },
+  "cold_start_notes": {
+    "baseline": [
+      "model was not loaded in Ollama before the run; cold_start_ms = validator load + Ollama readiness + one warm-up call; cases run warm"
+    ],
+    "optimized": [
+      "model was not loaded in Ollama before the run; cold_start_ms = validator load + Ollama readiness + one warm-up call; cases run warm"
+    ],
+    "comparable": true
+  },
+  "declarations": {
+    "baseline": {
+      "seeds": {
+        "llm_seed": 7,
+        "temperature": 0.0,
+        "top_p": 1.0,
+        "note": "the only random input to decisions; schema names and session IDs are random but unused by any decision"
+      },
+      "concurrency": {
+        "cases": 1,
+        "turns": 1,
+        "llm_requests": 1,
+        "ollama_num_parallel": "server default",
+        "note": "cases run one after another in one process"
+      },
+      "caches": {
+        "model_load": "evicted from Ollama before the run, so cold start includes the model load",
+        "warm_runs": "the model stays loaded between cases (one warm-up call before the first)",
+        "ollama_prompt_cache": "server default, not cleared between cases",
+        "guardrail_models": "loaded once per process from local caches",
+        "database_connections": "new connection per use",
+        "business_state": "none carried over: fresh schemas for every case in every repetition",
+        "os_file_cache": "not controlled, so a later variant may read model files from memory"
+      },
+      "timeouts": {
+        "llm_call_s": 75.0,
+        "llm_max_tokens": 512,
+        "agent_tool_steps": 5,
+        "tool_backend": "direct",
+        "task": "no overall task timeout; injected post-commit timeouts are counted separately"
+      }
+    },
+    "optimized": {
+      "seeds": {
+        "llm_seed": 7,
+        "temperature": 0.0,
+        "top_p": 1.0,
+        "note": "the only random input to decisions; schema names and session IDs are random but unused by any decision"
+      },
+      "concurrency": {
+        "cases": 1,
+        "turns": 1,
+        "llm_requests": 1,
+        "ollama_num_parallel": "server default",
+        "note": "cases run one after another in one process"
+      },
+      "caches": {
+        "model_load": "evicted from Ollama before the run, so cold start includes the model load",
+        "warm_runs": "the model stays loaded between cases (one warm-up call before the first)",
+        "ollama_prompt_cache": "server default, not cleared between cases",
+        "guardrail_models": "loaded once per process from local caches",
+        "database_connections": "per-schema pool",
+        "business_state": "none carried over: fresh schemas for every case in every repetition",
+        "os_file_cache": "not controlled, so a later variant may read model files from memory"
+      },
+      "timeouts": {
+        "llm_call_s": 75.0,
+        "llm_max_tokens": 512,
+        "agent_tool_steps": 5,
+        "tool_backend": "direct",
+        "task": "no overall task timeout; injected post-commit timeouts are counted separately"
+      }
+    }
+  },
+  "experiments": [
+    {
+      "id": "E1-pool",
+      "decision": "accept",
+      "effect": "p50 8601 -> 8080 ms (6.1%), mean 4.6%, p95 0.9%; LLM calls/task 6 -> 6",
+      "reason": "gate passed and latency improved",
+      "control": "evals/evidence/experiments/E1-pool/control",
+      "variant": "evals/evidence/experiments/E1-pool/variant",
+      "control_ids": {
+        "source_id": "3e72efe9f5+d423ba92",
+        "config_id": "b9c594125b7b"
+      },
+      "variant_ids": {
+        "source_id": "3e72efe9f5+6105ab4e",
+        "config_id": "24ba48140790"
+      },
+      "gate": {
+        "comparable": true,
+        "failed_checks": [],
+        "all_runs_correct": true,
+        "validator_ok": true,
+        "quality_preserved": true
+      },
+      "latency_ms": {
+        "p50": {
+          "baseline": 8601.1,
+          "optimized": 8080.5,
+          "improvement_pct": 6.1
+        },
+        "p95": {
+          "baseline": 10196.4,
+          "optimized": 10104.5,
+          "improvement_pct": 0.9
+        },
+        "mean": {
+          "baseline": 7984.2,
+          "optimized": 7614.9,
+          "improvement_pct": 4.6
+        },
+        "n": {
+          "baseline": 18,
+          "optimized": 18
+        },
+        "per_case_median": {
+          "public_01_refund_boundary": {
+            "baseline": 6465.9,
+            "optimized": 6277.5,
+            "improvement_pct": 2.9
+          },
+          "public_02_exchange": {
+            "baseline": 8452.9,
+            "optimized": 8080.5,
+            "improvement_pct": 4.4
+          },
+          "public_03_expired": {
+            "baseline": 5403.6,
+            "optimized": 5384.5,
+            "improvement_pct": 0.4
+          },
+          "public_04_clarify": {
+            "baseline": 9950.4,
+            "optimized": 9452.0,
+            "improvement_pct": 5.0
+          },
+          "public_05_stale_stock": {
+            "baseline": 8715.8,
+            "optimized": 8184.4,
+            "improvement_pct": 6.1
+          },
+          "public_06_timeout_replay": {
+            "baseline": 8854.9,
+            "optimized": 8191.3,
+            "improvement_pct": 7.5
+          }
+        }
+      },
+      "components_median_ms_per_task": {
+        "llm_ms": {
+          "baseline": 6797.7,
+          "optimized": 6844.0,
+          "improvement_pct": -0.7
+        },
+        "guard_ms": {
+          "baseline": 621.5,
+          "optimized": 700.6,
+          "improvement_pct": -12.7
+        },
+        "other_ms": {
+          "baseline": 804.6,
+          "optimized": 357.1,
+          "improvement_pct": 55.6
+        }
+      },
+      "llm_calls_per_task_median": {
+        "baseline": 6,
+        "optimized": 6,
+        "improvement_pct": 0.0
+      },
+      "tokens": {
+        "completion_total": {
+          "baseline": 3954,
+          "optimized": 3954,
+          "improvement_pct": 0.0
+        },
+        "prompt_total": {
+          "baseline": 49485,
+          "optimized": 49485,
+          "improvement_pct": 0.0
+        },
+        "effective_output_tokens_per_call_second_median": {
+          "baseline": 34.0,
+          "optimized": 33.4,
+          "increase_pct": -1.8
+        },
+        "note": "Ollama-reported completion tokens / summed LLM call wall time (not pure decode time)"
+      },
+      "memory": {
+        "peak_ram_mb_max": {
+          "baseline": 5314.8,
+          "optimized": 5259.2,
+          "improvement_pct": 1.0
+        },
+        "peak_python_rss_mb_max": {
+          "baseline": 2360.1,
+          "optimized": 2272.5,
+          "improvement_pct": 3.7
+        },
+        "peak_ollama_rss_mb_max": {
+          "baseline": 2991.6,
+          "optimized": 2990.2,
+          "improvement_pct": 0.0
+        },
+        "peak_vram_mb_max": {
+          "baseline": 315.5,
+          "optimized": 315.5,
+          "improvement_pct": 0.0
+        },
+        "peak_gpu_device_used_mb_max": {
+          "baseline": 3045.0,
+          "optimized": 3045.0,
+          "improvement_pct": 0.0
+        },
+        "scope": {
+          "peak_ram_mb": "adapter Python RSS + ollama* RSS summed per sample (shared pages double-counted)",
+          "peak_vram_mb": "Ollama /api/ps size_vram (model allocation, not per-process driver data)",
+          "peak_gpu_device_used_mb": "whole GPU incl. other applications"
+        }
+      },
+      "notes": "Control measured on AC power (decode probe 64.5 tok/s after) before the gate recorded AC status; the first variant attempt ran partly on battery and is kept as _invalid_variant_on_battery (see INVALID.md). Variant rerun on AC: decode 66.2 -> 63.6 tok/s."
+    },
+    {
+      "id": "E3-confirm-template",
+      "decision": "accept",
+      "effect": "p50 8080 -> 5719 ms (29.2%), mean 20.7%, p95 22.8%; LLM calls/task 6 -> 4",
+      "reason": "gate passed and latency improved",
+      "control": "evals/evidence/experiments/E1-pool/variant",
+      "variant": "evals/evidence/experiments/E3-confirm-template/variant",
+      "control_ids": {
+        "source_id": "3e72efe9f5+6105ab4e",
+        "config_id": "24ba48140790"
+      },
+      "variant_ids": {
+        "source_id": "3e72efe9f5+6105ab4e",
+        "config_id": "d6d3e38d35b5"
+      },
+      "gate": {
+        "comparable": true,
+        "failed_checks": [],
+        "all_runs_correct": true,
+        "validator_ok": true,
+        "quality_preserved": true
+      },
+      "latency_ms": {
+        "p50": {
+          "baseline": 8080.5,
+          "optimized": 5718.8,
+          "improvement_pct": 29.2
+        },
+        "p95": {
+          "baseline": 10104.5,
+          "optimized": 7795.8,
+          "improvement_pct": 22.8
+        },
+        "mean": {
+          "baseline": 7614.9,
+          "optimized": 6039.6,
+          "improvement_pct": 20.7
+        },
+        "n": {
+          "baseline": 18,
+          "optimized": 18
+        },
+        "per_case_median": {
+          "public_01_refund_boundary": {
+            "baseline": 6277.5,
+            "optimized": 4435.0,
+            "improvement_pct": 29.4
+          },
+          "public_02_exchange": {
+            "baseline": 8080.5,
+            "optimized": 6582.0,
+            "improvement_pct": 18.5
+          },
+          "public_03_expired": {
+            "baseline": 5384.5,
+            "optimized": 5109.9,
+            "improvement_pct": 5.1
+          },
+          "public_04_clarify": {
+            "baseline": 9452.0,
+            "optimized": 7779.6,
+            "improvement_pct": 17.7
+          },
+          "public_05_stale_stock": {
+            "baseline": 8184.4,
+            "optimized": 6581.8,
+            "improvement_pct": 19.6
+          },
+          "public_06_timeout_replay": {
+            "baseline": 8191.3,
+            "optimized": 5583.7,
+            "improvement_pct": 31.8
+          }
+        }
+      },
+      "components_median_ms_per_task": {
+        "llm_ms": {
+          "baseline": 6844.0,
+          "optimized": 4769.8,
+          "improvement_pct": 30.3
+        },
+        "guard_ms": {
+          "baseline": 700.6,
+          "optimized": 540.4,
+          "improvement_pct": 22.9
+        },
+        "other_ms": {
+          "baseline": 357.1,
+          "optimized": 299.3,
+          "improvement_pct": 16.2
+        }
+      },
+      "llm_calls_per_task_median": {
+        "baseline": 6,
+        "optimized": 4,
+        "improvement_pct": 33.3
+      },
+      "tokens": {
+        "completion_total": {
+          "baseline": 3954,
+          "optimized": 3381,
+          "improvement_pct": 14.5
+        },
+        "prompt_total": {
+          "baseline": 49485,
+          "optimized": 43236,
+          "improvement_pct": 12.6
+        },
+        "effective_output_tokens_per_call_second_median": {
+          "baseline": 33.4,
+          "optimized": 35.9,
+          "increase_pct": 7.5
+        },
+        "note": "Ollama-reported completion tokens / summed LLM call wall time (not pure decode time)"
+      },
+      "memory": {
+        "peak_ram_mb_max": {
+          "baseline": 5259.2,
+          "optimized": 5298.5,
+          "improvement_pct": -0.7
+        },
+        "peak_python_rss_mb_max": {
+          "baseline": 2272.5,
+          "optimized": 2326.6,
+          "improvement_pct": -2.4
+        },
+        "peak_ollama_rss_mb_max": {
+          "baseline": 2990.2,
+          "optimized": 2988.4,
+          "improvement_pct": 0.1
+        },
+        "peak_vram_mb_max": {
+          "baseline": 315.5,
+          "optimized": 315.5,
+          "improvement_pct": 0.0
+        },
+        "peak_gpu_device_used_mb_max": {
+          "baseline": 3045.0,
+          "optimized": 3045.0,
+          "improvement_pct": 0.0
+        },
+        "scope": {
+          "peak_ram_mb": "adapter Python RSS + ollama* RSS summed per sample (shared pages double-counted)",
+          "peak_vram_mb": "Ollama /api/ps size_vram (model allocation, not per-process driver data)",
+          "peak_gpu_device_used_mb": "whole GPU incl. other applications"
+        }
+      },
+      "notes": "UX trade-off: confirmation replies are templated (e.g. 'Your refund of $30.00 for line L1 of order O100 is complete.'), which states the stored result exactly. Tests updated where they asserted the old call count; a new test covers the switch-off path."
+    }
+  ],
+  "claims_allowed": true
+}

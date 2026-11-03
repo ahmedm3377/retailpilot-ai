@@ -1,0 +1,135 @@
+{
+  "variant": "E3-confirm-template",
+  "source_id": "3e72efe9f5+6105ab4e",
+  "config_id": "d6d3e38d35b5",
+  "input_sha256": "f3f9dc73ac2d846de3af5c8647afcccd58d0335b80cd06f416f4dd08a1ca6165",
+  "repetitions": 3,
+  "cases": 6,
+  "cold_start_ms": 19007.2,
+  "validator": {
+    "run_1.json": {
+      "ok": true,
+      "error": null
+    },
+    "run_2.json": {
+      "ok": true,
+      "error": null
+    },
+    "run_3.json": {
+      "ok": true,
+      "error": null
+    }
+  },
+  "decode_probe": {
+    "runs": [
+      {
+        "eval_count": 14,
+        "eval_ms": 216.6,
+        "prompt_eval_count": 20,
+        "prompt_eval_ms": 60.9,
+        "total_ms": 299.3,
+        "decode_tokens_per_s": 64.6
+      },
+      {
+        "eval_count": 14,
+        "eval_ms": 218.8,
+        "prompt_eval_count": 20,
+        "prompt_eval_ms": 57.1,
+        "total_ms": 295.2,
+        "decode_tokens_per_s": 64.0
+      },
+      {
+        "eval_count": 14,
+        "eval_ms": 220.9,
+        "prompt_eval_count": 20,
+        "prompt_eval_ms": 57.6,
+        "total_ms": 298.7,
+        "decode_tokens_per_s": 63.4
+      }
+    ],
+    "median_decode_tokens_per_s": 64.0,
+    "method": "Ollama /api/chat, fixed prompt, num_predict=64, temperature 0, think off; decode_tokens_per_s = eval_count / eval_duration as reported by Ollama"
+  },
+  "decode_probe_before": {
+    "runs": [
+      {
+        "eval_count": 14,
+        "eval_ms": 226.7,
+        "prompt_eval_count": 20,
+        "prompt_eval_ms": 62.7,
+        "total_ms": 307.8,
+        "decode_tokens_per_s": 61.8
+      },
+      {
+        "eval_count": 14,
+        "eval_ms": 213.6,
+        "prompt_eval_count": 20,
+        "prompt_eval_ms": 58.2,
+        "total_ms": 289.9,
+        "decode_tokens_per_s": 65.5
+      },
+      {
+        "eval_count": 14,
+        "eval_ms": 211.5,
+        "prompt_eval_count": 20,
+        "prompt_eval_ms": 56.7,
+        "total_ms": 283.4,
+        "decode_tokens_per_s": 66.2
+      }
+    ],
+    "median_decode_tokens_per_s": 65.5,
+    "method": "Ollama /api/chat, fixed prompt, num_predict=64, temperature 0, think off; decode_tokens_per_s = eval_count / eval_duration as reported by Ollama"
+  },
+  "task_runs": 18,
+  "complete_task_success": 18,
+  "success_rate": 1.0,
+  "failures_by_category": {},
+  "oracle_pass": 18,
+  "error_turns": 0,
+  "injected_timeouts": 3,
+  "recovered_timeouts": 3,
+  "successful_task_latency_ms": {
+    "n": 18,
+    "p50": 5718.8,
+    "p95": 7795.8,
+    "min": 4198.8,
+    "max": 7795.8,
+    "mean": 6039.6,
+    "cv": 0.1833,
+    "method": "nearest-rank: sorted value at 1-based rank ceil(q*n); no interpolation",
+    "scope": "first turn start to last turn end; successful runs only"
+  },
+  "per_case_median_ms": {
+    "public_01_refund_boundary": 4435.0,
+    "public_02_exchange": 6582.0,
+    "public_03_expired": 5109.9,
+    "public_04_clarify": 7779.6,
+    "public_05_stale_stock": 6581.8,
+    "public_06_timeout_replay": 5583.7
+  },
+  "component_median_ms_per_task": {
+    "llm_ms": 4769.8,
+    "guard_ms": 540.4,
+    "other_ms": 299.3,
+    "derivation": "llm = sum of llm_call latency; guard = sum of guardrail elapsed; other = remainder"
+  },
+  "llm_calls_per_task_median": 4,
+  "tokens": {
+    "prompt_total": 43236,
+    "completion_total": 3381,
+    "effective_output_tokens_per_call_second_median": 35.9,
+    "note": "Ollama-reported completion tokens / summed LLM call wall time (not pure decode time)"
+  },
+  "memory": {
+    "peak_ram_mb_max": 5298.5,
+    "peak_python_rss_mb_max": 2326.6,
+    "peak_ollama_rss_mb_max": 2988.4,
+    "peak_vram_mb_max": 315.5,
+    "peak_gpu_device_used_mb_max": 3045.0,
+    "scope": {
+      "peak_ram_mb": "adapter Python RSS + ollama* RSS summed per sample (shared pages double-counted)",
+      "peak_vram_mb": "Ollama /api/ps size_vram (model allocation, not per-process driver data)",
+      "peak_gpu_device_used_mb": "whole GPU incl. other applications"
+    }
+  }
+}

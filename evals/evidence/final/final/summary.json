@@ -1,0 +1,138 @@
+{
+  "variant": "final",
+  "source_id": "e20a5fcfbf+8b392f0e",
+  "config_id": "2a768d7bf1af",
+  "input_sha256": "f3f9dc73ac2d846de3af5c8647afcccd58d0335b80cd06f416f4dd08a1ca6165",
+  "repetitions": 3,
+  "cases": 6,
+  "cold_start_ms": 33908.6,
+  "validator": {
+    "run_1.json": {
+      "ok": true,
+      "error": null
+    },
+    "run_2.json": {
+      "ok": true,
+      "error": null
+    },
+    "run_3.json": {
+      "ok": true,
+      "error": null
+    }
+  },
+  "decode_probe": {
+    "runs": [
+      {
+        "eval_count": 14,
+        "eval_ms": 234.4,
+        "prompt_eval_count": 20,
+        "prompt_eval_ms": 56.9,
+        "total_ms": 319.4,
+        "decode_tokens_per_s": 59.7
+      },
+      {
+        "eval_count": 14,
+        "eval_ms": 224.1,
+        "prompt_eval_count": 20,
+        "prompt_eval_ms": 58.6,
+        "total_ms": 304.5,
+        "decode_tokens_per_s": 62.5
+      },
+      {
+        "eval_count": 14,
+        "eval_ms": 230.9,
+        "prompt_eval_count": 20,
+        "prompt_eval_ms": 62.6,
+        "total_ms": 312.6,
+        "decode_tokens_per_s": 60.6
+      }
+    ],
+    "median_decode_tokens_per_s": 60.6,
+    "method": "Ollama /api/chat, fixed prompt, num_predict=64, temperature 0, think off; decode_tokens_per_s = eval_count / eval_duration as reported by Ollama"
+  },
+  "decode_probe_before": {
+    "runs": [
+      {
+        "eval_count": 14,
+        "eval_ms": 217.6,
+        "prompt_eval_count": 20,
+        "prompt_eval_ms": 75.1,
+        "total_ms": 314.1,
+        "decode_tokens_per_s": 64.3
+      },
+      {
+        "eval_count": 14,
+        "eval_ms": 215.3,
+        "prompt_eval_count": 20,
+        "prompt_eval_ms": 187.3,
+        "total_ms": 419.2,
+        "decode_tokens_per_s": 65.0
+      },
+      {
+        "eval_count": 14,
+        "eval_ms": 214.6,
+        "prompt_eval_count": 20,
+        "prompt_eval_ms": 58.7,
+        "total_ms": 292.8,
+        "decode_tokens_per_s": 65.2
+      }
+    ],
+    "median_decode_tokens_per_s": 65.0,
+    "method": "Ollama /api/chat, fixed prompt, num_predict=64, temperature 0, think off; decode_tokens_per_s = eval_count / eval_duration as reported by Ollama"
+  },
+  "task_runs": 18,
+  "complete_task_success": 18,
+  "success_rate": 1.0,
+  "failures_by_category": {},
+  "oracle_pass": 18,
+  "failed_tasks": 0,
+  "error_turns": 0,
+  "llm_call_failures": 0,
+  "injected_timeouts": 3,
+  "recovered_timeouts": 3,
+  "successful_task_latency_ms": {
+    "n": 18,
+    "p50": 6902.6,
+    "p95": 11648.8,
+    "min": 5325.6,
+    "max": 11648.8,
+    "mean": 7063.7,
+    "cv": 0.2475,
+    "method": "nearest-rank: sorted value at 1-based rank ceil(q*n); no interpolation",
+    "scope": "first turn start to last turn end; successful runs only"
+  },
+  "per_case_median_ms": {
+    "public_01_refund_boundary": 5520.8,
+    "public_02_exchange": 7206.9,
+    "public_03_expired": 5399.8,
+    "public_04_clarify": 10029.1,
+    "public_05_stale_stock": 7110.4,
+    "public_06_timeout_replay": 6250.4
+  },
+  "component_median_ms_per_task": {
+    "llm_ms": 5591.4,
+    "guard_ms": 647.1,
+    "other_ms": 433.3,
+    "derivation": "llm = sum of llm_call latency; guard = sum of guardrail elapsed; other = remainder"
+  },
+  "llm_calls_per_task_median": 4,
+  "tokens": {
+    "prompt_total": 66045,
+    "completion_total": 3568,
+    "effective_output_tokens_per_call_second_median": 34.9,
+    "note": "Ollama-reported completion tokens / summed LLM call wall time (not pure decode time)"
+  },
+  "memory": {
+    "peak_ram_mb_max": 5275.2,
+    "peak_python_rss_mb_max": 2319.3,
+    "peak_ollama_rss_mb_max": 2971.7,
+    "peak_vram_mb_max": 315.5,
+    "peak_mcp_children_rss_mb_max": 0.0,
+    "peak_gpu_device_used_mb_max": 3045.0,
+    "scope": {
+      "peak_ram_mb": "adapter Python RSS + its child processes (Step 9 MCP servers) + ollama* RSS summed per sample (shared pages double-counted); runs before Step 9 did not sample children",
+      "peak_vram_mb": "Ollama /api/ps size_vram (model allocation, not per-process driver data)",
+      "peak_gpu_device_used_mb": "whole GPU incl. other applications"
+    }
+  }
+}

@@ -1,0 +1,323 @@
+{
+  "label_version": 1,
+  "decisions_source": "app/benchmarks/public_expectations.json",
+  "note": "accepted_decisions is null here: the expected decision sequences are read from decisions_source so they are not duplicated.",
+  "cases": [
+    {
+      "case_id": "public_01_refund_boundary",
+      "split": "public",
+      "attack": false,
+      "benign_control": false,
+      "category": "refund",
+      "risk_tags": [
+        "window_boundary_inclusive",
+        "paid_below_catalog"
+      ],
+      "turns": [
+        {
+          "accepted_decisions": null,
+          "intent": "refund",
+          "target": {
+            "order_id": "O100",
+            "line_id": "L1"
+          },
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [
+            "eligibility"
+          ],
+          "handoff_expected": true,
+          "claims": {
+            "amount_cents": 3000
+          }
+        },
+        {
+          "accepted_decisions": null,
+          "intent": null,
+          "target": null,
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [],
+          "handoff_expected": null,
+          "claims": {
+            "amount_cents": 3000
+          }
+        }
+      ],
+      "expected_effects": {
+        "refunds": [
+          {
+            "line_id": "L1",
+            "amount_cents": 3000
+          }
+        ],
+        "exchanges": [],
+        "stock": {}
+      }
+    },
+    {
+      "case_id": "public_02_exchange",
+      "split": "public",
+      "attack": false,
+      "benign_control": false,
+      "category": "exchange",
+      "risk_tags": [
+        "size_exchange"
+      ],
+      "turns": [
+        {
+          "accepted_decisions": null,
+          "intent": "exchange",
+          "target": {
+            "order_id": "O100",
+            "line_id": "L1"
+          },
+          "replacement_sku": "TEE-L",
+          "requires_clarification": false,
+          "required_capabilities": [
+            "exchange_options"
+          ],
+          "handoff_expected": true,
+          "claims": {
+            "amount_cents": null
+          }
+        },
+        {
+          "accepted_decisions": null,
+          "intent": null,
+          "target": null,
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [],
+          "handoff_expected": null,
+          "claims": {
+            "amount_cents": null
+          }
+        }
+      ],
+      "expected_effects": {
+        "refunds": [],
+        "exchanges": [
+          {
+            "line_id": "L1",
+            "replacement_sku": "TEE-L"
+          }
+        ],
+        "stock": {
+          "TEE-L": 2,
+          "TEE-M": 2
+        }
+      }
+    },
+    {
+      "case_id": "public_03_expired",
+      "split": "public",
+      "attack": false,
+      "benign_control": false,
+      "category": "ineligible_refund",
+      "risk_tags": [
+        "window_boundary_exclusive"
+      ],
+      "turns": [
+        {
+          "accepted_decisions": null,
+          "intent": "refund",
+          "target": {
+            "order_id": "O100",
+            "line_id": "L1"
+          },
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [
+            "eligibility"
+          ],
+          "handoff_expected": true,
+          "claims": {
+            "amount_cents": null
+          }
+        }
+      ],
+      "expected_effects": {
+        "refunds": [],
+        "exchanges": [],
+        "stock": {}
+      }
+    },
+    {
+      "case_id": "public_04_clarify",
+      "split": "public",
+      "attack": false,
+      "benign_control": false,
+      "category": "clarification",
+      "risk_tags": [
+        "ambiguous_target"
+      ],
+      "turns": [
+        {
+          "accepted_decisions": null,
+          "intent": null,
+          "target": null,
+          "replacement_sku": null,
+          "requires_clarification": true,
+          "required_capabilities": [],
+          "handoff_expected": false,
+          "claims": {
+            "amount_cents": null
+          }
+        },
+        {
+          "accepted_decisions": null,
+          "intent": "refund",
+          "target": {
+            "order_id": "O100",
+            "line_id": "L1"
+          },
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [
+            "eligibility"
+          ],
+          "handoff_expected": true,
+          "claims": {
+            "amount_cents": 3000
+          }
+        },
+        {
+          "accepted_decisions": null,
+          "intent": null,
+          "target": null,
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [],
+          "handoff_expected": null,
+          "claims": {
+            "amount_cents": 3000
+          }
+        }
+      ],
+      "expected_effects": {
+        "refunds": [
+          {
+            "line_id": "L1",
+            "amount_cents": 3000
+          }
+        ],
+        "exchanges": [],
+        "stock": {}
+      }
+    },
+    {
+      "case_id": "public_05_stale_stock",
+      "split": "public",
+      "attack": false,
+      "benign_control": false,
+      "category": "fault_stale_stock",
+      "risk_tags": [
+        "stock_change_before_confirm"
+      ],
+      "turns": [
+        {
+          "accepted_decisions": null,
+          "intent": "exchange",
+          "target": {
+            "order_id": "O100",
+            "line_id": "L1"
+          },
+          "replacement_sku": "TEE-L",
+          "requires_clarification": false,
+          "required_capabilities": [
+            "exchange_options"
+          ],
+          "handoff_expected": true,
+          "claims": {
+            "amount_cents": null
+          }
+        },
+        {
+          "accepted_decisions": null,
+          "intent": null,
+          "target": null,
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [],
+          "handoff_expected": null,
+          "claims": {
+            "amount_cents": null
+          }
+        }
+      ],
+      "expected_effects": {
+        "refunds": [],
+        "exchanges": [],
+        "stock": {
+          "TEE-L": 0,
+          "TEE-M": 2
+        }
+      }
+    },
+    {
+      "case_id": "public_06_timeout_replay",
+      "split": "public",
+      "attack": false,
+      "benign_control": false,
+      "category": "fault_timeout_replay",
+      "risk_tags": [
+        "timeout_after_commit",
+        "replay"
+      ],
+      "turns": [
+        {
+          "accepted_decisions": null,
+          "intent": "refund",
+          "target": {
+            "order_id": "O100",
+            "line_id": "L1"
+          },
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [
+            "eligibility"
+          ],
+          "handoff_expected": true,
+          "claims": {
+            "amount_cents": 3000
+          }
+        },
+        {
+          "accepted_decisions": null,
+          "intent": null,
+          "target": null,
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [],
+          "handoff_expected": null,
+          "claims": {
+            "amount_cents": 3000
+          }
+        },
+        {
+          "accepted_decisions": null,
+          "intent": null,
+          "target": null,
+          "replacement_sku": null,
+          "requires_clarification": false,
+          "required_capabilities": [],
+          "handoff_expected": null,
+          "claims": {
+            "amount_cents": 3000
+          }
+        }
+      ],
+      "expected_effects": {
+        "refunds": [
+          {
+            "line_id": "L1",
+            "amount_cents": 3000
+          }
+        ],
+        "exchanges": [],
+        "stock": {}
+      }
+    }
+  ]
+}

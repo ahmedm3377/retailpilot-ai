@@ -1,0 +1,255 @@
+{
+  "variant": "E1-pool",
+  "started_at": "2026-10-29T19:44:34+00:00",
+  "finished_at": "2026-10-29T19:52:02+00:00",
+  "source": {
+    "source_id": "3e72efe9f5+dcf25a05",
+    "head": "3e72efe9f5e7601ba8addf1ae060950b2a2d6f76",
+    "dirty": true,
+    "diff_sha256": "819225ff6f719a929c9882a1180f8493030de21b7d01732790da6b17bd230279",
+    "untracked_source_files": [
+      "app/benchmarks/__init__.py",
+      "app/benchmarks/compare.py",
+      "app/benchmarks/experiment.py",
+      "app/benchmarks/identity.py",
+      "app/benchmarks/machine.py",
+      "app/benchmarks/probe.py",
+      "app/benchmarks/profile.py",
+      "app/benchmarks/public_expectations.json",
+      "app/benchmarks/run.py",
+      "app/benchmarks/stats.py",
+      "app/benchmarks/summary.py",
+      "app/benchmarks/verify.py",
+      "tests/test_step06_tooling.py"
+    ],
+    "untracked_sha256": "5c4c897416e47adcc5ff24d030de66951c38dd90ffbfcc2057a76d62470a905d",
+    "changed_files": [
+      "app/agents/graph.py",
+      "app/agents/settings.py",
+      "app/db/connection.py",
+      "app/db/fixture_state.py",
+      "app/evaluation/metrics.py",
+      "tests/test_step03_routing_and_permissions.py",
+      "tests/test_step04_runner.py",
+      "app/benchmarks/__init__.py",
+      "app/benchmarks/compare.py",
+      "app/benchmarks/experiment.py",
+      "app/benchmarks/identity.py",
+      "app/benchmarks/machine.py",
+      "app/benchmarks/probe.py",
+      "app/benchmarks/profile.py",
+      "app/benchmarks/public_expectations.json",
+      "app/benchmarks/run.py",
+      "app/benchmarks/stats.py",
+      "app/benchmarks/summary.py",
+      "app/benchmarks/verify.py",
+      "tests/test_step06_tooling.py"
+    ]
+  },
+  "config": {
+    "config_id": "24ba48140790",
+    "settings": {
+      "ollama_base_url": "http://127.0.0.1:11434",
+      "model": "ollama_chat/gemma4:e2b",
+      "timeout_s": 75.0,
+      "max_tokens": 512,
+      "think": false,
+      "temperature": 0.0,
+      "top_p": 1.0,
+      "seed": 7,
+      "max_tool_steps": 5,
+      "checkpoint_schema": "retail_checkpoints",
+      "guardrails_enabled": true,
+      "jailbreak_threshold": 0.8,
+      "toxicity_threshold": 0.5,
+      "fail_closed": true,
+      "max_input_chars": 2000,
+      "confirm_template": false
+    },
+    "db_pool": true,
+    "prompt_sha256": {
+      "customer.handoff": "da380ab5ec477ffedc88937ba2f4ab9d5d5a7c67ff7495a0c8f562802eefefb0",
+      "customer.explain": "c279253e5db8939f60dccb173fb017c995d0453036197ceb90bca9e6d6e68085",
+      "operations": "9ad75786aee60ce9bff8a16fd24bbca4ba92f40e4965a71f9563a3bbc87a7910"
+    }
+  },
+  "input_sha256": "f3f9dc73ac2d846de3af5c8647afcccd58d0335b80cd06f416f4dd08a1ca6165",
+  "input_file": "candidate_assets/public_cases.json",
+  "model": {
+    "model": "ollama_chat/gemma4:e2b",
+    "digest": "b37049369adfe3d2b653af0ab301a062ca5cbe96ace6aa0d3f2559ee9b563fc2",
+    "quantization": "Q4_K_M",
+    "parameter_size": "4.6B",
+    "ollama_version": "0.40.12",
+    "decoding": {
+      "temperature": 0.0,
+      "top_p": 1.0,
+      "seed": 7,
+      "think": false,
+      "max_tokens": 512,
+      "timeout_s": 75.0
+    },
+    "ollama_loaded_model": {
+      "size_mb": 315.5,
+      "size_vram_mb": 315.5,
+      "context_length": 4096,
+      "source": "Ollama /api/ps after warm-up"
+    }
+  },
+  "cold_start": {
+    "cold_start_ms": 18874.8,
+    "notes": [
+      "model was already loaded in Ollama before the run; cold_start_ms = validator load + Ollama readiness + one warm-up call; cases run warm"
+    ]
+  },
+  "keep_alive": "Ollama server default (client does not set keep_alive)",
+  "hardware": {
+    "cpu": "Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz",
+    "cpu_physical_cores": 6,
+    "cpu_logical_cores": 12,
+    "ram": "15.8 GiB",
+    "gpu": [
+      {
+        "name": "NVIDIA GeForce GTX 1060 with Max-Q Design",
+        "memory_total": "6144 MiB",
+        "driver": "581.57"
+      }
+    ],
+    "os": "Windows 11 (10.0.26200)",
+    "machine": "AMD64",
+    "python": "3.13.11",
+    "power": {
+      "on_ac_power": false,
+      "power_scheme": "Balanced"
+    }
+  },
+  "packages": {
+    "litellm": "1.106.6",
+    "langgraph": "1.2.18",
+    "langgraph-checkpoint-postgres": "3.2.0",
+    "langchain-core": "1.7.1",
+    "guardrails-ai": "0.11.0",
+    "guardrails-ai-detect-jailbreak": "0.1.6",
+    "guardrails-ai-toxic-language": "0.0.2",
+    "guardrails-ai-detect-pii": "0.0.6",
+    "presidio-analyzer": "2.2.362",
+    "detoxify": "0.5.4",
+    "transformers": "5.22.0",
+    "torch": "2.15.0",
+    "psycopg": "3.3.6",
+    "pydantic": "2.14.1",
+    "psutil": "7.2.2"
+  },
+  "guardrails": {
+    "enabled": true,
+    "fail_closed": true,
+    "validators": {
+      "TaskInjection": "custom regex validator (retail/task_injection)",
+      "DetectJailbreak": "local, threshold=0.8",
+      "ToxicLanguage": "local Detoxify unbiased-small, threshold=0.5, full",
+      "DetectPII": "local Presidio en_core_web_sm, ['EMAIL_ADDRESS', 'PHONE_NUMBER'], fix",
+      "Schema": "Guard.for_pydantic + Pydantic extra=forbid"
+    },
+    "unavailable": {}
+  },
+  "load_before": {
+    "taken_at": "2026-10-29T19:44:32+00:00",
+    "ram_total_mb": 16164,
+    "ram_free_mb": 3915,
+    "cpu_load_pct": 6.9,
+    "gpu_device_used_mb": 3045.0,
+    "gpu_util_pct": 0.0,
+    "ollama_loaded": [
+      {
+        "name": "gemma4:e2b",
+        "size_vram_mb": 315.5
+      }
+    ],
+    "process_groups": {
+      "ollama": {
+        "count": 2,
+        "rss_mb": 86
+      },
+      "llama-server": {
+        "count": 1,
+        "rss_mb": 2871
+      },
+      "chrome": {
+        "count": 17,
+        "rss_mb": 1368
+      },
+      "msedge": {
+        "count": 15,
+        "rss_mb": 297
+      },
+      "python": {
+        "count": 4,
+        "rss_mb": 302
+      },
+      "node": {
+        "count": 0,
+        "rss_mb": 0
+      },
+      "firefox": {
+        "count": 0,
+        "rss_mb": 0
+      }
+    },
+    "other_ollama_clients": [],
+    "own_rss_mb": 278
+  },
+  "load_after": {
+    "taken_at": "2026-10-29T19:52:00+00:00",
+    "ram_total_mb": 16164,
+    "ram_free_mb": 1941,
+    "cpu_load_pct": 44.9,
+    "gpu_device_used_mb": 3045.0,
+    "gpu_util_pct": 0.0,
+    "ollama_loaded": [
+      {
+        "name": "gemma4:e2b",
+        "size_vram_mb": 315.5
+      }
+    ],
+    "process_groups": {
+      "ollama": {
+        "count": 2,
+        "rss_mb": 85
+      },
+      "llama-server": {
+        "count": 1,
+        "rss_mb": 2826
+      },
+      "chrome": {
+        "count": 17,
+        "rss_mb": 1156
+      },
+      "msedge": {
+        "count": 15,
+        "rss_mb": 313
+      },
+      "python": {
+        "count": 4,
+        "rss_mb": 2291
+      },
+      "node": {
+        "count": 0,
+        "rss_mb": 0
+      },
+      "firefox": {
+        "count": 0,
+        "rss_mb": 0
+      }
+    },
+    "other_ollama_clients": [],
+    "own_rss_mb": 2264
+  },
+  "contended": false,
+  "contention": [],
+  "network": {
+    "blocked_in_process": true,
+    "attempts": []
+  },
+  "concurrency": 1,
+  "prewarm": "runner.prepare(): validators + Ollama ready + one warm-up call"
+}

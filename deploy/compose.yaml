@@ -1,0 +1,226 @@
+# The whole desk in Docker: PostgreSQL, Ollama (+ the model), the MCP server, the API, the web UI and the
+# observability stack (OpenTelemetry Collector, Tempo, Prometheus, Grafana). From the repository root:
+#
+#   docker compose -f deploy/compose.yaml up -d --build                                   # CPU only
+#   docker compose -f deploy/compose.yaml -f deploy/compose.gpu.yaml up -d --build        # NVIDIA GPU
+#
+# UI http://127.0.0.1:5173 · Grafana http://127.0.0.1:13000 · PostgreSQL 127.0.0.1:55432 (retail/retail).
+# Settings: copy deploy/.env.example to deploy/.env. The first `up` needs the internet (images, Python
+# packages, guardrail models, the model itself); after that everything runs offline.
+#
+# Networking: the app's safety checks accept only loopback for PostgreSQL, the model server, the MCP server
+# and the collector. So those services, the API and the UI proxy share ONE network namespace (the `net`
+# service) and talk over 127.0.0.1 exactly as on a native run: no check is relaxed. Only nginx (UI and
+# /api), PostgreSQL and the Grafana stack are published, on BIND_ADDRESS (loopback by default).
+# Tempo, Prometheus and Grafana sit on an ordinary network under the DNS names the configs in
+# observability/ already use, so those files are shared with the native stack unchanged.
+name: retail-docker
+
+x-app-image: &app-image
+  image: retail-app:local
+  build:
+    context: ..
+    dockerfile: deploy/app.Dockerfile
+
+x-app-env: &app-env
+  DATABASE_URL: postgresql://retail:${POSTGRES_PASSWORD:-retail}@127.0.0.1:5432/retail
+  RETAIL_TEST_DATABASE_URL: postgresql://retail:${POSTGRES_PASSWORD:-retail}@127.0.0.1:5432/retail_test
+  LLM_MODEL: ollama_chat/${OLLAMA_MODEL:-gemma4:e2b}
+  LLM_API_BASE: http://127.0.0.1:11434
+  LLM_ENGINE: ollama
+  LLM_ENGINE_VERSION: "0.40.12"   # keep equal to the ollama image tag below
+  # Digest of gemma4:e2b as pulled from the Ollama registry; set your own when OLLAMA_MODEL changes.
+  LLM_MODEL_REVISION: ${LLM_MODEL_REVISION:-b37049369adfe3d2b653af0ab301a062ca5cbe96ace6aa0d3f2559ee9b563fc2}
+  LLM_QUANTIZATION: ${LLM_QUANTIZATION:-Q4_K_M}
+  MCP_SERVER_URL: http://127.0.0.1:8765/mcp
+  MCP_SERVER_PORT: "8765"
+  MCP_AUTH_TOKEN: ${MCP_AUTH_TOKEN:-change-this-local-token}
+  RETAIL_OTEL_ENDPOINT: http://127.0.0.1:14318
+
+services:
+  # Holds the shared network namespace and publishes its ports. Does nothing else.
+  net:
+    image: busybox:1.37
+    command: ["sleep", "infinity"]
+    init: true
+    restart: unless-stopped
+    networks:
+      obs:
+        aliases: [retail-otel-collector]   # Prometheus scrapes the collector by this name
+    ports:
+      - "${BIND_ADDRESS:-127.0.0.1}:${UI_PORT:-5173}:5173"            # nginx: UI, /api, /health, /docs
+      - "${BIND_ADDRESS:-127.0.0.1}:${POSTGRES_PORT:-55432}:5432"     # PostgreSQL, for host tools
+
+  postgres:
+    image: postgres:17-alpine@sha256:eee6c6e1b0894fa4fe0075eb054af9fd1cf39a35321c2d4110626cfe506411fb
+    network_mode: service:net
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: retail
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-retail}
+      POSTGRES_DB: retail
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ../backend/docker/initdb:/docker-entrypoint-initdb.d:ro   # creates retail_test on first start
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U retail -d retail"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  ollama:
+    image: ollama/ollama:0.40.12
+    network_mode: service:net
+    restart: unless-stopped
+    environment:
+      OLLAMA_HOST: 127.0.0.1:11434
+    volumes:
+      - ollama:/root/.ollama
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  # One-shot: pulls the model into the ollama volume if it is not there yet (so restarts stay offline).
+  ollama-pull:
+    image: ollama/ollama:0.40.12
+    network_mode: service:net
+    environment:
+      OLLAMA_HOST: 127.0.0.1:11434
+      MODEL: ${OLLAMA_MODEL:-gemma4:e2b}
+    entrypoint: ["/bin/sh", "-c", "ollama show \"$$MODEL\" >/dev/null 2>&1 || ollama pull \"$$MODEL\""]
+    restart: "no"
+    depends_on:
+      ollama: {condition: service_healthy}
+
+  mcp:
+    <<: *app-image
+    network_mode: service:net
+    restart: unless-stopped
+    environment:
+      <<: *app-env
+    command: ["python", "-m", "mcp_server"]
+    depends_on:
+      postgres: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; socket.create_connection(('127.0.0.1', 8765), 2)"]
+      interval: 3s
+      timeout: 5s
+      retries: 40
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.130.0@sha256:867d1074c2f750936fb9358ec9eefa009308053cf156b2c7ca1761ba5ef78452
+    network_mode: service:net
+    restart: unless-stopped
+    # Same config as the native stack; only the OTLP receiver moves to loopback 14318, the port the app accepts.
+    command: ["--config=/etc/otelcol/config.yaml",
+              "--set=receivers.otlp.protocols.http.endpoint=127.0.0.1:14318"]
+    volumes:
+      - ../observability/otel-collector.yaml:/etc/otelcol/config.yaml:ro
+    depends_on: [tempo]
+
+  api:
+    <<: *app-image
+    network_mode: service:net
+    restart: unless-stopped
+    environment:
+      <<: *app-env
+    command: ["python", "-m", "app.api.serve", "--no-start-stack"]
+    depends_on:
+      postgres: {condition: service_healthy}
+      mcp: {condition: service_healthy}
+      ollama-pull: {condition: service_completed_successfully}
+      otel-collector: {condition: service_started}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health/live', timeout=3)"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 300s   # guardrail models load and the model warms up before the API listens
+
+  ui:
+    image: retail-ui:local
+    build:
+      context: ..
+      dockerfile: deploy/ui.Dockerfile
+    network_mode: service:net
+    restart: unless-stopped
+    depends_on:
+      api: {condition: service_healthy}
+
+  tempo:
+    image: grafana/tempo:2.8.2@sha256:0ef775495967cd5d7a6b2e146b6ea695d624803c8db8349fb8ce4164f719f9b7
+    restart: unless-stopped
+    user: "0"
+    command: ["-config.file=/etc/tempo.yaml"]
+    volumes:
+      - ../observability/tempo.yaml:/etc/tempo.yaml:ro
+      - tempo:/var/tempo
+    ports:
+      - "${BIND_ADDRESS:-127.0.0.1}:${TEMPO_PORT:-13200}:3200"
+    networks:
+      obs:
+        aliases: [retail-tempo]
+
+  prometheus:
+    image: prom/prometheus:v3.5.0@sha256:63805ebb8d2b3920190daf1cb14a60871b16fd38bed42b857a3182bc621f4996
+    restart: unless-stopped
+    command: ["--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.path=/prometheus",
+              "--storage.tsdb.retention.time=7d"]
+    volumes:
+      - ../observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus:/prometheus
+    ports:
+      - "${BIND_ADDRESS:-127.0.0.1}:${PROMETHEUS_PORT:-19090}:9090"
+    networks:
+      obs:
+        aliases: [retail-prometheus]
+
+  grafana:
+    image: grafana/grafana:12.1.0@sha256:6ac590e7cabc2fbe8d7b8fc1ce9c9f0582177b334e0df9c927ebd9670469440f
+    restart: unless-stopped
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: "Viewer"
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+      GF_ANALYTICS_CHECK_FOR_PLUGIN_UPDATES: "false"
+      GF_ANALYTICS_FEEDBACK_LINKS_ENABLED: "false"
+      GF_NEWS_NEWS_FEED_ENABLED: "false"
+      GF_PLUGINS_PREINSTALL_DISABLED: "true"
+      GF_SECURITY_DISABLE_GRAVATAR: "true"
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: "/var/lib/grafana/dashboards/retail-ai-overview.json"
+    volumes:
+      - ../observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ../observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana:/var/lib/grafana
+    ports:
+      - "${BIND_ADDRESS:-127.0.0.1}:${GRAFANA_PORT:-13000}:3000"
+    depends_on: [prometheus, tempo]
+    networks: [obs]
+
+  # Not started by `up`. Runs the adapter and admin commands in the same image and namespace, e.g.
+  #   docker compose -f deploy/compose.yaml run --rm tools python adapter.py --input candidate_assets/public_cases.json --output out/results.json
+  tools:
+    <<: *app-image
+    profiles: [tools]
+    network_mode: service:net
+    environment:
+      <<: *app-env
+    volumes:
+      - ../out:/app/out
+    command: ["python", "adapter.py", "--help"]
+    depends_on:
+      postgres: {condition: service_healthy}
+      ollama-pull: {condition: service_completed_successfully}
+
+networks:
+  obs:
+
+volumes:
+  pgdata:
+  ollama:
+  tempo:
+  prometheus:
+  grafana:

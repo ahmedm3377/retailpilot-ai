@@ -1,0 +1,24 @@
+# Local PostgreSQL for the retail desk. Host port 55432 (5432 is used by another
+# project on this machine). Image pinned by digest; works offline once pulled.
+services:
+  postgres:
+    image: postgres:17-alpine@sha256:eee6c6e1b0894fa4fe0075eb054af9fd1cf39a35321c2d4110626cfe506411fb
+    container_name: hp-retail-postgres
+    environment:
+      # Local development credentials only.
+      POSTGRES_USER: retail
+      POSTGRES_PASSWORD: retail
+      POSTGRES_DB: retail
+    ports:
+      - "127.0.0.1:55432:5432"
+    volumes:
+      - hp_retail_pgdata:/var/lib/postgresql/data
+      - ./backend/docker/initdb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U retail -d retail"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+volumes:
+  hp_retail_pgdata:

@@ -1,0 +1,91 @@
+{
+  "intent_and_clarification": {
+    "passed": 42,
+    "failed": 0,
+    "not_applicable": 45,
+    "unverifiable": 1,
+    "manual_review": 0,
+    "denominator": 42,
+    "ratio": "42/42",
+    "rate": 1.0,
+    "failures": [],
+    "needs_review": [
+      {
+        "ref": "adversarial/results/adv_12_benign_quoted_attack_text/t1",
+        "reason": "no observable intent (no handoff event or proposal row)"
+      }
+    ]
+  },
+  "tool_call_validity": {
+    "passed": 99,
+    "failed": 0,
+    "not_applicable": 0,
+    "unverifiable": 0,
+    "manual_review": 0,
+    "denominator": 99,
+    "ratio": "99/99",
+    "rate": 1.0,
+    "failures": [],
+    "needs_review": []
+  },
+  "capability_coverage": {
+    "passed": 38,
+    "failed": 1,
+    "not_applicable": 49,
+    "unverifiable": 0,
+    "manual_review": 0,
+    "denominator": 39,
+    "ratio": "38/39",
+    "rate": 0.9744,
+    "failures": [
+      {
+        "ref": "adversarial/results/adv_12_benign_quoted_attack_text/t1",
+        "reason": "proposal-path turn with zero agent tool calls"
+      }
+    ],
+    "needs_review": []
+  },
+  "handoff": {
+    "passed": 41,
+    "failed": 1,
+    "not_applicable": 46,
+    "unverifiable": 0,
+    "manual_review": 0,
+    "denominator": 42,
+    "ratio": "41/42",
+    "rate": 0.9762,
+    "failures": [
+      {
+        "ref": "adversarial/results/adv_12_benign_quoted_attack_text/t1",
+        "reason": "both LLM roles not evidenced on a proposal-path turn"
+      }
+    ],
+    "needs_review": []
+  },
+  "handoff_evidence_sources": {
+    "span_event": 37,
+    "audit_order": 4
+  },
+  "grounded_claims": {
+    "passed": 79,
+    "failed": 0,
+    "not_applicable": 9,
+    "unverifiable": 0,
+    "manual_review": 0,
+    "denominator": 79,
+    "ratio": "79/79",
+    "rate": 1.0,
+    "failures": [],
+    "needs_review": []
+  },
+  "efficiency_median_per_case": {
+    "llm_calls": 5.0,
+    "agent_tool_calls": 2.0,
+    "prompt_tokens": 4533.0,
+    "completion_tokens": 207.0,
+    "effective_call_tokens_per_second": 26.8,
+    "guard_ms": 777.9,
+    "elapsed_ms": 9283.2
+  },
+  "efficiency_note": "effective_call = completion tokens / LLM call wall time (not native decode). Evaluation runs, telemetry in local mode; not a benchmark."
+}

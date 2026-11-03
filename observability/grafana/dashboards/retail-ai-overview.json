@@ -1,0 +1,3078 @@
+{
+  "uid": "retail-ai-overview",
+  "title": "Retail AI desk - overview",
+  "tags": [
+    "hp-retail",
+    "local"
+  ],
+  "timezone": "browser",
+  "schemaVersion": 41,
+  "version": 7,
+  "editable": false,
+  "graphTooltip": 1,
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "refresh": "30s",
+  "templating": {
+    "list": [
+      {
+        "name": "job",
+        "label": "Service",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "hp-retail-prometheus"
+        },
+        "query": {
+          "query": "label_values(retail_turn_duration_seconds_count, job)",
+          "refId": "job"
+        },
+        "definition": "label_values(retail_turn_duration_seconds_count, job)",
+        "includeAll": true,
+        "allValue": ".*",
+        "multi": false,
+        "refresh": 2,
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        }
+      }
+    ]
+  },
+  "annotations": {
+    "list": []
+  },
+  "links": [],
+  "panels": [
+    {
+      "type": "row",
+      "id": 1,
+      "title": "Application",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "panels": []
+    },
+    {
+      "type": "stat",
+      "title": "Turn p50",
+      "description": "Half of the customer turns finished within this time.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "histogram_quantile(0.5, sum by (le) ((last_over_time(retail_turn_duration_seconds_bucket{job=~\"$job\"}[$__range]) - (last_over_time(retail_turn_duration_seconds_bucket{job=~\"$job\"}[$__range] offset $__range) or last_over_time(retail_turn_duration_seconds_bucket{job=~\"$job\"}[$__range]) * 0))))",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "noValue": "no data",
+          "decimals": 2,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 2,
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 1
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Turn p95",
+      "description": "95% of the customer turns finished within this time.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "histogram_quantile(0.95, sum by (le) ((last_over_time(retail_turn_duration_seconds_bucket{job=~\"$job\"}[$__range]) - (last_over_time(retail_turn_duration_seconds_bucket{job=~\"$job\"}[$__range] offset $__range) or last_over_time(retail_turn_duration_seconds_bucket{job=~\"$job\"}[$__range]) * 0))))",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "noValue": "no data",
+          "decimals": 2,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 3,
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 1
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Chat p95",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "histogram_quantile(0.95, sum by (le) ((last_over_time(retail_turn_duration_seconds_bucket{job=~\"$job\", turn_kind=\"chat\"}[$__range]) - (last_over_time(retail_turn_duration_seconds_bucket{job=~\"$job\", turn_kind=\"chat\"}[$__range] offset $__range) or last_over_time(retail_turn_duration_seconds_bucket{job=~\"$job\", turn_kind=\"chat\"}[$__range]) * 0))))",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "noValue": "no data",
+          "decimals": 2,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 4,
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 1
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Confirmation p95",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "histogram_quantile(0.95, sum by (le) ((last_over_time(retail_turn_duration_seconds_bucket{job=~\"$job\", turn_kind=\"confirm\"}[$__range]) - (last_over_time(retail_turn_duration_seconds_bucket{job=~\"$job\", turn_kind=\"confirm\"}[$__range] offset $__range) or last_over_time(retail_turn_duration_seconds_bucket{job=~\"$job\", turn_kind=\"confirm\"}[$__range]) * 0))))",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "noValue": "no data",
+          "decimals": 2,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 5,
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 1
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Turns",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "sum ((last_over_time(retail_turn_duration_seconds_count{job=~\"$job\"}[$__range]) - (last_over_time(retail_turn_duration_seconds_count{job=~\"$job\"}[$__range] offset $__range) or last_over_time(retail_turn_duration_seconds_count{job=~\"$job\"}[$__range]) * 0))) or vector(0)",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "no data",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 6,
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 1
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Steps run",
+      "description": "Steps run across all turns.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "sum ((last_over_time(retail_step_duration_seconds_count{job=~\"$job\"}[$__range]) - (last_over_time(retail_step_duration_seconds_count{job=~\"$job\"}[$__range] offset $__range) or last_over_time(retail_step_duration_seconds_count{job=~\"$job\"}[$__range]) * 0))) or vector(0)",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "no data",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 7,
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 1
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Turn duration p50 / p95",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "histogram_quantile(0.5, sum by (le, turn_kind) (rate(retail_turn_duration_seconds_bucket{job=~\"$job\"}[$__rate_interval])))",
+          "legendFormat": "p50 {{turn_kind}}",
+          "range": true
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "B",
+          "expr": "histogram_quantile(0.95, sum by (le, turn_kind) (rate(retail_turn_duration_seconds_bucket{job=~\"$job\"}[$__rate_interval])))",
+          "legendFormat": "p95 {{turn_kind}}",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "noValue": "no data",
+          "custom": {
+            "spanNulls": true,
+            "showPoints": "auto",
+            "fillOpacity": 8
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "id": 8,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 5
+      }
+    },
+    {
+      "type": "bargauge",
+      "title": "Step p50",
+      "description": "Time spent in each step of a turn.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "histogram_quantile(0.5, sum by (le, step) ((last_over_time(retail_step_duration_seconds_bucket{job=~\"$job\"}[$__range]) - (last_over_time(retail_step_duration_seconds_bucket{job=~\"$job\"}[$__range] offset $__range) or last_over_time(retail_step_duration_seconds_bucket{job=~\"$job\"}[$__range]) * 0))))",
+          "legendFormat": "{{step}}",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "noValue": "no data",
+          "min": 0,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "orientation": "horizontal",
+        "displayMode": "gradient",
+        "showUnfilled": true,
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "id": 9,
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 12,
+        "y": 5
+      }
+    },
+    {
+      "type": "bargauge",
+      "title": "Step p95",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "histogram_quantile(0.95, sum by (le, step) ((last_over_time(retail_step_duration_seconds_bucket{job=~\"$job\"}[$__range]) - (last_over_time(retail_step_duration_seconds_bucket{job=~\"$job\"}[$__range] offset $__range) or last_over_time(retail_step_duration_seconds_bucket{job=~\"$job\"}[$__range]) * 0))))",
+          "legendFormat": "{{step}}",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "noValue": "no data",
+          "min": 0,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "orientation": "horizontal",
+        "displayMode": "gradient",
+        "showUnfilled": true,
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "id": 10,
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 18,
+        "y": 5
+      }
+    },
+    {
+      "type": "row",
+      "id": 11,
+      "title": "CPU, RAM and GPU",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 13
+      },
+      "panels": []
+    },
+    {
+      "type": "stat",
+      "title": "CPU p50",
+      "description": "Whole machine, sampled every 5 s while the API runs.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "max(quantile_over_time(0.5, retail_system_cpu_percent{job=~\"$job\"}[$__range]))",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "noValue": "no data",
+          "decimals": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 12,
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 0,
+        "y": 14
+      }
+    },
+    {
+      "type": "stat",
+      "title": "CPU p95",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "max(quantile_over_time(0.95, retail_system_cpu_percent{job=~\"$job\"}[$__range]))",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "noValue": "no data",
+          "decimals": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 13,
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 3,
+        "y": 14
+      }
+    },
+    {
+      "type": "stat",
+      "title": "RAM p50",
+      "description": "Whole machine.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "max(quantile_over_time(0.5, retail_system_memory_percent{job=~\"$job\"}[$__range]))",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "noValue": "no data",
+          "decimals": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 14,
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 6,
+        "y": 14
+      }
+    },
+    {
+      "type": "stat",
+      "title": "RAM p95",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "max(quantile_over_time(0.95, retail_system_memory_percent{job=~\"$job\"}[$__range]))",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "noValue": "no data",
+          "decimals": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 15,
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 9,
+        "y": 14
+      }
+    },
+    {
+      "type": "stat",
+      "title": "GPU p50",
+      "description": "Whole GPU, from nvidia-smi.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "max(quantile_over_time(0.5, retail_gpu_utilization_percent{job=~\"$job\"}[$__range]))",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "noValue": "no data",
+          "decimals": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 16,
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 12,
+        "y": 14
+      }
+    },
+    {
+      "type": "stat",
+      "title": "GPU p95",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "max(quantile_over_time(0.95, retail_gpu_utilization_percent{job=~\"$job\"}[$__range]))",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "noValue": "no data",
+          "decimals": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 17,
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 15,
+        "y": 14
+      }
+    },
+    {
+      "type": "stat",
+      "title": "GPU mem p50",
+      "description": "Whole GPU, including other applications.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "max(quantile_over_time(0.5, retail_gpu_memory_mb{job=~\"$job\"}[$__range]))",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "decmbytes",
+          "noValue": "no data",
+          "decimals": 0,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 18,
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 18,
+        "y": 14
+      }
+    },
+    {
+      "type": "stat",
+      "title": "GPU mem p95",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "max(quantile_over_time(0.95, retail_gpu_memory_mb{job=~\"$job\"}[$__range]))",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "decmbytes",
+          "noValue": "no data",
+          "decimals": 0,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 19,
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 21,
+        "y": 14
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "CPU and RAM",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "max(retail_system_cpu_percent{job=~\"$job\"})",
+          "legendFormat": "CPU",
+          "range": true
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "B",
+          "expr": "max(retail_system_memory_percent{job=~\"$job\"})",
+          "legendFormat": "RAM",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "noValue": "no data",
+          "custom": {
+            "spanNulls": true,
+            "showPoints": "auto",
+            "fillOpacity": 8
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "id": 20,
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 18
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "GPU utilization and memory",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "max(retail_gpu_utilization_percent{job=~\"$job\"})",
+          "legendFormat": "GPU %",
+          "range": true
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "B",
+          "expr": "max(retail_gpu_memory_mb{job=~\"$job\"})",
+          "legendFormat": "memory MB",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "no data",
+          "custom": {
+            "spanNulls": true,
+            "showPoints": "auto",
+            "fillOpacity": 8
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "id": 21,
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 18
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "RAM by component",
+      "description": "The API, the model server and the MCP server.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "max by (component) (retail_process_rss_mb{job=~\"$job\"})",
+          "legendFormat": "{{component}}",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "decmbytes",
+          "noValue": "no data",
+          "custom": {
+            "spanNulls": true,
+            "showPoints": "auto",
+            "fillOpacity": 8
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "id": 22,
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 18
+      }
+    },
+    {
+      "type": "row",
+      "id": 23,
+      "title": "Tokens and usage",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 26
+      },
+      "panels": []
+    },
+    {
+      "type": "stat",
+      "title": "Input tokens",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "sum ((last_over_time(retail_llm_tokens_sum{job=~\"$job\", token_type=\"input\"}[$__range]) - (last_over_time(retail_llm_tokens_sum{job=~\"$job\", token_type=\"input\"}[$__range] offset $__range) or last_over_time(retail_llm_tokens_sum{job=~\"$job\", token_type=\"input\"}[$__range]) * 0))) or vector(0)",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "no data",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 24,
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 0,
+        "y": 27
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Output tokens",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "sum ((last_over_time(retail_llm_tokens_sum{job=~\"$job\", token_type=\"output\"}[$__range]) - (last_over_time(retail_llm_tokens_sum{job=~\"$job\", token_type=\"output\"}[$__range] offset $__range) or last_over_time(retail_llm_tokens_sum{job=~\"$job\", token_type=\"output\"}[$__range]) * 0))) or vector(0)",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "no data",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 25,
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 5,
+        "y": 27
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Total tokens",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "sum ((last_over_time(retail_llm_tokens_sum{job=~\"$job\"}[$__range]) - (last_over_time(retail_llm_tokens_sum{job=~\"$job\"}[$__range] offset $__range) or last_over_time(retail_llm_tokens_sum{job=~\"$job\"}[$__range]) * 0))) or vector(0)",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "no data",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 26,
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 10,
+        "y": 27
+      }
+    },
+    {
+      "type": "stat",
+      "title": "LLM calls",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "sum ((last_over_time(retail_llm_call_duration_seconds_count{job=~\"$job\"}[$__range]) - (last_over_time(retail_llm_call_duration_seconds_count{job=~\"$job\"}[$__range] offset $__range) or last_over_time(retail_llm_call_duration_seconds_count{job=~\"$job\"}[$__range]) * 0))) or vector(0)",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "no data",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 27,
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 15,
+        "y": 27
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Tokens per turn",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "sum ((last_over_time(retail_llm_tokens_sum{job=~\"$job\"}[$__range]) - (last_over_time(retail_llm_tokens_sum{job=~\"$job\"}[$__range] offset $__range) or last_over_time(retail_llm_tokens_sum{job=~\"$job\"}[$__range]) * 0))) / sum ((last_over_time(retail_turn_duration_seconds_count{job=~\"$job\"}[$__range]) - (last_over_time(retail_turn_duration_seconds_count{job=~\"$job\"}[$__range] offset $__range) or last_over_time(retail_turn_duration_seconds_count{job=~\"$job\"}[$__range]) * 0)))",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "no data",
+          "decimals": 0,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 28,
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 27
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Tokens per minute",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "sum by (token_type) (rate(retail_llm_tokens_sum{job=~\"$job\"}[$__rate_interval])) * 60",
+          "legendFormat": "{{token_type}}",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "no data",
+          "custom": {
+            "spanNulls": true,
+            "showPoints": "auto",
+            "fillOpacity": 8
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "id": 29,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 31
+      }
+    },
+    {
+      "type": "bargauge",
+      "title": "Tokens by agent and type",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "sum by (agent_role, token_type) ((last_over_time(retail_llm_tokens_sum{job=~\"$job\"}[$__range]) - (last_over_time(retail_llm_tokens_sum{job=~\"$job\"}[$__range] offset $__range) or last_over_time(retail_llm_tokens_sum{job=~\"$job\"}[$__range]) * 0)))",
+          "legendFormat": "{{agent_role}} {{token_type}}",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "no data",
+          "min": 0,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "orientation": "horizontal",
+        "displayMode": "gradient",
+        "showUnfilled": true,
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "id": 30,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 31
+      }
+    },
+    {
+      "type": "row",
+      "id": 31,
+      "title": "Model throughput",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 39
+      },
+      "panels": []
+    },
+    {
+      "type": "stat",
+      "title": "Output tokens/s p50",
+      "description": "Output tokens divided by the whole call's time, not raw decode speed.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "histogram_quantile(0.5, sum by (le) ((last_over_time(retail_llm_output_token_rate_per_second_bucket{job=~\"$job\"}[$__range]) - (last_over_time(retail_llm_output_token_rate_per_second_bucket{job=~\"$job\"}[$__range] offset $__range) or last_over_time(retail_llm_output_token_rate_per_second_bucket{job=~\"$job\"}[$__range]) * 0))))",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "no data",
+          "decimals": 1,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 32,
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 0,
+        "y": 40
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Output tokens/s p95",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "histogram_quantile(0.95, sum by (le) ((last_over_time(retail_llm_output_token_rate_per_second_bucket{job=~\"$job\"}[$__range]) - (last_over_time(retail_llm_output_token_rate_per_second_bucket{job=~\"$job\"}[$__range] offset $__range) or last_over_time(retail_llm_output_token_rate_per_second_bucket{job=~\"$job\"}[$__range]) * 0))))",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "no data",
+          "decimals": 1,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 33,
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 5,
+        "y": 40
+      }
+    },
+    {
+      "type": "stat",
+      "title": "LLM call p50",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "histogram_quantile(0.5, sum by (le) ((last_over_time(retail_llm_call_duration_seconds_bucket{job=~\"$job\"}[$__range]) - (last_over_time(retail_llm_call_duration_seconds_bucket{job=~\"$job\"}[$__range] offset $__range) or last_over_time(retail_llm_call_duration_seconds_bucket{job=~\"$job\"}[$__range]) * 0))))",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "noValue": "no data",
+          "decimals": 2,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 34,
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 10,
+        "y": 40
+      }
+    },
+    {
+      "type": "stat",
+      "title": "LLM call p95",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "histogram_quantile(0.95, sum by (le) ((last_over_time(retail_llm_call_duration_seconds_bucket{job=~\"$job\"}[$__range]) - (last_over_time(retail_llm_call_duration_seconds_bucket{job=~\"$job\"}[$__range] offset $__range) or last_over_time(retail_llm_call_duration_seconds_bucket{job=~\"$job\"}[$__range]) * 0))))",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "noValue": "no data",
+          "decimals": 2,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 35,
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 15,
+        "y": 40
+      }
+    },
+    {
+      "type": "stat",
+      "title": "LLM calls per turn",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "sum ((last_over_time(retail_llm_call_duration_seconds_count{job=~\"$job\"}[$__range]) - (last_over_time(retail_llm_call_duration_seconds_count{job=~\"$job\"}[$__range] offset $__range) or last_over_time(retail_llm_call_duration_seconds_count{job=~\"$job\"}[$__range]) * 0))) / sum ((last_over_time(retail_turn_duration_seconds_count{job=~\"$job\"}[$__range]) - (last_over_time(retail_turn_duration_seconds_count{job=~\"$job\"}[$__range] offset $__range) or last_over_time(retail_turn_duration_seconds_count{job=~\"$job\"}[$__range]) * 0)))",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "no data",
+          "decimals": 1,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 36,
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 40
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Output tokens per second",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "histogram_quantile(0.5, sum by (le, agent_role) (rate(retail_llm_output_token_rate_per_second_bucket{job=~\"$job\"}[$__rate_interval])))",
+          "legendFormat": "p50 {{agent_role}}",
+          "range": true
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "B",
+          "expr": "histogram_quantile(0.95, sum by (le, agent_role) (rate(retail_llm_output_token_rate_per_second_bucket{job=~\"$job\"}[$__rate_interval])))",
+          "legendFormat": "p95 {{agent_role}}",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "no data",
+          "custom": {
+            "spanNulls": true,
+            "showPoints": "auto",
+            "fillOpacity": 8
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "id": 37,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 44
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "LLM call duration",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "histogram_quantile(0.5, sum by (le, agent_role) (rate(retail_llm_call_duration_seconds_bucket{job=~\"$job\"}[$__rate_interval])))",
+          "legendFormat": "p50 {{agent_role}}",
+          "range": true
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "B",
+          "expr": "histogram_quantile(0.95, sum by (le, agent_role) (rate(retail_llm_call_duration_seconds_bucket{job=~\"$job\"}[$__rate_interval])))",
+          "legendFormat": "p95 {{agent_role}}",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "noValue": "no data",
+          "custom": {
+            "spanNulls": true,
+            "showPoints": "auto",
+            "fillOpacity": 8
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "id": 38,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 44
+      }
+    },
+    {
+      "type": "row",
+      "id": 39,
+      "title": "Tool calling",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 52
+      },
+      "panels": []
+    },
+    {
+      "type": "stat",
+      "title": "Tool calls",
+      "description": "Calls the Retail Operations Agent asked for.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "sum ((last_over_time(retail_tool_calls_total{job=~\"$job\"}[$__range]) - (last_over_time(retail_tool_calls_total{job=~\"$job\"}[$__range] offset $__range) or last_over_time(retail_tool_calls_total{job=~\"$job\"}[$__range]) * 0))) or vector(0)",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "no data",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 40,
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 53
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Failed",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "sum ((last_over_time(retail_tool_calls_total{job=~\"$job\", outcome=\"failed\"}[$__range]) - (last_over_time(retail_tool_calls_total{job=~\"$job\", outcome=\"failed\"}[$__range] offset $__range) or last_over_time(retail_tool_calls_total{job=~\"$job\", outcome=\"failed\"}[$__range]) * 0))) or vector(0)",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "no data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          },
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 41,
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 53
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Refused",
+      "description": "The model asked for something outside the allowlist.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "sum ((last_over_time(retail_tool_calls_total{job=~\"$job\", outcome=\"refused\"}[$__range]) - (last_over_time(retail_tool_calls_total{job=~\"$job\", outcome=\"refused\"}[$__range] offset $__range) or last_over_time(retail_tool_calls_total{job=~\"$job\", outcome=\"refused\"}[$__range]) * 0))) or vector(0)",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "no data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          },
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 42,
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 53
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Tool call p50",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "histogram_quantile(0.5, sum by (le) ((last_over_time(retail_tool_duration_seconds_bucket{job=~\"$job\"}[$__range]) - (last_over_time(retail_tool_duration_seconds_bucket{job=~\"$job\"}[$__range] offset $__range) or last_over_time(retail_tool_duration_seconds_bucket{job=~\"$job\"}[$__range]) * 0))))",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "noValue": "no data",
+          "decimals": 3,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 43,
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 53
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Tool call p95",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "histogram_quantile(0.95, sum by (le) ((last_over_time(retail_tool_duration_seconds_bucket{job=~\"$job\"}[$__range]) - (last_over_time(retail_tool_duration_seconds_bucket{job=~\"$job\"}[$__range] offset $__range) or last_over_time(retail_tool_duration_seconds_bucket{job=~\"$job\"}[$__range]) * 0))))",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "noValue": "no data",
+          "decimals": 3,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 44,
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 53
+      }
+    },
+    {
+      "type": "stat",
+      "title": "MCP connect p95",
+      "description": "Connecting to the MCP server, once per request.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "histogram_quantile(0.95, sum by (le) ((last_over_time(retail_mcp_startup_duration_seconds_bucket{job=~\"$job\"}[$__range]) - (last_over_time(retail_mcp_startup_duration_seconds_bucket{job=~\"$job\"}[$__range] offset $__range) or last_over_time(retail_mcp_startup_duration_seconds_bucket{job=~\"$job\"}[$__range]) * 0))))",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "noValue": "no data",
+          "decimals": 3,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 45,
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 53
+      }
+    },
+    {
+      "type": "bargauge",
+      "title": "Calls by tool and outcome",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "sum by (tool_name, outcome) ((last_over_time(retail_tool_calls_total{job=~\"$job\"}[$__range]) - (last_over_time(retail_tool_calls_total{job=~\"$job\"}[$__range] offset $__range) or last_over_time(retail_tool_calls_total{job=~\"$job\"}[$__range]) * 0)))",
+          "legendFormat": "{{tool_name}} {{outcome}}",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "no data",
+          "min": 0,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "orientation": "horizontal",
+        "displayMode": "gradient",
+        "showUnfilled": true,
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "id": 46,
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 57
+      }
+    },
+    {
+      "type": "bargauge",
+      "title": "p95 by tool",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "histogram_quantile(0.95, sum by (le, tool_name) ((last_over_time(retail_tool_duration_seconds_bucket{job=~\"$job\"}[$__range]) - (last_over_time(retail_tool_duration_seconds_bucket{job=~\"$job\"}[$__range] offset $__range) or last_over_time(retail_tool_duration_seconds_bucket{job=~\"$job\"}[$__range]) * 0))))",
+          "legendFormat": "{{tool_name}}",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "noValue": "no data",
+          "min": 0,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "orientation": "horizontal",
+        "displayMode": "gradient",
+        "showUnfilled": true,
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "id": 47,
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 57
+      }
+    },
+    {
+      "type": "bargauge",
+      "title": "Guardrail verdicts",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "sum by (gate, outcome) ((last_over_time(retail_guardrail_checks_total{job=~\"$job\"}[$__range]) - (last_over_time(retail_guardrail_checks_total{job=~\"$job\"}[$__range] offset $__range) or last_over_time(retail_guardrail_checks_total{job=~\"$job\"}[$__range]) * 0)))",
+          "legendFormat": "{{gate}} {{outcome}}",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "no data",
+          "min": 0,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "orientation": "horizontal",
+        "displayMode": "gradient",
+        "showUnfilled": true,
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "id": 48,
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 57
+      }
+    },
+    {
+      "type": "row",
+      "id": 49,
+      "title": "Failures",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 65
+      },
+      "panels": []
+    },
+    {
+      "type": "stat",
+      "title": "Error turns",
+      "description": "Turns that ended with decision=error.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "sum ((last_over_time(retail_turn_duration_seconds_count{job=~\"$job\", decision=\"error\"}[$__range]) - (last_over_time(retail_turn_duration_seconds_count{job=~\"$job\", decision=\"error\"}[$__range] offset $__range) or last_over_time(retail_turn_duration_seconds_count{job=~\"$job\", decision=\"error\"}[$__range]) * 0))) or vector(0)",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "no data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          },
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 50,
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 66
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Model failures",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "sum ((last_over_time(retail_llm_call_duration_seconds_count{job=~\"$job\", outcome=\"error\"}[$__range]) - (last_over_time(retail_llm_call_duration_seconds_count{job=~\"$job\", outcome=\"error\"}[$__range] offset $__range) or last_over_time(retail_llm_call_duration_seconds_count{job=~\"$job\", outcome=\"error\"}[$__range]) * 0))) or vector(0)",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "no data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          },
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 51,
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 66
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Tool failures",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "sum ((last_over_time(retail_tool_calls_total{job=~\"$job\", outcome=\"failed\"}[$__range]) - (last_over_time(retail_tool_calls_total{job=~\"$job\", outcome=\"failed\"}[$__range] offset $__range) or last_over_time(retail_tool_calls_total{job=~\"$job\", outcome=\"failed\"}[$__range]) * 0))) or vector(0)",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "no data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          },
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 52,
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 66
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Guardrail unavailable",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "sum ((last_over_time(retail_guardrail_checks_total{job=~\"$job\", outcome=\"validator_unavailable\"}[$__range]) - (last_over_time(retail_guardrail_checks_total{job=~\"$job\", outcome=\"validator_unavailable\"}[$__range] offset $__range) or last_over_time(retail_guardrail_checks_total{job=~\"$job\", outcome=\"validator_unavailable\"}[$__range]) * 0))) or vector(0)",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "no data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          },
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 53,
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 66
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Guardrail blocks",
+      "description": "Input or replies the guardrails stopped. These are often correct behaviour.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "sum ((last_over_time(retail_guardrail_checks_total{job=~\"$job\", outcome=\"blocked\"}[$__range]) - (last_over_time(retail_guardrail_checks_total{job=~\"$job\", outcome=\"blocked\"}[$__range] offset $__range) or last_over_time(retail_guardrail_checks_total{job=~\"$job\", outcome=\"blocked\"}[$__range]) * 0))) or vector(0)",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "no data",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 54,
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 66
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Timeouts recovered",
+      "description": "A commit saved, its reply was lost, and the result was read back. Nothing was committed twice.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "sum ((last_over_time(retail_business_outcomes_total{job=~\"$job\", outcome=\"reconciled\"}[$__range]) - (last_over_time(retail_business_outcomes_total{job=~\"$job\", outcome=\"reconciled\"}[$__range] offset $__range) or last_over_time(retail_business_outcomes_total{job=~\"$job\", outcome=\"reconciled\"}[$__range]) * 0))) or vector(0)",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "no data",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "value",
+        "graphMode": "none"
+      },
+      "id": 55,
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 66
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Failures per minute",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "hp-retail-prometheus"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "A",
+          "expr": "sum(rate(retail_turn_duration_seconds_count{job=~\"$job\", decision=\"error\"}[$__rate_interval])) * 60 or vector(0)",
+          "legendFormat": "error turns",
+          "range": true
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "B",
+          "expr": "sum(rate(retail_llm_call_duration_seconds_count{job=~\"$job\", outcome=\"error\"}[$__rate_interval])) * 60 or vector(0)",
+          "legendFormat": "model",
+          "range": true
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "hp-retail-prometheus"
+          },
+          "refId": "C",
+          "expr": "sum(rate(retail_tool_calls_total{job=~\"$job\", outcome=\"failed\"}[$__rate_interval])) * 60 or vector(0)",
+          "legendFormat": "tools",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "no data",
+          "custom": {
+            "spanNulls": true,
+            "showPoints": "auto",
+            "fillOpacity": 8
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "id": 56,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 70
+      }
+    },
+    {
+      "type": "table",
+      "title": "Requests that failed",
+      "description": "Click a request to see its steps, inputs, outputs and times.",
+      "datasource": {
+        "type": "tempo",
+        "uid": "hp-retail-tempo"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "tempo",
+            "uid": "hp-retail-tempo"
+          },
+          "queryType": "traceql",
+          "limit": 20,
+          "tableType": "spans",
+          "spss": 1,
+          "query": "{resource.service.name=\"hp-retail-agentic-ai\" && name=\"retail.customer_turn\" && span.retail.decision=\"error\"} | select(span.retail.decision, span.retail.turn.kind, span.retail.content.query, span.retail.content.answer)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "noValue": "-",
+          "custom": {
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": true
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 170
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Kind"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 80
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Decision"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 90
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Customer message"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 380
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Duration"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 90
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Open request"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Open this request",
+                    "targetBlank": false,
+                    "url": "/d/retail-ai-request/retail-ai-desk-request?var-trace_id=${__data.fields[\"traceIdHidden\"]}&${__url_time_range}"
+                  }
+                ]
+              },
+              {
+                "id": "custom.width",
+                "value": 150
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "traceIdHidden"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "id": 57,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 70
+      },
+      "transformations": [
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "Start time",
+                "desc": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {
+              "Span ID": true,
+              "Start time": true,
+              "retail.turn.kind": true,
+              "retail.decision": true,
+              "retail.content.query": true,
+              "retail.content.answer": true,
+              "Duration": true,
+              "traceIdHidden": true
+            },
+            "indexByName": {
+              "Span ID": 0,
+              "Start time": 1,
+              "retail.turn.kind": 2,
+              "retail.decision": 3,
+              "retail.content.query": 4,
+              "retail.content.answer": 5,
+              "Duration": 6,
+              "traceIdHidden": 7
+            },
+            "renameByName": {
+              "Span ID": "Open request",
+              "Start time": "Time",
+              "retail.turn.kind": "Kind",
+              "retail.decision": "Decision",
+              "retail.content.query": "Customer message",
+              "retail.content.answer": "Reply"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "row",
+      "id": 58,
+      "title": "Requests",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 78
+      },
+      "panels": []
+    },
+    {
+      "type": "table",
+      "title": "Recent requests: click one to see its steps",
+      "description": "Every customer turn. Click a request to see its steps, inputs, outputs and times.",
+      "datasource": {
+        "type": "tempo",
+        "uid": "hp-retail-tempo"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "tempo",
+            "uid": "hp-retail-tempo"
+          },
+          "queryType": "traceql",
+          "limit": 20,
+          "tableType": "spans",
+          "spss": 1,
+          "query": "{resource.service.name=\"hp-retail-agentic-ai\" && name=\"retail.customer_turn\"} | select(span.retail.decision, span.retail.turn.kind, span.retail.content.query, span.retail.content.answer)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "noValue": "-",
+          "custom": {
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": true
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 170
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Kind"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 80
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Decision"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 90
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Customer message"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 380
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Duration"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 90
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Open request"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Open this request",
+                    "targetBlank": false,
+                    "url": "/d/retail-ai-request/retail-ai-desk-request?var-trace_id=${__data.fields[\"traceIdHidden\"]}&${__url_time_range}"
+                  }
+                ]
+              },
+              {
+                "id": "custom.width",
+                "value": 150
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "traceIdHidden"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "id": 59,
+      "gridPos": {
+        "h": 11,
+        "w": 24,
+        "x": 0,
+        "y": 79
+      },
+      "transformations": [
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "Start time",
+                "desc": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {
+              "Span ID": true,
+              "Start time": true,
+              "retail.turn.kind": true,
+              "retail.decision": true,
+              "retail.content.query": true,
+              "retail.content.answer": true,
+              "Duration": true,
+              "traceIdHidden": true
+            },
+            "indexByName": {
+              "Span ID": 0,
+              "Start time": 1,
+              "retail.turn.kind": 2,
+              "retail.decision": 3,
+              "retail.content.query": 4,
+              "retail.content.answer": 5,
+              "Duration": 6,
+              "traceIdHidden": 7
+            },
+            "renameByName": {
+              "Span ID": "Open request",
+              "Start time": "Time",
+              "retail.turn.kind": "Kind",
+              "retail.decision": "Decision",
+              "retail.content.query": "Customer message",
+              "retail.content.answer": "Reply"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

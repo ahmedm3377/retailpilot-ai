@@ -1,0 +1,1 @@
+"""Loading contract fixture files."""

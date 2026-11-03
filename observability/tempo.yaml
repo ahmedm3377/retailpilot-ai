@@ -1,0 +1,30 @@
+# Single-binary Tempo with local storage (development only).
+stream_over_http_enabled: true
+
+server:
+  http_listen_port: 3200
+
+distributor:
+  # Traces carry each step's input and output (up to RETAIL_OTEL_MAX_CONTENT_CHARS); the default cuts values at 2 KB.
+  max_attribute_bytes: 32768
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: 0.0.0.0:4317
+
+storage:
+  trace:
+    backend: local
+    wal:
+      path: /var/tempo/wal
+    local:
+      path: /var/tempo/blocks
+
+compactor:
+  compaction:
+    block_retention: 168h
+
+# Tempo reports anonymous usage statistics to Grafana Labs by default; keep everything local.
+usage_report:
+  reporting_enabled: false

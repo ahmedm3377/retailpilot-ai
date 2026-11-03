@@ -1,0 +1,80 @@
+# This project's own local telemetry stack (separate Compose project).
+#   docker compose -f observability/compose.yaml up -d      # start
+#   docker compose -f observability/compose.yaml stop       # stop (never `down -v`: keeps volumes)
+# Host ports differ from the defaults ON PURPOSE: another project's stack ("retailcare-*")
+# already uses 127.0.0.1:3000/3200/4317/4318/9090/13133 on this machine. Never export there.
+# Images are pinned by digest and were already present locally, so start-up works offline.
+name: hp-retail-observability
+
+services:
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.130.0@sha256:867d1074c2f750936fb9358ec9eefa009308053cf156b2c7ca1761ba5ef78452
+    container_name: hp-retail-otel-collector
+    restart: unless-stopped     # comes back with Docker after a reboot once started
+    command: ["--config=/etc/otelcol/config.yaml"]
+    volumes:
+      - ./otel-collector.yaml:/etc/otelcol/config.yaml:ro
+    ports:
+      - "127.0.0.1:14318:4318"   # OTLP/HTTP from the app (loopback only)
+    depends_on: [tempo]
+    networks: [hp-retail-obs]
+
+  tempo:
+    image: grafana/tempo:2.8.2@sha256:0ef775495967cd5d7a6b2e146b6ea695d624803c8db8349fb8ce4164f719f9b7
+    container_name: hp-retail-tempo
+    restart: unless-stopped     # comes back with Docker after a reboot once started
+    user: "0"                    # local dev: lets Tempo write to the named volume without an init step
+    command: ["-config.file=/etc/tempo.yaml"]
+    volumes:
+      - ./tempo.yaml:/etc/tempo.yaml:ro
+      - hp_retail_tempo:/var/tempo
+    ports:
+      - "127.0.0.1:13200:3200"   # Tempo HTTP API (verification script)
+    networks: [hp-retail-obs]
+
+  prometheus:
+    image: prom/prometheus:v3.5.0@sha256:63805ebb8d2b3920190daf1cb14a60871b16fd38bed42b857a3182bc621f4996
+    container_name: hp-retail-prometheus
+    restart: unless-stopped     # comes back with Docker after a reboot once started
+    command: ["--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.path=/prometheus",
+              "--storage.tsdb.retention.time=7d"]
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - hp_retail_prometheus:/prometheus
+    ports:
+      - "127.0.0.1:19090:9090"
+    depends_on: [otel-collector]
+    networks: [hp-retail-obs]
+
+  grafana:
+    image: grafana/grafana:12.1.0@sha256:6ac590e7cabc2fbe8d7b8fc1ce9c9f0582177b334e0df9c927ebd9670469440f
+    container_name: hp-retail-grafana
+    restart: unless-stopped     # comes back with Docker after a reboot once started
+    environment:
+      # Local demo: read-only anonymous viewer; no phone-home, update checks, news, plugin installs or avatars.
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: "Viewer"
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+      GF_ANALYTICS_CHECK_FOR_PLUGIN_UPDATES: "false"
+      GF_ANALYTICS_FEEDBACK_LINKS_ENABLED: "false"
+      GF_NEWS_NEWS_FEED_ENABLED: "false"
+      GF_PLUGINS_PREINSTALL_DISABLED: "true"
+      GF_SECURITY_DISABLE_GRAVATAR: "true"
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: "/var/lib/grafana/dashboards/retail-ai-overview.json"
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - hp_retail_grafana:/var/lib/grafana
+    ports:
+      - "127.0.0.1:13000:3000"
+    depends_on: [prometheus, tempo]
+    networks: [hp-retail-obs]
+
+networks:
+  hp-retail-obs:
+
+volumes:
+  hp_retail_tempo:
+  hp_retail_prometheus:
+  hp_retail_grafana:

@@ -1,0 +1,621 @@
+{
+  "uid": "retail-ai-request",
+  "title": "Retail AI desk - request",
+  "tags": [
+    "retail"
+  ],
+  "schemaVersion": 41,
+  "version": 3,
+  "timezone": "browser",
+  "refresh": "",
+  "editable": false,
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "links": [
+    {
+      "title": "Back to the overview",
+      "type": "link",
+      "url": "/d/retail-ai-overview/retail-ai-desk-overview",
+      "icon": "dashboard",
+      "keepTime": true
+    }
+  ],
+  "templating": {
+    "list": [
+      {
+        "name": "trace_id",
+        "label": "Trace ID",
+        "type": "textbox",
+        "query": "",
+        "current": {
+          "text": "",
+          "value": ""
+        },
+        "options": [
+          {
+            "selected": true,
+            "text": "",
+            "value": ""
+          }
+        ]
+      }
+    ]
+  },
+  "panels": [
+    {
+      "type": "table",
+      "title": "The request",
+      "description": "Long values are cut off in the table: hover a cell and use the eye icon to read all of it.",
+      "datasource": {
+        "type": "tempo",
+        "uid": "hp-retail-tempo"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "tempo",
+            "uid": "hp-retail-tempo"
+          },
+          "queryType": "traceql",
+          "limit": 1,
+          "tableType": "spans",
+          "spss": 100,
+          "query": "{trace:id=\"$trace_id\" && name=\"retail.customer_turn\"} | select(span.retail.turn.kind, span.retail.decision, span.retail.llm.calls, span.retail.tool.calls, span.retail.content.query, span.retail.content.answer)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "noValue": "-",
+          "custom": {
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": true
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 170
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Kind"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 70
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Decision"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 90
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "LLM calls"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 80
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Tool calls"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 80
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Duration"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 90
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Customer message"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 380
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "id": 1,
+      "gridPos": {
+        "h": 5,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "transformations": [
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "Start time",
+                "desc": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {
+              "Start time": true,
+              "retail.turn.kind": true,
+              "retail.decision": true,
+              "retail.llm.calls": true,
+              "retail.tool.calls": true,
+              "Duration": true,
+              "retail.content.query": true,
+              "retail.content.answer": true
+            },
+            "indexByName": {
+              "Start time": 0,
+              "retail.turn.kind": 1,
+              "retail.decision": 2,
+              "retail.llm.calls": 3,
+              "retail.tool.calls": 4,
+              "Duration": 5,
+              "retail.content.query": 6,
+              "retail.content.answer": 7
+            },
+            "renameByName": {
+              "Start time": "Time",
+              "retail.turn.kind": "Kind",
+              "retail.decision": "Decision",
+              "retail.llm.calls": "LLM calls",
+              "retail.tool.calls": "Tool calls",
+              "retail.content.query": "Customer message",
+              "retail.content.answer": "Reply"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "title": "Steps, in order: what each received and produced, and its time",
+      "description": "Long values are cut off in the table: hover a cell and use the eye icon to read all of it.",
+      "datasource": {
+        "type": "tempo",
+        "uid": "hp-retail-tempo"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "tempo",
+            "uid": "hp-retail-tempo"
+          },
+          "queryType": "traceql",
+          "limit": 1,
+          "tableType": "spans",
+          "spss": 100,
+          "query": "{trace:id=\"$trace_id\" && span.retail.step != nil} | select(span.retail.step, span.retail.content.input, span.retail.content.output, span.retail.content.state_in, span.retail.content.state_out)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "noValue": "-",
+          "custom": {
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": true
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 170
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Step"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 140
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Duration"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 90
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Input"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 260
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Output"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 260
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "State before"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 260
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "id": 2,
+      "gridPos": {
+        "h": 14,
+        "w": 24,
+        "x": 0,
+        "y": 5
+      },
+      "transformations": [
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "Start time",
+                "desc": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {
+              "Start time": true,
+              "retail.step": true,
+              "Duration": true,
+              "retail.content.input": true,
+              "retail.content.output": true,
+              "retail.content.state_in": true,
+              "retail.content.state_out": true
+            },
+            "indexByName": {
+              "Start time": 0,
+              "retail.step": 1,
+              "Duration": 2,
+              "retail.content.input": 3,
+              "retail.content.output": 4,
+              "retail.content.state_in": 5,
+              "retail.content.state_out": 6
+            },
+            "renameByName": {
+              "Start time": "Time",
+              "retail.step": "Step",
+              "retail.content.input": "Input",
+              "retail.content.output": "Output",
+              "retail.content.state_in": "State before",
+              "retail.content.state_out": "State after"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "title": "Model and tool calls",
+      "description": "Long values are cut off in the table: hover a cell and use the eye icon to read all of it.",
+      "datasource": {
+        "type": "tempo",
+        "uid": "hp-retail-tempo"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "tempo",
+            "uid": "hp-retail-tempo"
+          },
+          "queryType": "traceql",
+          "limit": 1,
+          "tableType": "spans",
+          "spss": 100,
+          "query": "{trace:id=\"$trace_id\" && (name=~\"chat .*\" || name=~\"execute_tool .*\")} | select(span.retail.agent.role, span.gen_ai.usage.input_tokens, span.gen_ai.usage.output_tokens, span.retail.tool.outcome, span.retail.content.input, span.retail.content.output)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "noValue": "-",
+          "custom": {
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": true
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 170
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Call"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 220
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Agent"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 140
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Duration"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 90
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Tokens in"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 80
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Tokens out"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 80
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Tool outcome"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Input"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 360
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "id": 3,
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 19
+      },
+      "transformations": [
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "Start time",
+                "desc": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {
+              "Start time": true,
+              "Name": true,
+              "retail.agent.role": true,
+              "Duration": true,
+              "gen_ai.usage.input_tokens": true,
+              "gen_ai.usage.output_tokens": true,
+              "retail.tool.outcome": true,
+              "retail.content.input": true,
+              "retail.content.output": true
+            },
+            "indexByName": {
+              "Start time": 0,
+              "Name": 1,
+              "retail.agent.role": 2,
+              "Duration": 3,
+              "gen_ai.usage.input_tokens": 4,
+              "gen_ai.usage.output_tokens": 5,
+              "retail.tool.outcome": 6,
+              "retail.content.input": 7,
+              "retail.content.output": 8
+            },
+            "renameByName": {
+              "Start time": "Time",
+              "Name": "Call",
+              "retail.agent.role": "Agent",
+              "gen_ai.usage.input_tokens": "Tokens in",
+              "gen_ai.usage.output_tokens": "Tokens out",
+              "retail.tool.outcome": "Tool outcome",
+              "retail.content.input": "Input",
+              "retail.content.output": "Output"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "traces",
+      "title": "Timeline",
+      "description": "Click a span to see all its details under retail.content.*.",
+      "datasource": {
+        "type": "tempo",
+        "uid": "hp-retail-tempo"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "tempo",
+            "uid": "hp-retail-tempo"
+          },
+          "queryType": "traceql",
+          "query": "$trace_id",
+          "refId": "A",
+          "limit": 1
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "options": {},
+      "id": 4,
+      "gridPos": {
+        "h": 18,
+        "w": 24,
+        "x": 0,
+        "y": 31
+      }
+    }
+  ]
+}

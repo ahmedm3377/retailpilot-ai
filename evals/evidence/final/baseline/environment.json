@@ -1,0 +1,318 @@
+{
+  "variant": "baseline",
+  "started_at": "2026-10-31T03:43:03+00:00",
+  "finished_at": "2026-10-31T03:47:16+00:00",
+  "source": {
+    "source_id": "e20a5fcfbf+8b392f0e",
+    "head": "e20a5fcfbf5b63bce972021e8c149d8d8e132a13",
+    "dirty": true,
+    "diff_sha256": "03a71377a2aa046516becf80fc5b2a46fccc6bea14b053cf0ee8a3f91faa99b1",
+    "untracked_source_files": [
+      "app/db/demo_store.py",
+      "app/observability/stack.py",
+      "tests/test_already_completed_request.py",
+      "tests/test_api_serve_telemetry.py",
+      "tests/test_clarification_loop.py",
+      "tests/test_customer_identifies_target.py"
+    ],
+    "untracked_sha256": "2bcfa7202fd82f2b07dd115d965d02341e6b780e5ee4145bc0f0b754c5fc1417",
+    "changed_files": [
+      ".env.example",
+      "CLAUDE.md",
+      "README.md",
+      "adapter.py",
+      "app/agents/customer_agent.py",
+      "app/agents/graph.py",
+      "app/agents/messages.py",
+      "app/agents/operations_agent.py",
+      "app/agents/schemas.py",
+      "app/agents/state.py",
+      "app/api/main.py",
+      "app/api/registry.py",
+      "app/api/schemas.py",
+      "app/api/serve.py",
+      "app/api/service.py",
+      "app/api/views.py",
+      "app/benchmarks/compare.py",
+      "app/benchmarks/machine.py",
+      "app/benchmarks/profile.py",
+      "app/benchmarks/run.py",
+      "app/benchmarks/summary.py",
+      "app/benchmarks/verify.py",
+      "app/evaluation/runner.py",
+      "app/evaluation/serialization.py",
+      "app/mcp/client.py",
+      "app/mcp/server.py",
+      "app/netguard.py",
+      "app/services/agent_runtime.py",
+      "app/services/operations.py",
+      "app/tools/offline_check.py",
+      "evals/README.md",
+      "evals/runner.py",
+      "evals/scoring/report.py",
+      "frontend/e2e/retail-demo.spec.ts",
+      "frontend/playwright.config.ts",
+      "frontend/src/App.tsx",
+      "frontend/src/api/client.ts",
+      "frontend/src/api/types.ts",
+      "frontend/src/components/AppShell.tsx",
+      "frontend/src/components/AuditTimeline.tsx",
+      "frontend/src/components/ChatPanel.tsx",
+      "frontend/src/components/OrderSummary.tsx",
+      "frontend/src/components/ScenarioPicker.tsx",
+      "frontend/src/hooks/useDemo.ts",
+      "frontend/src/styles/app.css",
+      "frontend/tests/app.test.tsx",
+      "frontend/tests/mockApi.ts",
+      "observability/compose.yaml",
+      "tests/test_observability.py",
+      "tests/test_step03_offline.py",
+      "tests/test_step04_cli.py",
+      "tests/test_step04_real_ollama.py",
+      "tests/test_step04_runner.py",
+      "tests/test_step05_api.py",
+      "tests/test_step06_tooling.py",
+      "tests/test_step09_mcp_security.py",
+      "app/db/demo_store.py",
+      "app/observability/stack.py",
+      "data/demo_store_seed.json",
+      "frontend/src/components/SignIn.tsx",
+      "tests/test_already_completed_request.py",
+      "tests/test_api_serve_telemetry.py",
+      "tests/test_clarification_loop.py",
+      "tests/test_customer_identifies_target.py"
+    ]
+  },
+  "config": {
+    "config_id": "d300992d6df0",
+    "settings": {
+      "ollama_base_url": "http://127.0.0.1:11434",
+      "model": "ollama_chat/gemma4:e2b",
+      "timeout_s": 75.0,
+      "max_tokens": 512,
+      "think": false,
+      "temperature": 0.0,
+      "top_p": 1.0,
+      "seed": 7,
+      "max_tool_steps": 5,
+      "checkpoint_schema": "retail_checkpoints",
+      "guardrails_enabled": true,
+      "jailbreak_threshold": 0.8,
+      "toxicity_threshold": 0.5,
+      "fail_closed": true,
+      "max_input_chars": 2000,
+      "confirm_template": false,
+      "tool_backend": "direct"
+    },
+    "db_pool": false,
+    "prompt_sha256": {
+      "customer.handoff": "d98bc41d85fedec0df9fd64540cae1cb0b945bd32c7576d0c9f5482d91dca1b6",
+      "customer.explain": "8ac9665c044c3823748ca3f9a62ed91f20be68799c37c7998fa23e2724a3361f",
+      "operations": "5428d19f912e93e14f5777bde0aa46aab74183066e9ea1eb680c86cd32af20c5"
+    }
+  },
+  "input_sha256": "f3f9dc73ac2d846de3af5c8647afcccd58d0335b80cd06f416f4dd08a1ca6165",
+  "input_file": "candidate_assets/public_cases.json",
+  "model": {
+    "model": "ollama_chat/gemma4:e2b",
+    "digest": "b37049369adfe3d2b653af0ab301a062ca5cbe96ace6aa0d3f2559ee9b563fc2",
+    "quantization": "Q4_K_M",
+    "parameter_size": "4.6B",
+    "ollama_version": "0.40.12",
+    "decoding": {
+      "temperature": 0.0,
+      "top_p": 1.0,
+      "seed": 7,
+      "think": false,
+      "max_tokens": 512,
+      "timeout_s": 75.0
+    },
+    "ollama_loaded_model": {
+      "size_mb": 315.5,
+      "size_vram_mb": 315.5,
+      "context_length": 4096,
+      "source": "Ollama /api/ps after warm-up"
+    }
+  },
+  "cold_start": {
+    "cold_start_ms": 55120.8,
+    "notes": [
+      "model was not loaded in Ollama before the run; cold_start_ms = validator load + Ollama readiness + one warm-up call; cases run warm"
+    ],
+    "samples": 1
+  },
+  "declarations": {
+    "seeds": {
+      "llm_seed": 7,
+      "temperature": 0.0,
+      "top_p": 1.0,
+      "note": "the only random input to decisions; schema names and session IDs are random but unused by any decision"
+    },
+    "concurrency": {
+      "cases": 1,
+      "turns": 1,
+      "llm_requests": 1,
+      "ollama_num_parallel": "server default",
+      "note": "cases run one after another in one process"
+    },
+    "caches": {
+      "model_load": "evicted from Ollama before the run, so cold start includes the model load",
+      "warm_runs": "the model stays loaded between cases (one warm-up call before the first)",
+      "ollama_prompt_cache": "server default, not cleared between cases",
+      "guardrail_models": "loaded once per process from local caches",
+      "database_connections": "new connection per use",
+      "business_state": "none carried over: fresh schemas for every case in every repetition",
+      "os_file_cache": "not controlled, so a later variant may read model files from memory"
+    },
+    "timeouts": {
+      "llm_call_s": 75.0,
+      "llm_max_tokens": 512,
+      "agent_tool_steps": 5,
+      "tool_backend": "direct",
+      "task": "no overall task timeout; injected post-commit timeouts are counted separately"
+    }
+  },
+  "keep_alive": "Ollama server default (client does not set keep_alive)",
+  "hardware": {
+    "cpu": "Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz",
+    "cpu_physical_cores": 6,
+    "cpu_logical_cores": 12,
+    "ram": "15.8 GiB",
+    "gpu": [
+      {
+        "name": "NVIDIA GeForce GTX 1060 with Max-Q Design",
+        "memory_total": "6144 MiB",
+        "driver": "581.57"
+      }
+    ],
+    "os": "Windows 11 (10.0.26200)",
+    "machine": "AMD64",
+    "python": "3.13.11",
+    "power": {
+      "on_ac_power": true,
+      "power_scheme": "Balanced"
+    }
+  },
+  "packages": {
+    "litellm": "1.106.6",
+    "langgraph": "1.2.18",
+    "langgraph-checkpoint-postgres": "3.2.0",
+    "langchain-core": "1.7.1",
+    "guardrails-ai": "0.11.0",
+    "guardrails-ai-detect-jailbreak": "0.1.6",
+    "guardrails-ai-toxic-language": "0.0.2",
+    "guardrails-ai-detect-pii": "0.0.6",
+    "presidio-analyzer": "2.2.362",
+    "detoxify": "0.5.4",
+    "transformers": "5.22.0",
+    "torch": "2.15.0",
+    "psycopg": "3.3.6",
+    "pydantic": "2.14.1",
+    "psutil": "7.2.2"
+  },
+  "guardrails": {
+    "enabled": true,
+    "fail_closed": true,
+    "validators": {
+      "TaskInjection": "custom regex validator (retail/task_injection)",
+      "DetectJailbreak": "local, threshold=0.8",
+      "ToxicLanguage": "local Detoxify unbiased-small, threshold=0.5, full",
+      "DetectPII": "local Presidio en_core_web_sm, ['EMAIL_ADDRESS', 'PHONE_NUMBER'], fix",
+      "Schema": "Guard.for_pydantic + Pydantic extra=forbid"
+    },
+    "unavailable": {}
+  },
+  "load_before": {
+    "taken_at": "2026-10-31T03:43:01+00:00",
+    "ram_total_mb": 16164,
+    "ram_free_mb": 5207,
+    "cpu_load_pct": 12.2,
+    "gpu_device_used_mb": 0.0,
+    "gpu_util_pct": 0.0,
+    "ollama_loaded": [],
+    "process_groups": {
+      "ollama": {
+        "count": 2,
+        "rss_mb": 41
+      },
+      "llama-server": {
+        "count": 0,
+        "rss_mb": 0
+      },
+      "chrome": {
+        "count": 0,
+        "rss_mb": 0
+      },
+      "msedge": {
+        "count": 6,
+        "rss_mb": 83
+      },
+      "python": {
+        "count": 2,
+        "rss_mb": 286
+      },
+      "node": {
+        "count": 0,
+        "rss_mb": 0
+      },
+      "firefox": {
+        "count": 0,
+        "rss_mb": 0
+      }
+    },
+    "other_ollama_clients": [],
+    "on_ac_power": true,
+    "own_rss_mb": 279
+  },
+  "load_after": {
+    "taken_at": "2026-10-31T03:47:15+00:00",
+    "ram_total_mb": 16164,
+    "ram_free_mb": 2556,
+    "cpu_load_pct": 8.6,
+    "gpu_device_used_mb": 3045.0,
+    "gpu_util_pct": 0.0,
+    "ollama_loaded": [
+      {
+        "name": "gemma4:e2b",
+        "size_vram_mb": 315.5
+      }
+    ],
+    "process_groups": {
+      "ollama": {
+        "count": 2,
+        "rss_mb": 38
+      },
+      "llama-server": {
+        "count": 1,
+        "rss_mb": 2907
+      },
+      "chrome": {
+        "count": 15,
+        "rss_mb": 1445
+      },
+      "msedge": {
+        "count": 6,
+        "rss_mb": 53
+      },
+      "python": {
+        "count": 2,
+        "rss_mb": 1801
+      },
+      "node": {
+        "count": 0,
+        "rss_mb": 0
+      },
+      "firefox": {
+        "count": 0,
+        "rss_mb": 0
+      }
+    },
+    "other_ollama_clients": [],
+    "on_ac_power": true,
+    "own_rss_mb": 1796
+  },
+  "contended": false,
+  "contention": [],
+  "concurrency": 1,
+  "prewarm": "runner.prepare(): validators + Ollama ready + one warm-up call"
+}

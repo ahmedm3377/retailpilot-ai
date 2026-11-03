@@ -1,0 +1,34 @@
+{
+  "_comment": "Synthetic starting data for the demo store (app/db/demo_store.py). Loaded into PostgreSQL once; after that the app reads only the database. delivered_days_ago is counted back from the seed date, which becomes the store's as_of.",
+  "currency": "USD",
+  "products": [
+    {"sku": "TEE-S", "product_id": "TEE", "size": "S", "price_cents": 4000, "stock": 4},
+    {"sku": "TEE-M", "product_id": "TEE", "size": "M", "price_cents": 4000, "stock": 2},
+    {"sku": "TEE-L", "product_id": "TEE", "size": "L", "price_cents": 4000, "stock": 3},
+    {"sku": "JACKET-M", "product_id": "JACKET", "size": "M", "price_cents": 9000, "stock": 1},
+    {"sku": "JACKET-L", "product_id": "JACKET", "size": "L", "price_cents": 9000, "stock": 0},
+    {"sku": "HOODIE-S", "product_id": "HOODIE", "size": "S", "price_cents": 6000, "stock": 2},
+    {"sku": "HOODIE-M", "product_id": "HOODIE", "size": "M", "price_cents": 6000, "stock": 5},
+    {"sku": "HOODIE-L", "product_id": "HOODIE", "size": "L", "price_cents": 6500, "stock": 3},
+    {"sku": "BEANIE-OS", "product_id": "BEANIE", "size": "OS", "price_cents": 2000, "stock": 9}
+  ],
+  "orders": [
+    {"order_id": "O100", "customer_id": "C100", "status": "delivered", "delivered_days_ago": 16, "lines": [
+      {"line_id": "L1", "sku": "TEE-M", "paid_cents": 3000, "unopened": true, "final_sale": false, "returned": false},
+      {"line_id": "L2", "sku": "JACKET-M", "paid_cents": 9000, "unopened": true, "final_sale": false, "returned": false}
+    ]},
+    {"order_id": "O101", "customer_id": "C100", "status": "delivered", "delivered_days_ago": 5, "lines": [
+      {"line_id": "L1", "sku": "HOODIE-S", "paid_cents": 5400, "unopened": true, "final_sale": false, "returned": false}
+    ]},
+    {"order_id": "O090", "customer_id": "C100", "status": "delivered", "delivered_days_ago": 45, "lines": [
+      {"line_id": "L1", "sku": "TEE-L", "paid_cents": 4000, "unopened": true, "final_sale": false, "returned": false}
+    ]},
+    {"order_id": "O102", "customer_id": "C100", "status": "delivered", "delivered_days_ago": 3, "lines": [
+      {"line_id": "L1", "sku": "BEANIE-OS", "paid_cents": 1500, "unopened": true, "final_sale": true, "returned": false}
+    ]},
+    {"order_id": "O200", "customer_id": "C200", "status": "delivered", "delivered_days_ago": 8, "lines": [
+      {"line_id": "L1", "sku": "HOODIE-M", "paid_cents": 6000, "unopened": false, "final_sale": false, "returned": false},
+      {"line_id": "L2", "sku": "TEE-S", "paid_cents": 4000, "unopened": true, "final_sale": false, "returned": false}
+    ]}
+  ]
+}

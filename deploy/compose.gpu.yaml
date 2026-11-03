@@ -1,0 +1,17 @@
+# NVIDIA GPU for the model server. Needs the NVIDIA driver plus the NVIDIA Container Toolkit (Linux) or
+# Docker Desktop with WSL 2 (Windows). Use it together with compose.yaml:
+#   docker compose -f deploy/compose.yaml -f deploy/compose.gpu.yaml up -d --build
+services:
+  ollama:
+    gpus: all
+  # Only so nvidia-smi exists there: results.json's hardware.gpu, peak VRAM and Grafana's GPU panels read it.
+  # CUDA stays hidden (nvidia-smi reads NVML, not CUDA), so the guardrail models run on the CPU as on a native
+  # run and never compete with the model for VRAM; Presidio would otherwise try the GPU.
+  api:
+    gpus: all
+    environment:
+      CUDA_VISIBLE_DEVICES: ""
+  tools:
+    gpus: all
+    environment:
+      CUDA_VISIBLE_DEVICES: ""
